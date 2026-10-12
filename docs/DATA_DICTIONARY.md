@@ -97,3 +97,18 @@ Tài liệu này phản ánh cấu trúc schema và ý nghĩa từng trường d
 | | `target` | BIGINT | Nhãn mục tiêu nhị phân | Nhãn 1 chiếm 20.30% (32,486 dòng), nhãn 0 chiếm 79.70% (127,514 dòng). Mất cân bằng lớp. |
 | `test.csv` (40,000 dòng) | `customer_id` | BIGINT | Khóa khách hàng | 40,000 khách hàng trong tập kiểm tra độc lập. |
 | `sample_submission.csv` | `customer_id`, `target` | BIGINT | Định dạng mẫu nộp bài | Mẫu dự đoán cho tập test. |
+
+---
+
+## 7. Xác minh định nghĩa bài toán, Cutoff thời gian và Giới hạn nghiên cứu
+
+### 7.1. Kết quả kiểm toán thực nghiệm về Target và Cửa sổ 30 ngày
+- Kiểm toán dữ liệu thực nghiệm cho thấy: Tỷ lệ khách hàng phát sinh giao dịch trong 30 ngày cuối (từ 2024-08-27 đến 2024-09-26) ở nhóm `target = 1` là **7.44%** (2,418 / 32,486 khách), trong khi ở nhóm `target = 0` là **7.58%** (9,666 / 127,514 khách). Đồng thời, tỷ lệ khách hàng từng có ít nhất 1 giao dịch ở cả hai nhóm là hoàn toàn đồng nhất (**91.79%**).
+- **Kết luận khoa học**: Nhãn `target` **không** được sinh ra từ các giao dịch trong 30 ngày cuối của bảng `transactions.csv`.
+
+### 7.2. Định nghĩa phạm vi bài toán phù hợp
+- Do bộ dữ liệu nguồn không cung cấp mốc thời gian chốt dự đoán (prediction cutoff) hay tài liệu sinh nhãn chính thức, nghiên cứu xác định chuẩn xác phạm vi bài toán là:
+  > **"Phân loại thiên hướng mua hàng của khách hàng (Customer Purchase Propensity Classification) dựa trên snapshot dữ liệu hành vi thương mại điện tử đa bảng."**
+- Không tuyên bố hệ thống là mô hình chuỗi thời gian dự báo tương lai point-in-time nếu không có bằng chứng cutoff nguồn. Các đặc trưng tổng hợp từ `sessions.csv` và `transactions.csv` được hiểu là đặc trưng tóm lược hành vi quan sát trên toàn bộ snapshot.
+- Toàn bộ pipeline loại bỏ hoàn toàn `customer_id` và `target` khỏi ma trận đầu vào để đảm bảo tính hợp lệ.
+

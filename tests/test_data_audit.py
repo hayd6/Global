@@ -80,3 +80,37 @@ def test_target_distribution_validity():
 
     pos_rate = con.execute(f"SELECT AVG(target) FROM read_csv_auto('{TRAIN_CSV.as_posix()}')").fetchone()[0]
     assert 0.18 <= pos_rate <= 0.22, f"Target positive rate unexpected: {pos_rate:.4f}"
+
+
+def test_marketing_campaigns_inventory():
+    """Verify that marketing_campaigns.csv has exactly 200 rows and 6 columns."""
+    con = duckdb.connect()
+    cnt = con.execute(f"SELECT COUNT(*) FROM read_csv_auto('{MARKETING_CSV.as_posix()}')").fetchone()[0]
+    cols = con.execute(f"DESCRIBE SELECT * FROM read_csv_auto('{MARKETING_CSV.as_posix()}') LIMIT 0").fetchall()
+    assert cnt == 200, f"Expected 200 marketing campaigns, got {cnt}"
+    assert len(cols) == 6, f"Expected 6 columns in marketing_campaigns, got {len(cols)}"
+
+
+def test_dataset_date_bounds():
+    """Verify that timestamps in sessions and transactions do not exceed the reference date 2024-09-26."""
+    con = duckdb.connect()
+    max_sess = con.execute(f"SELECT MAX(session_timestamp) FROM read_csv_auto('{SESSIONS_CSV.as_posix()}')").fetchone()[0]
+    max_trans = con.execute(f"SELECT MAX(transaction_timestamp) FROM read_csv_auto('{TRANSACTIONS_CSV.as_posix()}')").fetchone()[0]
+    import datetime
+    assert max_sess <= datetime.date(2024, 9, 26), f"Session timestamp exceeded 2024-09-26: {max_sess}"
+    assert max_trans <= datetime.date(2024, 9, 26), f"Transaction timestamp exceeded 2024-09-26: {max_trans}"
+
+
+def test_feature_dictionary_has_temporal_and_leakage_metadata():
+    """Verify feature dictionary contains temporal_nature and cutoff_rule columns."""
+    import pandas as pd
+    from src.config import OUTPUTS_DIR
+    dict_path = OUTPUTS_DIR / "feature_dictionary.csv"
+    assert dict_path.exists(), "feature_dictionary.csv missing!"
+    df = pd.read_csv(dict_path)
+    assert "temporal_nature" in df.columns, "Missing 'temporal_nature' column in feature_dictionary.csv"
+    assert "cutoff_rule" in df.columns, "Missing 'cutoff_rule' column in feature_dictionary.csv"
+    assert "leakage_risk" in df.columns, "Missing 'leakage_risk' column in feature_dictionary.csv"
+    assert "customer_id" not in df["feature_name"].values, "customer_id must not be a feature!"
+    assert "target" not in df["feature_name"].values, "target must not be a feature!"
+
