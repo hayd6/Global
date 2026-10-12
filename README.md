@@ -13,29 +13,33 @@ Dự án phát triển một hệ thống Big Data và Machine Learning hoàn ch
 ## 2. Kết quả thực nghiệm trọng yếu
 
 ### 2.1. Đánh giá 7 mô hình cơ sở (`outputs/metrics/baseline_metrics.csv`)
-Đánh giá trên tập Validation phân tầng (Stratified 32,000 mẫu, tỷ lệ nhãn dương 20.3%):
+Đánh giá trên tập Holdout phân tầng chuẩn hóa (`split_id: stratified_80_20_v1`, 32,000 khách hàng độc lập, tỷ lệ nhãn dương 20.31%, ngưỡng cố định 0.5):
 
-| Mô hình | Số đặc trưng | PR-AUC | ROC-AUC | F1-Score | Precision | Recall | Thời gian huấn luyện |
+| Mô hình | Số đặc trưng | PR-AUC | ROC-AUC | F1-Score | Precision | Recall | Thời gian Fit |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Gradient Boosting** | 180 | **0.2785** | **0.6150** | **0.3660** | 0.2442 | 0.7303 | 19.17s |
-| **Random Forest** | 180 | 0.2753 | 0.6101 | 0.3635 | 0.2425 | 0.7258 | 12.95s |
-| **Logistic Regression** | 180 | 0.2704 | 0.6033 | 0.3602 | 0.2396 | 0.7299 | **1.10s** |
-| **Support Vector Machine (SGD)** | 180 | 0.2578 | 0.5858 | 0.3526 | 0.2337 | 0.7214 | 4.30s |
-| **Decision Tree** | 180 | 0.2575 | 0.5927 | 0.3569 | 0.2372 | 0.7247 | 7.14s |
-| **Naive Bayes** | 180 | 0.2170 | 0.5235 | 0.3377 | 0.2073 | 0.9080 | **0.42s** |
-| **K-Nearest Neighbors (KNN)** | 180 | 0.2108 | 0.5187 | 0.3375 | 0.2071 | 0.9103 | 8.04s |
+| **Gradient Boosting** | 180 | **0.2758** | **0.6097** | **0.3575** | 0.2570 | 0.5873 | 34.85s |
+| **Random Forest** | 180 | 0.2700 | 0.6031 | 0.3488 | 0.2589 | 0.5346 | 29.80s |
+| **Logistic Regression** | 180 | 0.2649 | 0.5989 | 0.3473 | 0.2529 | 0.5541 | **1.49s** |
+| **Decision Tree** | 180 | 0.2584 | 0.5851 | 0.3446 | 0.2468 | 0.5710 | 10.23s |
+| **SGDClassifier (log_loss)** | 180 | 0.2456 | 0.5748 | 0.3357 | 0.2404 | 0.5563 | 6.66s |
+| **Naive Bayes** | 180 | 0.2161 | 0.5177 | 0.2825 | 0.2171 | 0.4040 | **0.57s** |
+| **K-Nearest Neighbors (KNN)** | 180 | 0.2102 | 0.5167 | 0.0685 | 0.2231 | 0.0405 | 17.10s |
 
 ### 2.2. So sánh lựa chọn đặc trưng & XGBoost (`outputs/metrics/metrics_comparison.csv`)
+Đánh giá so sánh trực tiếp trên cùng tập Holdout 32,000 khách hàng độc lập (ngưỡng 0.5):
 
-| Mô hình & Cấu hình đặc trưng | Số đặc trưng | PR-AUC | ROC-AUC | F1-Score | Precision | Recall | Thời gian Fit |
+| Mô hình & Cấu hình đặc trưng | Số đặc trưng | PR-AUC | ROC-AUC | F1-Score | Fit Time | Search Cost | Total Time |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Baseline (Full Features)** | 63 | 0.2720 | 0.6087 | 0.3664 | 0.2445 | 0.7306 | 15.64s |
-| **Baseline (Statistical Features)** | 17 | 0.2714 | 0.6090 | 0.3671 | 0.2422 | 0.7582 | 6.39s |
-| **Baseline (PSO Features)** | 17 | 0.2600 | 0.5906 | 0.3557 | 0.2364 | 0.7180 | 4.08s |
-| **XGBoost (Full Features)** | 63 | 0.2659 | 0.6033 | 0.3630 | 0.2398 | 0.7462 | 3.10s |
-| **XGBoost (PSO Features)** | 17 | 0.2590 | 0.5875 | 0.3547 | 0.2411 | 0.6708 | **1.52s** |
+| **Baseline (Full Features)** | 63 | 0.2730 | 0.6078 | 0.3558 | 16.96s | 0.00s | 16.96s |
+| **Baseline (Statistical Features)** | 17 | **0.2759** | **0.6105** | 0.3557 | 6.35s | 0.13s | **6.48s** |
+| **Baseline (PSO Features)** | 17 | 0.2601 | 0.5894 | 0.3411 | 4.52s | 11.79s | 16.31s |
+| **XGBoost (Full Features)** | 63 | 0.2654 | 0.6006 | 0.3475 | 4.65s | 0.00s | 4.65s |
+| **XGBoost (PSO Features)** | 17 | 0.2584 | 0.5846 | 0.3319 | **2.22s** | 11.79s | 14.01s |
 
-> **Nhận xét cốt lõi**: Thuật toán Binary PSO đã tinh giản **73.0%** số chiều đặc trưng (từ 63 xuống 17 đặc trưng), giúp thời gian huấn luyện mô hình XGBoost giảm hơn 50% (xuống chỉ còn 1.52 giây) trong khi bảo toàn năng lực dự đoán thực tế.
+> **Phân tích đánh đổi khách quan (Trade-off Analysis)**:
+> 1. **Mức độ tinh giản chiều (Feature Sparsity)**: Thuật toán Binary PSO giảm thành công **73.02%** số chiều đặc trưng (từ 63 xuống 17 đặc trưng), giúp rút ngắn thời gian huấn luyện mô hình hạ nguồn đáng kể (Fit time của Baseline giảm từ 16.96s xuống 4.52s; XGBoost giảm từ 4.65s xuống 2.22s - nhanh hơn 2.1x).
+> 2. **Chi phí tìm kiếm (Search Overhead)**: Quá trình tìm kiếm của bầy đàn (16 hạt x 12 vòng lặp) trên phân vùng inner tuning tiêu tốn 11.79s (tính toán 208 mặt nạ nhị phân).
+> 3. **Hiệu năng phân loại (Performance Trade-off)**: Trên tập Holdout 32k độc lập chưa từng tham gia tìm kiếm, PSO chấp nhận đánh đổi một phần khả năng phân biệt (-0.0129 PR-AUC so với Baseline Full; -0.0070 PR-AUC so với XGBoost Full). Chọn lọc thống kê ANOVA F-score (k=17) đạt PR-AUC 0.2759 với chi phí tìm kiếm gần như tức thì (0.13s).
 
 ---
 

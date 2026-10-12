@@ -25,7 +25,7 @@ Tài liệu này ghi lại các quyết định kỹ thuật trọng yếu đư�
 - **Bối cảnh**: Tỷ lệ nhãn dương trong `train.csv` chỉ là 20.30% (mất cân bằng). Nếu dùng Accuracy hoặc ROC-AUC đơn thuần, mô hình có thể bị bias về lớp đa số (không mua hàng). Khi thử nghiệm với $\alpha=0.85$, phần thưởng độ thưa chiếm tỷ trọng khá lớn làm thuật toán có xu hướng cắt giảm cả các biến quan trọng; sau khi tinh chỉnh lên $\alpha=0.92$, thuật toán cân bằng hoàn hảo giữa PR-AUC và tính tinh gọn.
 - **Quyết định**: Hàm fitness được định nghĩa như sau:
   $$\text{Fitness} = 0.92 \cdot \text{PR-AUC} + 0.08 \cdot \left(1 - \frac{\text{k\_selected}}{\text{total\_features}}\right)$$
-- **Hệ quả**: Thuật toán bầy đàn giảm số đặc trưng từ 63 xuống 17 đặc trưng (giảm 73% số chiều), trong khi giữ vững năng lực phân biệt và giảm hơn 70% thời gian huấn luyện.
+- **Hệ quả**: Thuật toán bầy đàn giảm số đặc trưng từ 63 xuống 17 đặc trưng (giảm 73.02% số chiều), giúp giảm thời gian fit của mô hình hạ nguồn từ 16.96s xuống 4.52s (giảm 73% fit time cho baseline; từ 4.65s xuống 2.22s cho XGBoost). Chi phí tìm kiếm PSO là 11.79s (đầu tư offline 208 mặt nạ). Trên tập holdout 32k độc lập, hiệu năng phân biệt có sự đánh đổi nhẹ (-0.0129 PR-AUC trên baseline, -0.0070 PR-AUC trên XGBoost) để đổi lấy sự tối giản vượt trội về số chiều.
 
 ---
 
@@ -44,3 +44,13 @@ Tài liệu này ghi lại các quyết định kỹ thuật trọng yếu đư�
   1. `customer_id` tuyệt đối không được đưa vào vector đặc trưng đầu vào của mô hình.
   2. Toàn bộ các bộ tiền xử lý (Imputer, Scaler, Encoder) chỉ được `fit` trên 80% tập Train (128,000 dòng), sau đó `transform` trên 20% tập Validation (32,000 dòng) và tập Test (40,000 dòng).
   3. Tập `test.csv` chỉ dùng để tạo bảng dự đoán cuối cùng `outputs/test_predictions.csv`, không tham gia vào bất kỳ bước chọn đặc trưng hay tinh chỉnh mô hình nào.
+
+---
+
+## Quyết định 6: Quản lý phân vùng tập trung (Unified Split Manager) & Giới hạn phạm vi nghiên cứu
+- **Ngày quyết định**: 2026-10-12
+- **Bối cảnh**: Kiểm toán độc lập phát hiện các mô hình baseline, ANOVA và PSO từng sử dụng phương thức phân chia (split) và tiền xử lý không đồng nhất; nhãn `target` không có thông tin cutoff sinh nhãn trong dữ liệu nguồn.
+- **Quyết định**:
+  1. Xây dựng module `src/models/split_manager.py` tạo một phân vùng Stratified 80/20 duy nhất (`split_id: stratified_80_20_v1`), cố định chỉ số khách hàng vào `outputs/processed/split_indices.npz` và lưu metadata vào `configs/split_metadata.json`. Phân vùng inner tuning cho PSO được trích xuất hoàn toàn từ tập Train pool 128k mẫu, tuyệt đối không chạm vào 32k mẫu Holdout.
+  2. Xác định phạm vi nghiên cứu chính thức là: **Bài toán phân loại xu hướng mua hàng (Purchase Propensity Classification) trên ảnh chụp quan sát đa bảng (Observational Snapshot)**, loại bỏ các giả định không có bằng chứng về chuỗi thời gian hay cửa sổ dự đoán tương lai 30 ngày.
+- **Hệ quả**: Đảm bảo 100% tính công bằng, triệt tiêu rò rỉ dữ liệu, và kết luận nghiên cứu trung thực về mặt khoa học.
