@@ -1,4 +1,6 @@
 {
+    "split_id": "stratified_80_20_v1",
+    "selection_partition": "inner_train_tuning_partition",
     "n_particles": 16,
     "n_iterations": 12,
     "inertia_w": 0.729,
@@ -9,6 +11,9 @@
     "total_candidate_features": 63,
     "selected_features_count": 17,
     "sparsity_reduction_pct": 73.02,
-    "best_fitness": 0.2764,
-    "best_pr_auc": 0.237
+    "best_fitness": 0.2848,
+    "best_pr_auc": 0.2461,
+    "search_time_seconds": 11.79,
+    "n_evaluations": 208,
+    "n_unique_masks": 208
 }

@@ -102,12 +102,7 @@ def export_powerbi_tables():
     )
     logger.info("Exported outputs/powerbi/dashboard_behavior_summary.csv")
 
-    # 4. Generate outputs/powerbi/dashboard_validation_errors.csv
-    # Interactive sample of predictions and error analysis (False Positive / False Negative)
-    # Using the trained model predictions from metrics_comparison / train_xgboost
-    from src.models.train_xgboost import run_xgboost_experiments
-    
-    # Check if test_predictions exists
+    # 4. Export test predictions sample for Power BI consumption
     pred_path = OUTPUTS_DIR / "test_predictions.csv"
     if pred_path.exists():
         shutil.copy(pred_path, POWERBI_DIR / "test_predictions_sample.csv")

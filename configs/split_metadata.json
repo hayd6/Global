@@ -1,0 +1,27 @@
+{
+    "split_id": "stratified_80_20_v1",
+    "random_state": 42,
+    "total_train_pool_size": 160000,
+    "train_size": 128000,
+    "holdout_size": 32000,
+    "pso_inner_train_size": 96000,
+    "pso_inner_val_size": 32000,
+    "positive_rate_overall": 0.20304,
+    "positive_rate_train": 0.20304,
+    "positive_rate_holdout": 0.20303,
+    "train_customer_id_sample": [
+        37637,
+        49049,
+        65649,
+        151875,
+        141667
+    ],
+    "holdout_customer_id_sample": [
+        195766,
+        180698,
+        122619,
+        58792,
+        47593
+    ],
+    "holdout_sha256": "008236ea0d8461b4d5f58b34e973766d4a696a20c97b8d28a4b9d025c99a5da2"
+}

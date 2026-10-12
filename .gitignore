@@ -93,7 +93,8 @@ dataset/*
 # ==========================================
 outputs/
 artifacts/
-models/
+/models/
+!src/models/
 checkpoints/
 runs/
 mlruns/

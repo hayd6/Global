@@ -38,11 +38,12 @@ def compute_metrics(
     model_name: str,
     feature_count: int,
     fit_time: float,
-    threshold: float = None,
+    threshold: float = 0.5,
+    threshold_source: str = "fixed_0.5",
 ) -> dict:
     """
-    Computes comprehensive evaluation metrics with emphasis on PR-AUC.
-    Finds optimal F1 threshold if threshold is None.
+    Computes comprehensive evaluation metrics with primary emphasis on threshold-free
+    PR-AUC and ROC-AUC. Threshold metrics default to fixed 0.5 to avoid optimistic bias.
     """
     # Clip probabilities
     y_prob = np.clip(y_prob, 1e-7, 1.0 - 1e-7)
@@ -50,16 +51,15 @@ def compute_metrics(
     roc_auc = float(roc_auc_score(y_true, y_prob))
     pr_auc = float(average_precision_score(y_true, y_prob))
 
-    # Optimal threshold based on F1 curve
-    if threshold is None:
-        precisions, recalls, thresholds = precision_recall_curve(y_true, y_prob)
-        f1_scores = 2 * (precisions * recalls) / (precisions + recalls + 1e-9)
-        best_idx = np.argmax(f1_scores)
-        best_threshold = float(thresholds[best_idx]) if best_idx < len(thresholds) else 0.5
-    else:
-        best_threshold = threshold
+    # Reference optimal F1 threshold (exploratory diagnostic only)
+    precisions, recalls, thresholds = precision_recall_curve(y_true, y_prob)
+    f1_curve = 2 * (precisions * recalls) / (precisions + recalls + 1e-9)
+    best_idx = np.argmax(f1_curve)
+    best_f1_threshold_ref = float(thresholds[best_idx]) if best_idx < len(thresholds) else 0.5
 
-    y_pred = (y_prob >= best_threshold).astype(int)
+    # Evaluation predictions based on designated threshold (default 0.5)
+    eval_threshold = threshold if threshold is not None else 0.5
+    y_pred = (y_prob >= eval_threshold).astype(int)
 
     f1 = float(f1_score(y_true, y_pred, zero_division=0))
     precision = float(precision_score(y_true, y_pred, zero_division=0))
@@ -77,7 +77,9 @@ def compute_metrics(
         "precision": round(precision, 4),
         "recall": round(recall, 4),
         "accuracy": round(accuracy, 4),
-        "best_threshold": round(best_threshold, 4),
+        "threshold": round(eval_threshold, 4),
+        "threshold_source": threshold_source,
+        "best_f1_threshold_ref": round(best_f1_threshold_ref, 4),
         "true_negatives": int(tn),
         "false_positives": int(fp),
         "false_negatives": int(fn),
