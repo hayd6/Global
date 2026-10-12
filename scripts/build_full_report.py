@@ -445,10 +445,10 @@ So sánh trực diện 3 không gian đặc trưng trên mô hình Gradient Boos
 
 ### 4.4. Áp dụng Particle Swarm Optimization (PSO)
 - **Hàm mục tiêu (Fitness Function)**:
-  $$\\text{Fitness}(X) = 0.85 \\cdot \\text{PR-AUC}(X) + 0.15 \\cdot \\left(1 - \\frac{|X|}{D}\\right)$$
-  với $D = 63$. Hệ số $\\alpha = 0.85$ ưu tiên tối đa năng lực phát hiện lớp dương, đồng thời thưởng điểm cho các hạt có độ thưa (sparsity) cao.
-- **Tham số thuật toán**: Số hạt = 10, Số vòng lặp = 10, $w = 0.729$, $c_1 = 1.494$, $c_2 = 1.494$, hàm kích hoạt Sigmoid chuyển đổi vận tốc thành xác suất nhị phân.
-- **Tiến trình hội tụ**: Điểm fitness tăng trưởng từ 0.2512 (vòng 1) lên mức cực đại 0.3245 (vòng 8) và ổn định ở vòng 10.
+  $$\\text{Fitness}(X) = 0.92 \\cdot \\text{PR-AUC}(X) + 0.08 \\cdot \\left(1 - \\frac{|X|}{D}\\right)$$
+  với $D = 63$. Hệ số $\\alpha = 0.92$ (cố định trong `configs/pso_experiment_config.json`) ưu tiên tối đa năng lực phát hiện lớp dương, đồng thời thưởng điểm cho các hạt có độ thưa (sparsity) cao.
+- **Tham số thuật toán**: Số hạt = 16, Số vòng lặp = 12, $w = 0.729$, $c_1 = 1.494$, $c_2 = 1.494$, tổng số lần đánh giá mặt nạ = 208 (16 khởi tạo + 16 $\\times$ 12 vòng lặp).
+- **Tiến trình hội tụ**: Theo dữ liệu thực tế tại `outputs/feature_selection/pso_convergence.csv`, điểm fitness tăng trưởng từ 0.2785 (vòng 0–3) lên 0.2810 (vòng 4–5), 0.2835 (vòng 6–8) và đạt cực đại 0.2848 tại vòng 9 (duy trì đến vòng 12), số đặc trưng giảm từ 22 xuống đúng 17 đặc trưng tối ưu.
 - **Danh mục 17 đặc trưng được PSO lựa chọn**:
 """
 
@@ -459,13 +459,13 @@ md_content += """
 Toàn bộ các biến nhiễu nhân tạo (`noise_*`) đã bị Binary PSO loại bỏ 100%.
 
 ### 4.5. Xây dựng mô hình nâng cao XGBoost (E1–E5)
-Bảng tổng hợp kết quả thực nghiệm toàn diện 5 mô hình trên tập Holdout 32.000 mẫu (Ngưỡng $\\tau = 0.50$):
+Bảng tổng hợp kết quả thực nghiệm toàn diện 5 mô hình trên tập Holdout 32.000 mẫu (Ngưỡng $\\tau = 0.50$, nguồn: `outputs/metrics/metrics_comparison.csv`):
 
 | Mã | Cấu hình Thí nghiệm | Số biến | PR-AUC | ROC-AUC | F1-Score | Precision | Recall | Fit Time | Search Time | Tổng chi phí |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **E1** | Baseline (Full Features) | 63 | 0.2730 | 0.6078 | 0.3558 | 0.2574 | 0.5766 | 17.04s | 0.00s | 17.04s |
-| **E2** | Baseline (Statistical ANOVA) | 17 | **0.2759** | **0.6105** | 0.3557 | 0.2566 | 0.5796 | 6.24s | 0.13s | 6.37s |
-| **E3** | Baseline (PSO Features) | 17 | 0.2601 | 0.5894 | 0.3411 | 0.2535 | 0.5208 | 4.50s | 11.79s | 16.29s |
+| **E1** | Baseline (Full Features) | 63 | 0.2730 | 0.6078 | 0.3558 | 0.2573 | 0.5766 | 17.04s | 0.00s | 17.04s |
+| **E2** | Baseline (Statistical ANOVA) | 17 | **0.2759** | **0.6105** | 0.3557 | 0.2566 | **0.5797** | 6.24s | 0.13s | 6.37s |
+| **E3** | Baseline (PSO Features) | 17 | 0.2601 | 0.5894 | 0.3411 | 0.2535 | 0.5209 | 4.50s | 11.79s | 16.29s |
 | **E4** | XGBoost (Full Features) | 63 | 0.2654 | 0.6006 | 0.3475 | 0.2594 | 0.5262 | 4.40s | 0.00s | 4.40s |
 | **E5** | XGBoost (PSO Features) | 17 | 0.2584 | 0.5846 | 0.3319 | 0.2515 | 0.4879 | **2.07s** | 11.79s | 13.86s |
 

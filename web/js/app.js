@@ -165,56 +165,60 @@ function renderPSOChart() {
   const container = document.getElementById("pso-chart-container");
   if (!container) return;
 
-  const iterations = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const bestFitness = [0.2512, 0.2689, 0.2845, 0.2991, 0.3084, 0.3150, 0.3212, 0.3245, 0.3245, 0.3245];
-  const avgFitness = [0.2105, 0.2314, 0.2510, 0.2688, 0.2812, 0.2905, 0.2990, 0.3042, 0.3081, 0.3110];
+  // Dữ liệu thực tế từ outputs/feature_selection/pso_convergence.csv (16 hạt x 12 vòng lặp)
+  const iterations = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const bestFitness = [0.2785, 0.2785, 0.2785, 0.2785, 0.2810, 0.2810, 0.2835, 0.2835, 0.2835, 0.2848, 0.2848, 0.2848, 0.2848];
+  const avgFitness = [0.2664, 0.2707, 0.2719, 0.2727, 0.2744, 0.2755, 0.2773, 0.2779, 0.2780, 0.2789, 0.2792, 0.2801, 0.2806];
 
   const w = 480;
   const h = 220;
   const pad = 40;
 
   // Scale functions
-  const minF = 0.20;
-  const maxF = 0.35;
-  const getX = (i) => pad + ((i - 1) / (10 - 1)) * (w - 2 * pad);
+  const minF = 0.25;
+  const maxF = 0.30;
+  const n = iterations.length;
+  const getX = (idx) => pad + (idx / (n - 1)) * (w - 2 * pad);
   const getY = (val) => h - pad - ((val - minF) / (maxF - minF)) * (h - 2 * pad);
 
   // Generate paths
-  let bestPath = `M ${getX(1)} ${getY(bestFitness[0])}`;
-  let avgPath = `M ${getX(1)} ${getY(avgFitness[0])}`;
+  let bestPath = `M ${getX(0)} ${getY(bestFitness[0])}`;
+  let avgPath = `M ${getX(0)} ${getY(avgFitness[0])}`;
 
-  for (let i = 1; i < 10; i++) {
-    bestPath += ` L ${getX(i + 1)} ${getY(bestFitness[i])}`;
-    avgPath += ` L ${getX(i + 1)} ${getY(avgFitness[i])}`;
+  for (let i = 1; i < n; i++) {
+    bestPath += ` L ${getX(i)} ${getY(bestFitness[i])}`;
+    avgPath += ` L ${getX(i)} ${getY(avgFitness[i])}`;
   }
 
   container.innerHTML = `
     <svg viewBox="0 0 ${w} ${h}" style="width: 100%; height: auto;">
       <!-- Grid lines -->
-      <line x1="${pad}" y1="${getY(0.25)}" x2="${w - pad}" y2="${getY(0.25)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4" />
-      <line x1="${pad}" y1="${getY(0.30)}" x2="${w - pad}" y2="${getY(0.30)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4" />
-      <line x1="${pad}" y1="${getY(0.35)}" x2="${w - pad}" y2="${getY(0.35)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4" />
+      <line x1="${pad}" y1="${getY(0.26)}" x2="${w - pad}" y2="${getY(0.26)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4" />
+      <line x1="${pad}" y1="${getY(0.27)}" x2="${w - pad}" y2="${getY(0.27)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4" />
+      <line x1="${pad}" y1="${getY(0.28)}" x2="${w - pad}" y2="${getY(0.28)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4" />
+      <line x1="${pad}" y1="${getY(0.29)}" x2="${w - pad}" y2="${getY(0.29)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4" />
 
       <!-- Axes -->
       <line x1="${pad}" y1="${h - pad}" x2="${w - pad}" y2="${h - pad}" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
       <line x1="${pad}" y1="${pad / 2}" x2="${pad}" y2="${h - pad}" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
 
       <!-- Labels -->
-      <text x="${pad - 8}" y="${getY(0.25) + 4}" fill="#64748b" font-size="10" text-anchor="end">0.25</text>
-      <text x="${pad - 8}" y="${getY(0.30) + 4}" fill="#64748b" font-size="10" text-anchor="end">0.30</text>
-      <text x="${pad - 8}" y="${getY(0.35) + 4}" fill="#64748b" font-size="10" text-anchor="end">0.35</text>
-      <text x="${w / 2}" y="${h - 8}" fill="#64748b" font-size="11" text-anchor="middle">Vòng lặp (Iterations 1-10)</text>
+      <text x="${pad - 8}" y="${getY(0.26) + 4}" fill="#64748b" font-size="10" text-anchor="end">0.26</text>
+      <text x="${pad - 8}" y="${getY(0.27) + 4}" fill="#64748b" font-size="10" text-anchor="end">0.27</text>
+      <text x="${pad - 8}" y="${getY(0.28) + 4}" fill="#64748b" font-size="10" text-anchor="end">0.28</text>
+      <text x="${pad - 8}" y="${getY(0.29) + 4}" fill="#64748b" font-size="10" text-anchor="end">0.29</text>
+      <text x="${w / 2}" y="${h - 8}" fill="#64748b" font-size="11" text-anchor="middle">Vòng lặp (Iterations 0-12 | 16 hạt x 12 vòng = 208 masks)</text>
 
       <!-- Curves -->
       <path d="${avgPath}" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3,3" />
       <path d="${bestPath}" fill="none" stroke="#6366f1" stroke-width="3" />
 
       <!-- Dots on best curve -->
-      ${bestFitness.map((val, i) => `<circle cx="${getX(i + 1)}" cy="${getY(val)}" r="3.5" fill="#6366f1" />`).join("")}
+      ${bestFitness.map((val, i) => `<circle cx="${getX(i)}" cy="${getY(val)}" r="3" fill="#6366f1" />`).join("")}
 
       <!-- Legend -->
       <circle cx="${w - 180}" cy="18" r="4" fill="#6366f1" />
-      <text x="${w - 170}" y="22" fill="#f8fafc" font-size="11">Best Fitness (0.3245)</text>
+      <text x="${w - 170}" y="22" fill="#f8fafc" font-size="11">Best Fitness (0.2848)</text>
       <circle cx="${w - 180}" cy="34" r="4" fill="#f59e0b" />
       <text x="${w - 170}" y="38" fill="#94a3b8" font-size="11">Avg Fitness</text>
     </svg>

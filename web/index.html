@@ -201,7 +201,7 @@ FROM sessions GROUP BY customer_id;</pre>
               <tr>
                 <td><strong>Cường độ phiên duyệt web</strong></td>
                 <td>15 biến</td>
-                <td><code>total_sessions</code>, <code>avg_session_duration_sec</code>, <code>bounce_rate</code>, <code>desktop_session_ratio</code></td>
+                <td><code>sess_count</code>, <code>total_session_duration</code>, <code>bounce_rate</code>, <code>pct_desktop_sessions</code></td>
                 <td>Tần suất ghé thăm, sự chú ý và sở thích thiết bị sử dụng</td>
               </tr>
               <tr>
@@ -213,7 +213,7 @@ FROM sessions GROUP BY customer_id;</pre>
               <tr>
                 <td><strong>Giao dịch & RFM</strong></td>
                 <td>18 biến</td>
-                <td><code>total_spend</code>, <code>recency_days</code>, <code>transaction_count</code>, <code>discount_per_dollar</code></td>
+                <td><code>total_spend</code>, <code>recency_days</code>, <code>trans_count</code>, <code>loyalty_spend_product</code></td>
                 <td>Lịch sử giá trị đơn hàng, độ mới của giao dịch và độ nhạy giảm giá</td>
               </tr>
               <tr>
@@ -269,7 +269,7 @@ FROM sessions GROUP BY customer_id;</pre>
                 <td>0.2730</td>
                 <td>0.6078</td>
                 <td>0.3558</td>
-                <td>0.2574</td>
+                <td>0.2573</td>
                 <td>0.5766</td>
                 <td>17.04s</td>
                 <td>0.00s</td>
@@ -283,7 +283,7 @@ FROM sessions GROUP BY customer_id;</pre>
                 <td><strong>0.6105</strong></td>
                 <td><strong>0.3557</strong></td>
                 <td>0.2566</td>
-                <td><strong>0.5796</strong></td>
+                <td><strong>0.5797</strong></td>
                 <td>6.24s</td>
                 <td>0.13s</td>
                 <td><span class="tag-badge tag-best">PR-AUC cao nhất (+0.0029)</span></td>
@@ -296,7 +296,7 @@ FROM sessions GROUP BY customer_id;</pre>
                 <td>0.5894</td>
                 <td>0.3411</td>
                 <td>0.2535</td>
-                <td>0.5208</td>
+                <td>0.5209</td>
                 <td>4.50s</td>
                 <td>11.79s</td>
                 <td><span class="tag-badge tag-pso">Giảm 73% biến, fit 4.5s</span></td>
@@ -335,10 +335,10 @@ FROM sessions GROUP BY customer_id;</pre>
       <!-- CHARTS GRID -->
       <div class="grid-cols-2">
         <div class="card">
-          <h3 class="card-title">Tiến trình hội tụ hàm Fitness của Binary PSO (10 Vòng lặp)</h3>
+          <h3 class="card-title">Tiến trình hội tụ hàm Fitness của Binary PSO (12 Vòng lặp | 16 Hạt)</h3>
           <div id="pso-chart-container" style="min-height: 220px;"></div>
           <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; text-align: center;">
-            Hạt tối ưu tìm được tập 17 đặc trưng tại vòng 8 với Best Fitness = 0.3245 (loại bỏ 100% biến nhiễu).
+            Bầy đàn 16 hạt tìm được tập 17 đặc trưng tối ưu tại vòng 9 với Best Fitness = 0.2848 (tổng 208 lần đánh giá, loại bỏ 100% biến nhiễu).
           </p>
         </div>
 

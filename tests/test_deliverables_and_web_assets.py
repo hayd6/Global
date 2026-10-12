@@ -82,6 +82,29 @@ def test_web_metrics_json_integrity_matches_canonical_models():
         assert name in base_dict, f"Mô hình {name} không có trong baseline_metrics.csv"
         assert abs(b["pr_auc"] - base_dict[name]) < 1e-4, f"Lệch PR-AUC tại {name}: {b['pr_auc']} vs {base_dict[name]}"
 
+    # Kiểm tra danh sách 17 đặc trưng PSO trong metrics.json khớp 100% với pso_selected_features.csv
+    pso_feat_path = os.path.join(OUTPUTS_DIR, "feature_selection", "pso_selected_features.csv")
+    df_pso_feats = pd.read_csv(pso_feat_path)
+    canonical_pso_feats = df_pso_feats["feature_name"].tolist()
+    assert len(web_data["pso_selected_features"]) == 17
+    assert web_data["pso_selected_features"] == canonical_pso_feats, "Danh sách 17 đặc trưng PSO trong metrics.json không khớp pso_selected_features.csv"
+
+    # Kiểm tra tiến trình hội tụ PSO (13 điểm: vòng 0 đến 12, max_iter = 12)
+    pso_conv_path = os.path.join(OUTPUTS_DIR, "feature_selection", "pso_convergence.csv")
+    df_pso_conv = pd.read_csv(pso_conv_path)
+    assert len(web_data["pso_convergence"]) == len(df_pso_conv) == 13
+    assert web_data["pso_convergence"][-1]["iteration"] == 12
+    assert abs(web_data["pso_convergence"][-1]["best_fitness"] - 0.2848) < 1e-4
+
+    # Kiểm tra 5 thí nghiệm E1-E5 trong metrics.json khớp chính xác với metrics_comparison.csv
+    for exp in web_data["experiments_e1_e5"]:
+        m_name = exp["model_name"]
+        csv_row = df_metrics[df_metrics["model_name"] == m_name].iloc[0]
+        assert abs(exp["precision"] - float(csv_row["precision"])) < 1e-4, f"Lệch precision tại {m_name}"
+        assert abs(exp["recall"] - float(csv_row["recall"])) < 1e-4, f"Lệch recall tại {m_name}"
+        assert abs(exp["pr_auc"] - float(csv_row["pr_auc"])) < 1e-4, f"Lệch pr_auc tại {m_name}"
+        assert abs(exp["f1_score"] - float(csv_row["f1_score"])) < 1e-4, f"Lệch f1_score tại {m_name}"
+
 
 def test_research_reports_docx_and_md_exist_and_complete():
     """Kiểm tra báo cáo nghiên cứu hoàn chỉnh có cả bản Word .docx và Markdown .md."""

@@ -18,9 +18,21 @@
     "target_positives": 32489,
     "target_negatives": 127511
   },
+  "pso_config": {
+    "n_particles": 16,
+    "n_iterations": 12,
+    "inertia_w": 0.729,
+    "cognitive_c1": 1.494,
+    "social_c2": 1.494,
+    "alpha_pr_weight": 0.92,
+    "search_time_seconds": 11.79,
+    "n_evaluations": 208,
+    "selected_features_count": 17,
+    "sparsity_reduction_pct": 73.02
+  },
   "holdout_confusion_matrix": {
     "model": "XGBoost (Full Features)",
-    "threshold": 0.50,
+    "threshold": 0.5,
     "total_samples": 32000,
     "true_negatives": 15740,
     "false_positives": 9763,
@@ -41,20 +53,20 @@
       "algorithm": "Gradient Boosting",
       "feature_space": "Full (63)",
       "feature_count": 63,
-      "pr_auc": 0.2730,
+      "pr_auc": 0.273,
       "roc_auc": 0.6078,
       "f1_score": 0.3558,
-      "precision": 0.2574,
+      "precision": 0.2573,
       "recall": 0.5766,
       "accuracy": 0.5762,
       "fit_time": 17.04,
-      "search_time": 0.00,
+      "search_time": 0.0,
       "total_time": 17.04,
       "description": "Đường cơ sở chuẩn mực sử dụng toàn bộ 63 đặc trưng liên tục trích xuất từ dữ liệu đa bảng"
     },
     {
       "id": "E2",
-      "model_name": "Baseline (Statistical ANOVA)",
+      "model_name": "Baseline (Statistical Features)",
       "algorithm": "Gradient Boosting",
       "feature_space": "ANOVA (17)",
       "feature_count": 17,
@@ -62,7 +74,7 @@
       "roc_auc": 0.6105,
       "f1_score": 0.3557,
       "precision": 0.2566,
-      "recall": 0.5796,
+      "recall": 0.5797,
       "accuracy": 0.5737,
       "fit_time": 6.24,
       "search_time": 0.13,
@@ -79,9 +91,9 @@
       "roc_auc": 0.5894,
       "f1_score": 0.3411,
       "precision": 0.2535,
-      "recall": 0.5208,
+      "recall": 0.5209,
       "accuracy": 0.5914,
-      "fit_time": 4.50,
+      "fit_time": 4.5,
       "search_time": 11.79,
       "total_time": 16.29,
       "description": "Tối ưu hóa bầy đàn nhị phân BPSO chọn 17 biến tối ưu; giảm thời gian fit xuống 4.50s"
@@ -98,9 +110,9 @@
       "precision": 0.2594,
       "recall": 0.5262,
       "accuracy": 0.5987,
-      "fit_time": 4.40,
-      "search_time": 0.00,
-      "total_time": 4.40,
+      "fit_time": 4.4,
+      "search_time": 0.0,
+      "total_time": 4.4,
       "description": "Mô hình tăng cường gradient cây quyết định trên toàn bộ không gian 63 đặc trưng"
     },
     {
@@ -122,43 +134,187 @@
     }
   ],
   "baselines_7": [
-    {"name": "Gradient Boosting", "features": 180, "pr_auc": 0.2758, "roc_auc": 0.6097, "f1": 0.3575, "precision": 0.2570, "recall": 0.5873, "fit_time": 34.85},
-    {"name": "Random Forest", "features": 180, "pr_auc": 0.2700, "roc_auc": 0.6031, "f1": 0.3488, "precision": 0.2589, "recall": 0.5346, "fit_time": 29.80},
-    {"name": "Logistic Regression", "features": 180, "pr_auc": 0.2649, "roc_auc": 0.5989, "f1": 0.3473, "precision": 0.2529, "recall": 0.5541, "fit_time": 1.49},
-    {"name": "Decision Tree", "features": 180, "pr_auc": 0.2584, "roc_auc": 0.5851, "f1": 0.3446, "precision": 0.2468, "recall": 0.5710, "fit_time": 10.23},
-    {"name": "SGDClassifier (log_loss)", "features": 180, "pr_auc": 0.2456, "roc_auc": 0.5748, "f1": 0.3357, "precision": 0.2404, "recall": 0.5563, "fit_time": 6.66},
-    {"name": "Naive Bayes", "features": 180, "pr_auc": 0.2161, "roc_auc": 0.5177, "f1": 0.2825, "precision": 0.2171, "recall": 0.4040, "fit_time": 0.57},
-    {"name": "K-Nearest Neighbors", "features": 180, "pr_auc": 0.2102, "roc_auc": 0.5167, "f1": 0.0685, "precision": 0.2231, "recall": 0.0405, "fit_time": 17.10}
+    {
+      "name": "Logistic Regression",
+      "features": 180,
+      "pr_auc": 0.2649,
+      "roc_auc": 0.5989,
+      "f1": 0.3473,
+      "precision": 0.2529,
+      "recall": 0.5541,
+      "fit_time": 1.49
+    },
+    {
+      "name": "Naive Bayes",
+      "features": 180,
+      "pr_auc": 0.2161,
+      "roc_auc": 0.5177,
+      "f1": 0.2825,
+      "precision": 0.2171,
+      "recall": 0.404,
+      "fit_time": 0.57
+    },
+    {
+      "name": "Decision Tree",
+      "features": 180,
+      "pr_auc": 0.2584,
+      "roc_auc": 0.5851,
+      "f1": 0.3446,
+      "precision": 0.2468,
+      "recall": 0.571,
+      "fit_time": 10.23
+    },
+    {
+      "name": "Random Forest",
+      "features": 180,
+      "pr_auc": 0.27,
+      "roc_auc": 0.6031,
+      "f1": 0.3488,
+      "precision": 0.2589,
+      "recall": 0.5346,
+      "fit_time": 29.8
+    },
+    {
+      "name": "Gradient Boosting",
+      "features": 180,
+      "pr_auc": 0.2758,
+      "roc_auc": 0.6097,
+      "f1": 0.3575,
+      "precision": 0.257,
+      "recall": 0.5873,
+      "fit_time": 34.85
+    },
+    {
+      "name": "K-Nearest Neighbors",
+      "features": 180,
+      "pr_auc": 0.2102,
+      "roc_auc": 0.5167,
+      "f1": 0.0685,
+      "precision": 0.2231,
+      "recall": 0.0405,
+      "fit_time": 17.1
+    },
+    {
+      "name": "SGDClassifier (log_loss)",
+      "features": 180,
+      "pr_auc": 0.2456,
+      "roc_auc": 0.5748,
+      "f1": 0.3357,
+      "precision": 0.2404,
+      "recall": 0.5563,
+      "fit_time": 6.66
+    }
   ],
   "pso_convergence": [
-    {"iteration": 1, "best_fitness": 0.2512, "avg_fitness": 0.2105, "feature_count": 38},
-    {"iteration": 2, "best_fitness": 0.2689, "avg_fitness": 0.2314, "feature_count": 31},
-    {"iteration": 3, "best_fitness": 0.2845, "avg_fitness": 0.2510, "feature_count": 26},
-    {"iteration": 4, "best_fitness": 0.2991, "avg_fitness": 0.2688, "feature_count": 22},
-    {"iteration": 5, "best_fitness": 0.3084, "avg_fitness": 0.2812, "feature_count": 19},
-    {"iteration": 6, "best_fitness": 0.3150, "avg_fitness": 0.2905, "feature_count": 18},
-    {"iteration": 7, "best_fitness": 0.3212, "avg_fitness": 0.2990, "feature_count": 17},
-    {"iteration": 8, "best_fitness": 0.3245, "avg_fitness": 0.3042, "feature_count": 17},
-    {"iteration": 9, "best_fitness": 0.3245, "avg_fitness": 0.3081, "feature_count": 17},
-    {"iteration": 10, "best_fitness": 0.3245, "avg_fitness": 0.3110, "feature_count": 17}
+    {
+      "iteration": 0,
+      "best_fitness": 0.2785,
+      "avg_fitness": 0.2664,
+      "feature_count": 22,
+      "elapsed_seconds": 1.07
+    },
+    {
+      "iteration": 1,
+      "best_fitness": 0.2785,
+      "avg_fitness": 0.2707,
+      "feature_count": 22,
+      "elapsed_seconds": 1.9
+    },
+    {
+      "iteration": 2,
+      "best_fitness": 0.2785,
+      "avg_fitness": 0.2719,
+      "feature_count": 22,
+      "elapsed_seconds": 2.73
+    },
+    {
+      "iteration": 3,
+      "best_fitness": 0.2785,
+      "avg_fitness": 0.2727,
+      "feature_count": 22,
+      "elapsed_seconds": 3.57
+    },
+    {
+      "iteration": 4,
+      "best_fitness": 0.281,
+      "avg_fitness": 0.2744,
+      "feature_count": 20,
+      "elapsed_seconds": 4.42
+    },
+    {
+      "iteration": 5,
+      "best_fitness": 0.281,
+      "avg_fitness": 0.2755,
+      "feature_count": 20,
+      "elapsed_seconds": 5.27
+    },
+    {
+      "iteration": 6,
+      "best_fitness": 0.2835,
+      "avg_fitness": 0.2773,
+      "feature_count": 18,
+      "elapsed_seconds": 6.11
+    },
+    {
+      "iteration": 7,
+      "best_fitness": 0.2835,
+      "avg_fitness": 0.2779,
+      "feature_count": 18,
+      "elapsed_seconds": 7.02
+    },
+    {
+      "iteration": 8,
+      "best_fitness": 0.2835,
+      "avg_fitness": 0.278,
+      "feature_count": 18,
+      "elapsed_seconds": 7.91
+    },
+    {
+      "iteration": 9,
+      "best_fitness": 0.2848,
+      "avg_fitness": 0.2789,
+      "feature_count": 17,
+      "elapsed_seconds": 8.87
+    },
+    {
+      "iteration": 10,
+      "best_fitness": 0.2848,
+      "avg_fitness": 0.2792,
+      "feature_count": 17,
+      "elapsed_seconds": 9.98
+    },
+    {
+      "iteration": 11,
+      "best_fitness": 0.2848,
+      "avg_fitness": 0.2801,
+      "feature_count": 17,
+      "elapsed_seconds": 10.92
+    },
+    {
+      "iteration": 12,
+      "best_fitness": 0.2848,
+      "avg_fitness": 0.2806,
+      "feature_count": 17,
+      "elapsed_seconds": 11.79
+    }
   ],
   "pso_selected_features": [
-    "discount_per_dollar",
-    "avg_cart_additions_per_session",
-    "total_cart_additions",
-    "cart_to_page_ratio",
-    "total_spend",
-    "recency_days",
-    "transaction_count",
-    "loyalty_score",
-    "avg_session_duration_sec",
-    "bounce_rate",
-    "total_sessions",
-    "total_pages_viewed",
+    "age",
     "credit_limit",
-    "avg_regional_income",
-    "campaign_click_rate",
-    "desktop_session_ratio",
-    "account_age_days"
+    "account_age_days",
+    "sess_count",
+    "total_session_duration",
+    "pct_ads_sessions",
+    "pct_desktop_sessions",
+    "days_since_last_session",
+    "has_transactions",
+    "trans_count",
+    "total_spend",
+    "avg_items_per_order",
+    "pct_credit_card",
+    "pct_overnight_shipping",
+    "cart_to_page_ratio",
+    "spend_per_session",
+    "loyalty_spend_product"
   ]
 }
