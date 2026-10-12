@@ -163,12 +163,12 @@ Sau khi hoàn thành pipeline, chạy toàn bộ bộ kiểm thử tích hợp:
 pytest -v
 ```
 **Tiêu chuẩn chấp nhận (Acceptance Criteria)**:
-- Toàn bộ **33/33 tests** phải đạt trạng thái `PASSED`.
+- Toàn bộ **34/34 tests** phải đạt trạng thái `PASSED`.
 - Thời gian thực thi toàn bộ test suite: dưới 15 giây.
 - Bao gồm:
   - 4 bài kiểm thử dữ liệu thô (`test_data_audit.py`).
   - 4 bài kiểm thử liên kết quan hệ và khóa ngoại (`test_relational_integrity.py`).
   - 2 bài kiểm thử làm sạch và tích hợp (`test_cleaning_integration.py`).
   - 2 bài kiểm thử đặc trưng và từ điển (`test_feature_engineering.py`).
-  - 7 bài kiểm thử artifact Holdout 32k (`test_holdout_predictions_artifact.py`).
-  - 10 bài kiểm thử mô hình và thuật toán PSO (`test_models_and_pso.py`, `test_edge_cases_and_fixtures.py`).
+  - 8 bài kiểm thử artifact Holdout 32k (`test_holdout_predictions_artifact.py`).
+  - 14 bài kiểm thử mô hình và thuật toán PSO (`test_models_and_pso.py`, `test_edge_cases_and_fixtures.py`).

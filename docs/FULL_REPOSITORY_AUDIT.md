@@ -73,7 +73,7 @@
 ### 3.1. Giai đoạn A — Kiểm kê toàn bộ Repository
 - **Mã nguồn**: 13 tệp Python chính thức trong `src/` (chia thành `data/`, `features/`, `models/`, `analysis/`, `export/`, `evaluation/`). Không có dead code; các tệp đều liên kết chặt chẽ qua `src/config.py`.
 - **Cấu hình**: `configs/split_metadata.json`, `configs/pso_experiment_config.json`.
-- **Kiểm thử**: Đã nâng cấp từ 25 bài test lên **33 bài test tự động** trong `tests/`, chia thành chế độ test nhanh (`@pytest.mark.fast`) và test tích hợp đầy đủ.
+- **Kiểm thử**: Đã nâng cấp từ 25 bài test lên **34 bài test tự động** trong `tests/`, chia thành chế độ test nhanh (`@pytest.mark.fast`) và test tích hợp đầy đủ.
 
 ### 3.2. Giai đoạn B — Kiểm toán dữ liệu gốc
 - **Phát hiện**:
@@ -96,16 +96,17 @@
 - **Phát hiện & Khắc phục quan trọng**:
   1. *Đồng nhất hóa tiền xử lý PSO*: Trước đây PSO sử dụng `.fillna(0).values` trong khi pipeline chính sử dụng `SimpleImputer(strategy="median")`. Đã sửa trực tiếp `src/models/pso_optimizer.py` để sử dụng `SimpleImputer(strategy="median")` + `StandardScaler()` fit độc quyền trên `sub_tr` của Train pool, đảm bảo tính nhất quán khoa học tuyệt đối.
   2. *Chính xác hóa tên mô hình*: Docstring của `src/models/baselines.py` và sơ đồ kiến trúc trước đây gọi mô hình thứ 7 là "SVM", trong khi code sử dụng `SGDClassifier(loss="log_loss")`. Đã chuẩn hóa lại toàn bộ tài liệu thành `SGDClassifier (log-loss)` hoặc `SGDClassifier (Logistic Regression via SGD)`.
-  3. *Tách biệt chi phí tìm kiếm*: Báo cáo minh bạch thời gian tìm kiếm của PSO (11,79 giây) tách biệt với thời gian huấn luyện mô hình (0,81 giây).
-  4. *Trung thực về kết quả PSO*: Khẳng định rõ ràng rằng PSO không vượt qua ANOVA F-test về PR-AUC, nhưng mang lại ưu thế vượt trội về độ tinh giản (giảm 73% số chiều) và tăng tốc độ huấn luyện downstream 2,4 lần.
+  3. *Tách biệt chi phí tìm kiếm*: Báo cáo minh bạch thời gian tìm kiếm của PSO (11,79 giây) tách biệt với thời gian huấn luyện mô hình (XGBoost PSO fit time: 2,07 giây).
+  4. *Trung thực về kết quả PSO*: Khẳng định rõ ràng rằng PSO không vượt qua ANOVA F-test về PR-AUC, nhưng mang lại ưu thế vượt trội về độ tinh giản (giảm 73% số chiều) và tăng tốc độ huấn luyện downstream 2,1 lần (XGBoost fit time từ 4,40s xuống 2,07s).
   5. *Đối chiếu từng dòng Holdout*: 32.000 dự đoán trong `outputs/holdout_predictions.csv` khớp 100% với nhãn gốc, đúng thứ tự dòng và chỉ số phân vùng.
 
 ### 3.6. Giai đoạn F — Kiểm toán Kiểm thử & Tái lập
-- Đã bổ sung 2 tệp test mới:
+- Đã bổ sung các tệp test mới:
   - `tests/test_edge_cases_and_fixtures.py`: Kiểm thử nhanh các trường hợp biên, chia cho 0, cô lập tiền xử lý.
   - `tests/test_relational_integrity.py`: Kiểm thử toàn vẹn khóa ngoại và không bùng nổ dòng khi join.
+  - Mở rộng `tests/test_holdout_predictions_artifact.py` (8 tests) xác minh đối chiếu toàn diện độ đo và ma trận nhầm lẫn.
 - Tạo tệp `pytest.ini` đăng ký các marker `fast`, `dataset`, `slow`.
-- Toàn bộ **33/33 tests** chạy thành công trong 13,09 giây.
+- Toàn bộ **34/34 tests** chạy thành công trong 13,50 giây.
 
 ### 3.7. Giai đoạn G — Kiểm toán Tài liệu & Thư mục tham khảo
 - Đồng bộ hóa các tài liệu: `docs/ARCHITECTURE.md`, `docs/PROGRESS.md`, `docs/IMPLEMENTATION_PLAN.md`.

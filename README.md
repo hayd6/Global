@@ -87,7 +87,7 @@ Dự án phát triển một hệ thống Big Data và Machine Learning hoàn ch
 │   ├── export/                 # Xuất dữ liệu phục vụ Power BI / Web
 │   │   └── export_outputs.py
 │   └── pipeline.py             # Pipeline tự động hóa từ đầu đến cuối
-├── tests/                      # Bộ kiểm thử tự động pytest (33/33 PASSED)
+├── tests/                      # Bộ kiểm thử tự động pytest (34/34 PASSED)
 ├── outputs/                    # Kết quả thực nghiệm và dữ liệu phái sinh
 │   ├── data_quality_report.csv
 │   ├── referential_integrity_report.csv
@@ -159,7 +159,7 @@ python src/pipeline.py
   # Chế độ kiểm thử nhanh với fixture (không cần dataset):
   pytest -m fast
 
-  # Chế độ kiểm thử toàn diện toàn bộ 33 bài test:
+  # Chế độ kiểm thử toàn diện toàn bộ 34 bài test:
   pytest -v
   ```
 

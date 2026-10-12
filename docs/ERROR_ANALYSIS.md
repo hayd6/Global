@@ -32,7 +32,7 @@
      - **Thực nghiệm xác thực:** Đã kiểm tra đối chiếu trực tiếp trên từng khách hàng ngẫu nhiên và mẫu 5 khách hàng đầu tiên: `[195766, 180698, 122619, 58792, 47593]`. Mọi giá trị đặc trưng, nhãn $y$, xác suất $\hat{p}$ và nhãn dự đoán $\hat{y}$ được kiểm chứng là thuộc về **cùng một cá thể khách hàng duy nhất**, loại trừ hoàn toàn nguy cơ lệch hàng (index misalignment).
 3. **Artifact Dự đoán Holdout Độc lập & Tái lập Pipeline:**
    - **Tạo lập artifact độc lập:** Nhằm nâng cao năng lực tái lập mà không can thiệp hay thay đổi các kết quả thực nghiệm gốc, đề tài đã bổ sung tệp dữ liệu dự đoán riêng biệt cho tập Holdout: [outputs/holdout_predictions.csv](file:///d:/HuyD/Đại Học/BigData/Global/outputs/holdout_predictions.csv) (32,000 dòng gồm `customer_id`, `y_true`, `y_proba`, `y_pred`, `error_group`) và tệp siêu dữ liệu đi kèm [outputs/holdout_prediction_metadata.json](file:///d:/HuyD/Đại Học/BigData/Global/outputs/holdout_prediction_metadata.json).
-   - **Kiểm định tự động chuyên sâu (7 bài test):** Được kiểm chứng tự động toàn diện qua bộ test [tests/test_holdout_predictions_artifact.py](file:///d:/HuyD/Đại Học/BigData/Global/tests/test_holdout_predictions_artifact.py) (7/7 test cases đạt 100%):
+   - **Kiểm định tự động chuyên sâu (8 bài test):** Được kiểm chứng tự động toàn diện qua bộ test [tests/test_holdout_predictions_artifact.py](file:///d:/HuyD/Đại Học/BigData/Global/tests/test_holdout_predictions_artifact.py) (8/8 test cases đạt 100%):
      1. `test_holdout_csv_structure_and_row_count`: Đúng 32,000 dòng, không null, không trùng `customer_id`, đủ 5 cột bắt buộc.
      2. `test_holdout_values_range_and_validity`: `y_true` và `y_pred` strictly thuộc $\{0, 1\}$; `y_proba` hữu hạn, không NaN, nằm trong $[0, 1]$.
      3. `test_holdout_error_group_row_by_row_consistency`: 100% các dòng có `error_group` khớp với `y_true` và `y_pred` theo quy tắc TP/TN/FP/FN.
@@ -40,6 +40,7 @@
      5. `test_holdout_customer_id_sha256_computation_and_comparison`: Tự tính toán mã băm SHA-256 từ mảng bytes `int64` của 32,000 khách hàng trong artifact và đối chiếu độc lập với danh sách Holdout gốc (`008236ea0d8461b4d5f58b34e973766d4a696a20c97b8d28a4b9d025c99a5da2`).
      6. `test_holdout_confusion_matrix_matches_metrics_comparison_filtered_row`: Đọc `metrics_comparison.csv`, lọc động theo điều kiện `model_name == 'XGBoost (Full Features)'` & `split_id` & `evaluation_set` & `feature_space` (không dựa vào chỉ số dòng tĩnh), đối chiếu khớp 100% các số đếm TN=15,740, FP=9,763, FN=3,078, TP=3,419.
      7. `test_holdout_scale_pos_weight_exact_derivation_from_train_split`: Đếm trực tiếp nhãn âm (102,011) và nhãn dương (25,989) từ 128,000 dòng tập Train thực tế và đối chiếu tỷ lệ runtime $3.925160644888222$.
+     8. `test_holdout_artifact_metrics_and_model_config_integrity`: Kiểm tra quan hệ toàn vẹn giữa artifact dự đoán, cấu hình mô hình (tập đặc trưng 63 biến, tiền xử lý, split ID `stratified_80_20_v1`) và các chỉ số đo lường thực tế khớp tuyệt đối.
    - **Khớp nối ma trận nhầm lẫn:** 4 số đếm tính trực tiếp từ cột `y_true` và `y_pred` của tệp artifact này đạt chính xác: $\text{TN} = 15,740$, $\text{FP} = 9,763$, $\text{FN} = 3,078$, $\text{TP} = 3,419$, khớp 100% với `metrics_comparison.csv`.
 
 ### 1.2. Đối chiếu tham số mô hình và tiền xử lý

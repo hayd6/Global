@@ -10,6 +10,14 @@ import duckdb
 import numpy as np
 import pandas as pd
 import pytest
+from sklearn.metrics import (
+    average_precision_score,
+    roc_auc_score,
+    f1_score,
+    precision_score,
+    recall_score,
+    accuracy_score,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 OUTPUTS_DIR = PROJECT_ROOT / "outputs"
@@ -234,3 +242,60 @@ def test_holdout_scale_pos_weight_exact_derivation_from_train_split():
     assert abs(meta_spw["exact_value"] - expected_spw) < 1e-12, (
         f"scale_pos_weight mismatch: {meta_spw['exact_value']} vs {expected_spw}"
     )
+
+
+def test_holdout_artifact_metrics_and_model_config_integrity():
+    """Item A.8: Verify full metrics derivation from holdout_predictions.csv matches metrics_comparison.csv and metadata."""
+    pred_path = OUTPUTS_DIR / "holdout_predictions.csv"
+    meta_path = OUTPUTS_DIR / "holdout_prediction_metadata.json"
+    comp_path = OUTPUTS_DIR / "metrics" / "metrics_comparison.csv"
+
+    assert pred_path.exists(), "holdout_predictions.csv missing!"
+    assert meta_path.exists(), "holdout_prediction_metadata.json missing!"
+    assert comp_path.exists(), "metrics_comparison.csv missing!"
+
+    df_preds = pd.read_csv(pred_path)
+    with open(meta_path, "r", encoding="utf-8") as f:
+        meta = json.load(f)
+    df_comp = pd.read_csv(comp_path)
+
+    # 1. Verify model name & split in metadata matches metrics_comparison
+    model_name = meta["model_name"]
+    matching_row = df_comp[
+        (df_comp["model_name"] == model_name)
+        & (df_comp["split_id"] == meta["split_id"])
+        & (df_comp["evaluation_set"] == meta["evaluation_set"])
+    ]
+    assert len(matching_row) == 1, f"Expected 1 matching row for {model_name}, found {len(matching_row)}"
+    target = matching_row.iloc[0]
+
+    # 2. Derive all metrics directly from y_true, y_pred, y_proba
+    y_true = df_preds["y_true"].values
+    y_pred = df_preds["y_pred"].values
+    y_proba = df_preds["y_proba"].values
+
+    derived_pr_auc = round(float(average_precision_score(y_true, y_proba)), 4)
+    derived_roc_auc = round(float(roc_auc_score(y_true, y_proba)), 4)
+    derived_f1 = round(float(f1_score(y_true, y_pred)), 4)
+    derived_prec = round(float(precision_score(y_true, y_pred)), 4)
+    derived_rec = round(float(recall_score(y_true, y_pred)), 4)
+    derived_acc = round(float(accuracy_score(y_true, y_pred)), 4)
+
+    # 3. Assert exact matches against metrics_comparison.csv
+    assert derived_pr_auc == round(float(target["pr_auc"]), 4), f"PR-AUC: {derived_pr_auc} != {target['pr_auc']}"
+    assert derived_roc_auc == round(float(target["roc_auc"]), 4), f"ROC-AUC: {derived_roc_auc} != {target['roc_auc']}"
+    assert derived_f1 == round(float(target["f1_score"]), 4), f"F1: {derived_f1} != {target['f1_score']}"
+    assert derived_prec == round(float(target["precision"]), 4), f"Precision: {derived_prec} != {target['precision']}"
+    assert derived_rec == round(float(target["recall"]), 4), f"Recall: {derived_rec} != {target['recall']}"
+    assert derived_acc == round(float(target["accuracy"]), 4), f"Accuracy: {derived_acc} != {target['accuracy']}"
+
+    # 4. Verify confusion matrix matches
+    tn = int(np.sum((y_true == 0) & (y_pred == 0)))
+    fp = int(np.sum((y_true == 0) & (y_pred == 1)))
+    fn = int(np.sum((y_true == 1) & (y_pred == 0)))
+    tp = int(np.sum((y_true == 1) & (y_pred == 1)))
+
+    assert tn == int(target["true_negatives"]) == 15740
+    assert fp == int(target["false_positives"]) == 9763
+    assert fn == int(target["false_negatives"]) == 3078
+    assert tp == int(target["true_positives"]) == 3419

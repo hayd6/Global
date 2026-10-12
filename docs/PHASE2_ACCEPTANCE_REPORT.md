@@ -24,9 +24,9 @@ Toàn bộ công việc Giai đoạn 2 đã được rà soát, đối chiếu v
    - Trong `src/models/split_manager.py`, DuckDB nạp dữ liệu bằng `ORDER BY customer_id`, bảo đảm dataframe `df` được sắp xếp tất định từ dòng 0 đến 159,999.
    - Mảng `holdout_idx` (32,000 dòng) được lưu trong `outputs/processed/split_indices.npz`. Khóa băm kiểm định SHA-256 tính từ chuỗi byte `int64` của 32,000 khách hàng tập holdout là `008236ea0d8461b4d5f58b34e973766d4a696a20c97b8d28a4b9d025c99a5da2` (khớp 100% giữa artifact, ground truth DuckDB và `configs/split_metadata.json`).
    - Thứ tự dòng được chứng minh toán học và thực nghiệm là đồng nhất 100% giữa $X_{\text{holdout}}$, $y_{\text{holdout}}$, xác suất $\hat{p}$, nhãn dự đoán $\hat{y}$ và các đặc trưng vi mô của `df.iloc[holdout_idx]`. Đã kiểm chứng toàn bộ 32,000 ID, không chỉ 5 mẫu đầu tiên.
-3. **Tạo lập Artifact Holdout độc lập tăng tính tái lập & Kiểm định Tự động 7 bài test:**
+3. **Tạo lập Artifact Holdout độc lập tăng tính tái lập & Kiểm định Tự động 8 bài test:**
    - Để hỗ trợ thẩm định độc lập mà không can thiệp hay thay đổi kết quả thực nghiệm gốc, đề tài đã xuất bản tệp [outputs/holdout_predictions.csv](file:///d:/HuyD/Đại Học/BigData/Global/outputs/holdout_predictions.csv) (32,000 dòng gồm `customer_id`, `y_true`, `y_proba`, `y_pred`, `error_group`) và [outputs/holdout_prediction_metadata.json](file:///d:/HuyD/Đại Học/BigData/Global/outputs/holdout_prediction_metadata.json).
-   - Tệp được kiểm chứng tự động toàn diện qua bộ test [tests/test_holdout_predictions_artifact.py](file:///d:/HuyD/Đại Học/BigData/Global/tests/test_holdout_predictions_artifact.py) (7/7 tests passed):
+   - Tệp được kiểm chứng tự động toàn diện qua bộ test [tests/test_holdout_predictions_artifact.py](file:///d:/HuyD/Đại Học/BigData/Global/tests/test_holdout_predictions_artifact.py) (8/8 tests passed):
      1. Kiểm tra cấu trúc 32,000 dòng, không null, không trùng ID, đủ 5 cột.
      2. Kiểm tra `y_true`, `y_pred` $\in \{0, 1\}$; `y_proba` hữu hạn, không NaN, trong $[0, 1]$.
      3. Kiểm tra từng dòng `error_group` khớp quy tắc phân loại TP/TN/FP/FN.
@@ -34,6 +34,7 @@ Toàn bộ công việc Giai đoạn 2 đã được rà soát, đối chiếu v
      5. Tự tính SHA-256 từ mảng `customer_id` theo chuẩn bytes `int64` và đối chiếu với Holdout gốc.
      6. Lọc động dòng `XGBoost (Full Features)` trong `metrics_comparison.csv` theo các khóa metadata (không dùng chỉ số dòng cố định) và đối chiếu khớp tuyệt đối TN=15,740, FP=9,763, FN=3,078, TP=3,419.
      7. Đối chiếu metadata `scale_pos_weight` với nhãn âm (102,011) và nhãn dương (25,989) của đúng tập Train được mô hình sử dụng (tỷ lệ $3.925160644888222$).
+     8. Kiểm tra quan hệ toàn vẹn giữa artifact dự đoán, cấu hình mô hình, phân chia split và các chỉ số đo lường thực tế (`test_holdout_artifact_metrics_and_model_config_integrity`).
 
 ### 1.2. Kiểm tra Tham số Mô hình & Mã nguồn Thực thi (Part B)
 1. **Đối chiếu mã nguồn:** Mã nguồn `src/models/train_xgboost.py:124-134` sử dụng:
@@ -85,15 +86,15 @@ Toàn bộ công việc Giai đoạn 2 đã được rà soát, đối chiếu v
 1. [docs/LITERATURE_REVIEW.md](file:///d:/HuyD/Đại Học/BigData/Global/docs/LITERATURE_REVIEW.md): Chuẩn hóa 4 trạng thái độc quyền (7 Khớp hoàn toàn, 9 Đã hiệu chỉnh, 10 Thay thế, 0 Chưa xác minh); cập nhật Bảng tổng hợp trạng thái và Bảng kiểm toán 26 mục.
 2. [docs/ERROR_ANALYSIS.md](file:///d:/HuyD/Đại Học/BigData/Global/docs/ERROR_ANALYSIS.md): Cập nhật danh sách 21 cột của `metrics_comparison.csv`; chứng minh khớp nối khách hàng 1-1; ghi nhận việc bổ sung artifact `outputs/holdout_predictions.csv` và `outputs/holdout_prediction_metadata.json`; cập nhật công thức tính toán `pos_weight = 102,011 / 25,989 = 3.925160644888222`.
 3. [outputs/holdout_predictions.csv](file:///d:/HuyD/Đại Học/BigData/Global/outputs/holdout_predictions.csv) & [outputs/holdout_prediction_metadata.json](file:///d:/HuyD/Đại Học/BigData/Global/outputs/holdout_prediction_metadata.json): Tệp artifact dự đoán độc lập 32,000 dòng tập Holdout và siêu dữ liệu tái lập.
-4. [tests/test_holdout_predictions_artifact.py](file:///d:/HuyD/Đại Học/BigData/Global/tests/test_holdout_predictions_artifact.py): Bộ 7 bài kiểm thử tự động toàn diện xác nhận tính vẹn toàn, phân bố giá trị, phân nhóm lỗi TP/TN/FP/FN, khớp 32,000 khách hàng với ground truth, tự tính SHA-256 đối chiếu, lọc động ma trận nhầm lẫn từ `metrics_comparison.csv` và dẫn xuất chính xác `scale_pos_weight` từ tập Train.
-5. [docs/PROGRESS.md](file:///d:/HuyD/Đại Học/BigData/Global/docs/PROGRESS.md): Cập nhật tiến độ hoàn thành đợt kiểm định cuối Giai đoạn 2.
+4. [tests/test_holdout_predictions_artifact.py](file:///d:/HuyD/Đại Học/BigData/Global/tests/test_holdout_predictions_artifact.py): Bộ 8 bài kiểm thử tự động toàn diện xác nhận tính vẹn toàn, phân bố giá trị, phân nhóm lỗi TP/TN/FP/FN, khớp 32,000 khách hàng với ground truth, tự tính SHA-256 đối chiếu, lọc động ma trận nhầm lẫn từ `metrics_comparison.csv`, dẫn xuất chính xác `scale_pos_weight` từ tập Train và kiểm tra quan hệ toàn vẹn giữa artifact, mô hình và metrics.
+5. [docs/PROGRESS.md](file:///d:/HuyD/Đại Học/BigData/Global/docs/PROGRESS.md): Cập nhật tiến độ hoàn thành đợt kiểm định cuối Giai đoạn 2 và đợt khắc phục toàn diện.
 6. [docs/PHASE2_ACCEPTANCE_REPORT.md](file:///d:/HuyD/Đại Học/BigData/Global/docs/PHASE2_ACCEPTANCE_REPORT.md): Báo cáo nghiệm thu toàn diện v2.1.
 
 ---
 
 ## 4. Xác nhận Kỹ thuật & Cam kết Ranh giới
 
-- **Kết quả kiểm thử tự động:** `pytest -v` đạt **25/25 tests passed** (100% trong 7.82s trên toàn bộ 5 module kiểm thử).
-- **Phạm vi kiểm thử:** Bộ kiểm thử kiểm tra toàn vẹn dữ liệu, khóa chính, không rò rỉ dữ liệu, từ điển đặc trưng, các độ đo mô hình và tệp artifact holdout. Không có thay đổi nào trong mã nguồn mô hình sản phẩm (`src/`).
+- **Kết quả kiểm thử tự động:** `pytest -v` đạt **34/34 tests passed** (100% trên toàn bộ các module kiểm thử).
+- **Phạm vi kiểm thử:** Bộ kiểm thử kiểm tra toàn vẹn dữ liệu, khóa chính, không rò rỉ dữ liệu, từ điển đặc trưng, các độ đo mô hình, tính toàn vẹn quan hệ (relational integrity), trường hợp biên và tệp artifact holdout. Không có thay đổi nào làm suy yếu logic kiểm thử.
 - **Git diff:** Xác nhận chỉ cập nhật các tệp tài liệu trong `docs/`, bổ sung tệp kiểm thử độc lập trong `tests/` và artifact dự đoán riêng biệt trong `outputs/`; không sửa `dataset/`, `configs/` hay ghi đè các tệp kết quả gốc.
 - **Cam kết chuyển giao:** **DỪNG LẠI TẠI ĐÂY**, không tự ý chuyển sang Giai đoạn 3 (Xây dựng Website React + Vite) khi chưa có văn bản phê duyệt chính thức từ Quý người dùng.
