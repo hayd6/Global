@@ -55,13 +55,17 @@ Dự án phát triển một hệ thống Big Data và Machine Learning hoàn ch
 │   ├── test.csv
 │   ├── train.csv
 │   └── transactions.csv
-├── docs/                       # Tài liệu nghiên cứu chi tiết
+├── docs/                       # Tài liệu nghiên cứu và báo cáo kiểm toán chi tiết
+│   ├── FULL_REPOSITORY_AUDIT.md# Báo cáo kiểm toán toàn diện repository
+│   ├── DATA_QUALITY_REPORT.md  # Báo cáo kiểm toán chất lượng dữ liệu nguồn
+│   ├── FEATURE_AUDIT.md        # Báo cáo kiểm toán 72 đặc trưng & rò rỉ dữ liệu
+│   ├── ML_VALIDATION_REPORT.md # Báo cáo thẩm định mô hình ML & Holdout 32k
+│   ├── REPRODUCIBILITY.md      # Hướng dẫn tái lập dự án từ clean clone
+│   ├── FINAL_REMEDIATION_REPORT.md # Tổng kết đợt khắc phục lỗi One-Pass
 │   ├── ARCHITECTURE.md         # Sơ đồ kiến trúc Mermaid & luồng xử lý
-│   ├── DATA_DICTIONARY.md      # Từ điển dữ liệu thực tế
 │   ├── DECISIONS.md            # Sổ tay quyết định kỹ thuật (ADR)
 │   ├── EXPERIMENT_PLAN.md      # Thiết kế và kết quả thực nghiệm
-│   ├── PROGRESS.md             # Bảng theo dõi tiến độ 10 giai đoạn
-│   └── REPRODUCIBILITY.md      # Hướng dẫn tái lập kết quả
+│   └── PROGRESS.md             # Bảng theo dõi tiến độ các giai đoạn
 ├── configs/                    # File cấu hình tham số thực nghiệm JSON
 ├── src/                        # Mã nguồn dự án chuẩn module hóa
 │   ├── config.py               # Thiết lập đường dẫn, logging và constants
@@ -83,7 +87,7 @@ Dự án phát triển một hệ thống Big Data và Machine Learning hoàn ch
 │   ├── export/                 # Xuất dữ liệu phục vụ Power BI / Web
 │   │   └── export_outputs.py
 │   └── pipeline.py             # Pipeline tự động hóa từ đầu đến cuối
-├── tests/                      # Bộ kiểm thử tự động pytest (11/11 PASSED)
+├── tests/                      # Bộ kiểm thử tự động pytest (33/33 PASSED)
 ├── outputs/                    # Kết quả thực nghiệm và dữ liệu phái sinh
 │   ├── data_quality_report.csv
 │   ├── referential_integrity_report.csv
@@ -152,6 +156,10 @@ python src/pipeline.py
   ```
 - **Giai đoạn 10 — Chạy kiểm thử tự động pytest**:
   ```bash
+  # Chế độ kiểm thử nhanh với fixture (không cần dataset):
+  pytest -m fast
+
+  # Chế độ kiểm thử toàn diện toàn bộ 33 bài test:
   pytest -v
   ```
 

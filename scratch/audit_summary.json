@@ -1,0 +1,579 @@
+{
+  "csv_audit": {
+    "customers": {
+      "path": "D:\\HuyD\\\u0110\u1ea1i H\u1ecdc\\BigData\\Global\\dataset\\customers.csv",
+      "size_mb": 42.08,
+      "row_count": 200000,
+      "col_count": 17,
+      "exact_duplicates": 0,
+      "columns": {
+        "customer_id": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 200000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "age": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 58,
+          "empty_str_count": 0,
+          "placeholder_count": 10000
+        },
+        "country_code": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 10,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "region": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 100,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "signup_date": {
+          "type": "DATE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 1000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "loyalty_score": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 891,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "email_open_rate": {
+          "type": "DOUBLE",
+          "null_count": 22746,
+          "null_pct": 11.373,
+          "distinct_count": 177254,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "discount_usage_rate": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 200000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "avg_review_score": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 200000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "referral_code": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 179259,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "customer_tier": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 4,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "credit_limit": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 18999,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "noise_customer_0": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 200000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "noise_customer_1": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 200000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "noise_customer_2": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 200000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "noise_customer_3": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 200000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "noise_customer_4": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 200000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        }
+      }
+    },
+    "geo_data": {
+      "path": "D:\\HuyD\\\u0110\u1ea1i H\u1ecdc\\BigData\\Global\\dataset\\geo_data.csv",
+      "size_mb": 0.01,
+      "row_count": 100,
+      "col_count": 5,
+      "exact_duplicates": 0,
+      "columns": {
+        "geo_ip_region": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 100,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "average_income": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 100,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "urban_ratio": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 100,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "internet_penetration": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 100,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "region_tier": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 3,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        }
+      }
+    },
+    "marketing_campaigns": {
+      "path": "D:\\HuyD\\\u0110\u1ea1i H\u1ecdc\\BigData\\Global\\dataset\\marketing_campaigns.csv",
+      "size_mb": 0.01,
+      "row_count": 200,
+      "col_count": 6,
+      "exact_duplicates": 0,
+      "columns": {
+        "campaign_id": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 200,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "campaign_type": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 5,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "campaign_budget": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 200,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "region_target": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 85,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "start_date": {
+          "type": "DATE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 158,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "end_date": {
+          "type": "DATE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 159,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        }
+      }
+    },
+    "sessions": {
+      "path": "D:\\HuyD\\\u0110\u1ea1i H\u1ecdc\\BigData\\Global\\dataset\\sessions.csv",
+      "size_mb": 148.78,
+      "row_count": 2000000,
+      "col_count": 11,
+      "exact_duplicates": 0,
+      "columns": {
+        "session_id": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 2000000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "customer_id": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 199990,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "session_timestamp": {
+          "type": "DATE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 1000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "session_duration": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 2000000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "pages_viewed": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 23,
+          "empty_str_count": 0,
+          "placeholder_count": 100000
+        },
+        "cart_additions": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 14,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "bounce_flag": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 6,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "traffic_source": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 6,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "device_type": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 5,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "campaign_id": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 200,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "geo_ip_region": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 100,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        }
+      }
+    },
+    "transactions": {
+      "path": "D:\\HuyD\\\u0110\u1ea1i H\u1ecdc\\BigData\\Global\\dataset\\transactions.csv",
+      "size_mb": 46.71,
+      "row_count": 500000,
+      "col_count": 11,
+      "exact_duplicates": 0,
+      "columns": {
+        "transaction_id": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 500000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "customer_id": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 183541,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "transaction_timestamp": {
+          "type": "DATE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 1000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "order_value": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 51662,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "items_count": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 15,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "payment_method": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 4,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "discount_applied": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 6,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "shipping_speed": {
+          "type": "VARCHAR",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 3,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "high_value_flag": {
+          "type": "BOOLEAN",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 2,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "noise_trans_0": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 500000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "noise_trans_1": {
+          "type": "DOUBLE",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 500000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        }
+      }
+    },
+    "train": {
+      "path": "D:\\HuyD\\\u0110\u1ea1i H\u1ecdc\\BigData\\Global\\dataset\\train.csv",
+      "size_mb": 1.29,
+      "row_count": 160000,
+      "col_count": 2,
+      "exact_duplicates": 0,
+      "columns": {
+        "customer_id": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 160000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "target": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 2,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        }
+      }
+    },
+    "test": {
+      "path": "D:\\HuyD\\\u0110\u1ea1i H\u1ecdc\\BigData\\Global\\dataset\\test.csv",
+      "size_mb": 0.25,
+      "row_count": 40000,
+      "col_count": 1,
+      "exact_duplicates": 0,
+      "columns": {
+        "customer_id": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 40000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        }
+      }
+    },
+    "sample_submission": {
+      "path": "D:\\HuyD\\\u0110\u1ea1i H\u1ecdc\\BigData\\Global\\dataset\\sample_submission.csv",
+      "size_mb": 0.32,
+      "row_count": 40000,
+      "col_count": 2,
+      "exact_duplicates": 0,
+      "columns": {
+        "customer_id": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 40000,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        },
+        "target": {
+          "type": "BIGINT",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 1,
+          "empty_str_count": 0,
+          "placeholder_count": 0
+        }
+      }
+    }
+  },
+  "pk_violations": {
+    "customers": 0,
+    "sessions": 0,
+    "transactions": 0,
+    "marketing_campaigns": 0,
+    "geo_data": 0,
+    "train": 0,
+    "test": 0,
+    "sample_submission": 0
+  },
+  "train_test_overlap": 0,
+  "total_customers": 200000,
+  "train_customers": 160000,
+  "test_customers": 40000,
+  "target_distribution": {
+    "0": {
+      "count": 127514,
+      "pct": 79.7
+    },
+    "1": {
+      "count": 32486,
+      "pct": 20.3
+    }
+  },
+  "null_columns": {
+    "target": {
+      "count": 40000,
+      "pct": 20.0
+    },
+    "age": {
+      "count": 10000,
+      "pct": 5.0
+    },
+    "email_open_rate": {
+      "count": 22746,
+      "pct": 11.37
+    },
+    "average_income": {
+      "count": 10,
+      "pct": 0.01
+    },
+    "urban_ratio": {
+      "count": 10,
+      "pct": 0.01
+    },
+    "internet_penetration": {
+      "count": 10,
+      "pct": 0.01
+    },
+    "region_tier": {
+      "count": 10,
+      "pct": 0.01
+    },
+    "primary_campaign_type": {
+      "count": 10,
+      "pct": 0.01
+    },
+    "primary_campaign_budget": {
+      "count": 10,
+      "pct": 0.01
+    }
+  },
+  "holdout_sha256": "008236ea0d8461b4d5f58b34e973766d4a696a20c97b8d28a4b9d025c99a5da2"
+}

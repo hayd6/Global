@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score
 
@@ -253,17 +254,18 @@ def run_pso_optimization():
     sub_tr = inner_tr_idx[:min(20000, len(inner_tr_idx))]
     sub_va = inner_va_idx[:min(10000, len(inner_va_idx))]
 
-    X_tr_raw = df[candidate_cols].iloc[sub_tr].fillna(0).values
-    X_va_raw = df[candidate_cols].iloc[sub_va].fillna(0).values
+    X_tr_raw = df[candidate_cols].iloc[sub_tr]
+    X_va_raw = df[candidate_cols].iloc[sub_va]
     y_tr = splits["y"][sub_tr]
     y_va = splits["y"][sub_va]
 
     logger.info(f"PSO Partition: Inner Train={X_tr_raw.shape}, Inner Val={X_va_raw.shape} (Holdout strictly untouched).")
 
-    # Fit scaler EXCLUSIVELY on inner train partition
+    # Fit imputer and scaler EXCLUSIVELY on inner train partition (harmonized with pipeline median imputation)
+    imputer = SimpleImputer(strategy="median")
     scaler = StandardScaler()
-    X_tr = scaler.fit_transform(X_tr_raw)
-    X_va = scaler.transform(X_va_raw)
+    X_tr = scaler.fit_transform(imputer.fit_transform(X_tr_raw))
+    X_va = scaler.transform(imputer.transform(X_va_raw))
 
     pso = BinaryPSO(
         n_particles=16,

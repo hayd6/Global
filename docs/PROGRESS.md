@@ -8,7 +8,7 @@
 | **Giai đoạn 3** | Kiểm tra Target & Chống rò rỉ dữ liệu (Leakage Audit) | **HOÀN THÀNH** | Kiểm toán `high_value_flag`, loại ID, bảo đảm mốc thời gian, tách Train 80/20 Stratified và Test 40k độc lập |
 | **Giai đoạn 4** | Feature Engineering & EDA (9 biểu đồ chuyên sâu) | **HOÀN THÀNH** | `build_features.py`, `eda.py`, `outputs/feature_dictionary.csv`, `outputs/eda/*.png`, `outputs/eda_customer_summary.csv` |
 | **Giai đoạn 5** | Thiết lập đánh giá (Stratified Train/Val Split) | **HOÀN THÀNH** | Cố định `random_state=42`, Scikit-Learn Pipeline Fit-on-Train only |
-| **Giai đoạn 6** | Huấn luyện 7 mô hình cơ sở (Baselines) | **HOÀN THÀNH** | `baselines.py`, `outputs/metrics/baseline_metrics.csv` (GB, RF, LR, SVM, DT, NB, KNN) |
+| **Giai đoạn 6** | Huấn luyện 7 mô hình cơ sở (Baselines) | **HOÀN THÀNH** | `baselines.py`, `outputs/metrics/baseline_metrics.csv` (GB, RF, LR, SGD, DT, NB, KNN) |
 | **Giai đoạn 7** | Lựa chọn đặc trưng & Tối ưu hóa Binary PSO | **HOÀN THÀNH** | `pso_optimizer.py`, `feature_selection.py`, `pso_selected_features.csv`, `pso_convergence.csv`, `pso_convergence.png` |
 | **Giai đoạn 8** | Huấn luyện XGBoost & Thí nghiệm đối chứng | **HOÀN THÀNH** | `train_xgboost.py`, `metrics_comparison.csv`, `roc_curve.png`, `precision_recall_curve.png`, `confusion_matrix.png`, `feature_importance.csv` |
 | **Giai đoạn 9** | Xuất kết quả cho Power BI và Web | **HOÀN THÀNH** | `export_outputs.py`, thư mục `outputs/powerbi/` (6 bảng CSV chuẩn hóa) |

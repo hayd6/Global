@@ -34,7 +34,7 @@ flowchart TD
 
     subgraph Phase5_8["4. Machine Learning & Optimization Pipeline"]
         Split["Stratified Train/Val Split (80/20 trên 160k train)<br/>Độc lập Test (40k)"]
-        Baselines["7 Mô hình cơ sở (baselines.py)<br/>LR, NB, DT, RF, GB, KNN, SVM"]
+        Baselines["7 Mô hình cơ sở (baselines.py)<br/>LR, NB, DT, RF, GB, KNN, SGD"]
         StatSelect["Lựa chọn thống kê (ANOVA/Chi2/MutualInfo)"]
         PSO["Binary PSO Optimizer (pso_optimizer.py)<br/>Tối ưu hóa đa mục tiêu: PR-AUC & Độ tinh giản"]
         XGB["Huấn luyện XGBoost (train_xgboost.py)<br/>Toàn bộ đặc trưng vs Thống kê vs PSO"]

@@ -8,7 +8,7 @@ Models:
 4. Random Forest
 5. Gradient Boosting
 6. K-Nearest Neighbors (KNN)
-7. Support Vector Machine (Linear SVM with log-loss SGD)
+7. SGDClassifier (Logistic Regression via SGD)
 """
 
 import sys
