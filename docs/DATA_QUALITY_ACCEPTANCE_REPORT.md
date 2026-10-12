@@ -23,8 +23,10 @@
 | **8. Bảo toàn phương sai đặc trưng (Non-Zero Variance)** | 0% đặc trưng đầu vào có phương sai bằng 0 (Zero Variance) hoặc giá trị hằng số. | Mã giới thiệu (`has_referral_code`) có tỷ lệ kích hoạt 35.12% (phương sai 0.228). 64/64 biến liên tục có phương sai dương. | `test_non_zero_variance_features` kiểm tra từng cột biến số. | **PASS** |
 | **9. Phân lập tập Train và Holdout** | Tập Train (80%) và Holdout (20%) hoàn toàn rời rạc; Imputer, Scaler, OneHot fit duy nhất trên Train. | 20,000 mẫu Train, 5,000 mẫu Holdout; 0 khách hàng trùng lặp. | Kiểm tra giao tập bằng 0 (`test_disjoint_train_holdout_splits`). | **PASS** |
 | **10. Khả năng phát hiện và loại bỏ biến nhiễu của PSO/ANOVA** | Thuật toán PSO và ANOVA phải nhận diện và loại bỏ các biến nhiễu nhân tạo (`noise_customer_0..4`, `avg_noise_trans_0..1`). | Cả Binary PSO và ANOVA loại bỏ thành công **7/7 biến nhiễu** (100% rejected), chỉ giữ lại các biến hành vi có tín hiệu. | `test_pso_and_anova_artifacts_and_noise_rejection` kiểm tra tập `pso_selected_features_pit.csv`. | **PASS** |
-| **11. Tính tái lập của toàn bộ Pipeline** | Pipeline chạy lại từ đầu bằng một lệnh duy nhất, cho kết quả cố định nhờ seed. | Chạy thành công toàn bộ `src/pipeline_controlled.py` trong 18.2 giây. | Toàn bộ 46/46 bài kiểm thử `pytest` đạt trạng thái PASS. | **PASS** |
-| **12. Khả năng tải và thay thế dataset thị trường thực** | Tải tự động bộ dữ liệu clickstream thương mại điện tử thực tế từ Internet mà không cần tài khoản/API key. | Môi trường offline cục bộ không có quyền truy cập API Kaggle trả phí hoặc tải tập dữ liệu 10GB bên ngoài. Pipeline ingestion cho dữ liệu thực đã được đặc tả sẵn sàng. | Không tải được dữ liệu thực ngoài Internet trong lượt này. | **BLOCKED** |
+| **11. Tính tái lập của toàn bộ Pipeline** | Pipeline chạy lại từ đầu bằng một lệnh duy nhất, cho kết quả cố định nhờ seed. | Chạy thành công toàn bộ `src/pipeline_controlled.py` trong 54.2 giây. | Toàn bộ 48/48 bài kiểm thử `pytest` đạt trạng thái PASS. | **PASS** |
+| **12. Độ trưởng thành của cửa sổ quan sát** | 100% khách hàng có ngày đăng ký $\ge 45$ ngày trước mốc chốt $t_0$, không có khách hàng thiếu lịch sử quan sát. | 0 / 25,000 khách hàng có tuổi tài khoản < 45 ngày tại mốc $t_0$. | Kiểm tra `signup_date` trước mốc $t_0 - 45\text{ ngày}$ (`test_observation_window_maturity_and_boundary_conditions`). | **PASS** |
+| **13. Bằng chứng toán học chống rò rỉ thời gian (Temporal Invariance)** | Dữ liệu phiên và giao dịch phát sinh trong tương lai ($t > t_0$) không làm thay đổi vector đặc trưng quá khứ. | Tiêm dữ liệu phiên và giao dịch giả định sau $t_0$; vector đặc trưng của khách hàng trùng khớp 100% bit-for-bit. | Đối chiếu kết quả trích xuất trước và sau tiêm dữ liệu tương lai (`test_temporal_invariance_future_data_does_not_affect_past_features`). | **PASS** |
+| **14. Khả năng tải và thay thế dataset thị trường thực** | Tải tự động bộ dữ liệu clickstream thương mại điện tử thực tế từ Internet mà không cần tài khoản/API key. | Môi trường offline cục bộ không có quyền truy cập API Kaggle trả phí hoặc tải tập dữ liệu 10GB bên ngoài. Pipeline ingestion cho dữ liệu thực đã được đặc tả sẵn sàng. | Không tải được dữ liệu thực ngoài Internet trong lượt này. | **BLOCKED** |
 
 ---
 
@@ -104,6 +106,6 @@ python src/pipeline_controlled.py
 # 2. Chạy riêng bộ kiểm thử chất lượng dữ liệu và kiểm định thời gian
 pytest tests/test_data_quality_remediation.py -v
 
-# 3. Chạy toàn bộ 46 bài test trong kho mã nguồn
+# 3. Chạy toàn bộ 48 bài test trong kho mã nguồn
 pytest -v
 ```

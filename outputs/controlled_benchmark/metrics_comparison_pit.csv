@@ -1,6 +1,6 @@
 model_name,feature_count,pr_auc,roc_auc,f1_score,precision,recall,accuracy,true_negatives,false_positives,false_negatives,true_positives,fit_time_seconds,search_time_seconds,total_time_seconds
-E1 (Baseline Full Features),64,0.2658,0.7648,0.3034,0.2039,0.5923,0.7612,3546,1015,179,260,6.0,0.0,6.0
-E2 (Baseline ANOVA Features),16,0.2566,0.7631,0.2941,0.1928,0.6196,0.7388,3422,1139,167,272,2.1,0.03,2.13
-E3 (Baseline PSO Features),16,0.2081,0.7191,0.2644,0.173,0.5604,0.7262,3385,1176,193,246,1.06,6.23,7.29
-E4 (XGBoost Full Features),64,0.259,0.7659,0.3055,0.2103,0.5581,0.7772,3641,920,194,245,1.03,0.0,1.03
-E5 (XGBoost PSO Features),16,0.1906,0.7162,0.2641,0.176,0.5285,0.7414,3475,1086,207,232,0.46,6.23,6.69
+E1 (Baseline Full Features),64,0.2658,0.7648,0.3034,0.2039,0.5923,0.7612,3546,1015,179,260,6.34,0.0,6.34
+E2 (Baseline ANOVA Features),16,0.2566,0.7631,0.2941,0.1928,0.6196,0.7388,3422,1139,167,272,2.14,0.03,2.17
+E3 (Baseline PSO Features),16,0.2081,0.7191,0.2644,0.173,0.5604,0.7262,3385,1176,193,246,1.26,7.07,8.33
+E4 (XGBoost Full Features),64,0.259,0.7659,0.3055,0.2103,0.5581,0.7772,3641,920,194,245,0.79,0.0,0.79
+E5 (XGBoost PSO Features),16,0.1906,0.7162,0.2641,0.176,0.5285,0.7414,3475,1086,207,232,0.47,7.07,7.54

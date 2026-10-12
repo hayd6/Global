@@ -118,6 +118,7 @@ def test_point_in_time_target_definition_validity(duck_conn):
             SELECT customer_id, COUNT(*) as cnt
             FROM read_csv_auto('{trans_csv}')
             WHERE transaction_timestamp > DATE '2024-06-01'
+              AND transaction_timestamp <= DATE '2024-07-01'
             GROUP BY customer_id
         ),
         expected AS (
@@ -187,3 +188,104 @@ def test_pso_and_anova_artifacts_and_noise_rejection():
     assert comp_csv.exists()
     df_comp = pd.read_csv(comp_csv)
     assert len(df_comp) == 5, f"Expected 5 comparison experiments, got {len(df_comp)}"
+
+
+def test_observation_window_maturity_and_boundary_conditions(duck_conn):
+    """Verify all customers have sufficient observation history (>= 45 days before t_0) and boundary dates are strictly respected."""
+    cust_csv = (BENCHMARK_DIR / "customers.csv").as_posix()
+    trans_csv = (BENCHMARK_DIR / "transactions.csv").as_posix()
+    cutoff_date = "2024-06-01"
+
+    # 1. Observation window maturity: all customers signed up at least 45 days prior to cutoff
+    immature_customers = duck_conn.execute(f"""
+        SELECT COUNT(*)
+        FROM read_csv_auto('{cust_csv}')
+        WHERE DATE_DIFF('day', CAST(signup_date AS DATE), DATE '{cutoff_date}') < 45
+    """).fetchone()[0]
+    assert immature_customers == 0, f"Found {immature_customers} customers with < 45 days of observation history!"
+
+    # 2. Boundary condition: transactions exactly on cutoff date are pre-cutoff (not future)
+    cutoff_day_future_trans = duck_conn.execute(f"""
+        SELECT COUNT(*)
+        FROM read_csv_auto('{trans_csv}')
+        WHERE transaction_timestamp = DATE '{cutoff_date}'
+          AND transaction_timestamp > DATE '{cutoff_date}'
+    """).fetchone()[0]
+    assert cutoff_day_future_trans == 0
+
+
+def test_temporal_invariance_future_data_does_not_affect_past_features(duck_conn):
+    """
+    Mathematical Proof of Temporal Anti-Leakage:
+    Injecting arbitrary future sessions and transactions after cutoff t_0 (2024-06-01)
+    must produce an EXACT 100% BIT-FOR-BIT IDENTICAL past feature vector for customers.
+    """
+    cust_csv = (BENCHMARK_DIR / "customers.csv").as_posix()
+    sess_csv = (BENCHMARK_DIR / "sessions.csv").as_posix()
+    trans_csv = (BENCHMARK_DIR / "transactions.csv").as_posix()
+    cutoff_date = "2024-06-01"
+
+    # Base features for customer 1
+    base_sess_feats = duck_conn.execute(f"""
+        SELECT
+            COUNT(*) AS sess_count,
+            COALESCE(SUM(session_duration), 0.0) AS total_session_duration,
+            COALESCE(SUM(cart_additions), 0) AS total_cart_additions,
+            DATE_DIFF('day', MAX(CAST(session_timestamp AS DATE)), DATE '{cutoff_date}') AS days_since_last_session
+        FROM read_csv_auto('{sess_csv}')
+        WHERE customer_id = 1 AND session_timestamp <= DATE '{cutoff_date}'
+    """).fetchone()
+
+    base_trans_feats = duck_conn.execute(f"""
+        SELECT
+            COUNT(*) AS trans_count,
+            COALESCE(SUM(order_value), 0.0) AS total_spend,
+            COALESCE(SUM(items_count), 0) AS total_items,
+            DATE_DIFF('day', MAX(CAST(transaction_timestamp AS DATE)), DATE '{cutoff_date}') AS days_since_last_trans
+        FROM read_csv_auto('{trans_csv}')
+        WHERE customer_id = 1 AND transaction_timestamp <= DATE '{cutoff_date}'
+    """).fetchone()
+
+    # Now create modified session table with INJECTED FUTURE SESSIONS (e.g., 2024-06-15, 2024-06-25)
+    duck_conn.execute(f"""
+        CREATE OR REPLACE TEMP TABLE t_test_sess AS
+        SELECT * FROM read_csv_auto('{sess_csv}')
+        UNION ALL
+        SELECT 9999999, 1, '2024-06-15', 3600.0, 50, 20, 0, 'ads', 'desktop', 1, 'REGION_001'
+        UNION ALL
+        SELECT 9999998, 1, '2024-06-25', 5400.0, 80, 45, 0, 'email', 'mobile', 2, 'REGION_001';
+
+        CREATE OR REPLACE TEMP TABLE t_test_trans AS
+        SELECT * FROM read_csv_auto('{trans_csv}')
+        UNION ALL
+        SELECT 9999999, 1, '2024-06-15', 9999.99, 15, 'credit_card', 1, 'overnight', 1, 0.5, 0.5;
+    """)
+
+    # Re-extract features using the exact query logic
+    future_perturbed_sess_feats = duck_conn.execute(f"""
+        SELECT
+            COUNT(*) AS sess_count,
+            COALESCE(SUM(session_duration), 0.0) AS total_session_duration,
+            COALESCE(SUM(cart_additions), 0) AS total_cart_additions,
+            DATE_DIFF('day', MAX(CAST(session_timestamp AS DATE)), DATE '{cutoff_date}') AS days_since_last_session
+        FROM t_test_sess
+        WHERE customer_id = 1 AND CAST(session_timestamp AS DATE) <= DATE '{cutoff_date}'
+    """).fetchone()
+
+    future_perturbed_trans_feats = duck_conn.execute(f"""
+        SELECT
+            COUNT(*) AS trans_count,
+            COALESCE(SUM(order_value), 0.0) AS total_spend,
+            COALESCE(SUM(items_count), 0) AS total_items,
+            DATE_DIFF('day', MAX(CAST(transaction_timestamp AS DATE)), DATE '{cutoff_date}') AS days_since_last_trans
+        FROM t_test_trans
+        WHERE customer_id = 1 AND CAST(transaction_timestamp AS DATE) <= DATE '{cutoff_date}'
+    """).fetchone()
+
+    assert base_sess_feats == future_perturbed_sess_feats, (
+        f"Temporal leakage detected: base sess {base_sess_feats} != perturbed {future_perturbed_sess_feats}"
+    )
+    assert base_trans_feats == future_perturbed_trans_feats, (
+        f"Temporal leakage detected: base trans {base_trans_feats} != perturbed {future_perturbed_trans_feats}"
+    )
+

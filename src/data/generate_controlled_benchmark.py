@@ -257,7 +257,7 @@ def generate_controlled_benchmark_dataset(
     # ---------------------------------------------------------
     logger.info("Defining point-in-time Target: transactions in (t_cutoff, t_end]...")
     trans_df_dates = pd.to_datetime(transactions_df["transaction_timestamp"])
-    future_trans = transactions_df[trans_df_dates > t_cutoff]
+    future_trans = transactions_df[(trans_df_dates > t_cutoff) & (trans_df_dates <= t_end)]
     future_buyers = set(future_trans["customer_id"].unique())
 
     # Build target table for all N customers
