@@ -1,0 +1,134 @@
+# Python virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest & testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs & temporary files
+*.log
+logs/*.log
+temp/
+tmp/
+.DS_Store
+Thumbs.db
+
+# Large intermediate DuckDB temporary files if any
+*.duckdb.tmp
+*.tmp
+
+# ==========================================
+# Secrets and environment configuration
+# ==========================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
+service-account*.json
+
+# ==========================================
+# Python
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# ==========================================
+# Data files — do not upload raw datasets
+# ==========================================
+dataset/*
+!dataset/README.md
+!dataset/.gitkeep
+
+# Common data formats
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.arrow
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.db
+*.sqlite
+*.sqlite3
+
+# Allow small, intentionally maintained CSV files only if needed.
+# Remove these exceptions if all CSV files should remain ignored.
+!docs/**/*.csv
+
+# ==========================================
+# Generated outputs and model artifacts
+# ==========================================
+outputs/
+artifacts/
+models/
+checkpoints/
+runs/
+mlruns/
+wandb/
+lightning_logs/
+
+# Logs and temporary files
+logs/
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*.old
+
+# ==========================================
+# Jupyter
+# ==========================================
+.ipynb_checkpoints/
+
+# ==========================================
+# IDE and operating system
+# ==========================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# Build and package artifacts
+# ==========================================
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/

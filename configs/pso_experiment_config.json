@@ -1,0 +1,14 @@
+{
+    "n_particles": 16,
+    "n_iterations": 12,
+    "inertia_w": 0.729,
+    "cognitive_c1": 1.494,
+    "social_c2": 1.494,
+    "alpha_pr_weight": 0.92,
+    "random_state": 42,
+    "total_candidate_features": 63,
+    "selected_features_count": 17,
+    "sparsity_reduction_pct": 73.02,
+    "best_fitness": 0.2764,
+    "best_pr_auc": 0.237
+}
