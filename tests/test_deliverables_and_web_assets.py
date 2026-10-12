@@ -73,6 +73,15 @@ def test_web_metrics_json_integrity_matches_canonical_models():
     assert cm["true_positives"] == int(xgb_row["true_positives"]) == 3419
     assert abs(cm["pr_auc"] - float(xgb_row["pr_auc"])) < 1e-4
 
+    # Kiểm tra 7 baseline models trong metrics.json khớp chính xác baseline_metrics.csv
+    base_csv_path = os.path.join(OUTPUTS_DIR, "metrics", "baseline_metrics.csv")
+    df_base = pd.read_csv(base_csv_path)
+    base_dict = {r["model_name"]: float(r["pr_auc"]) for _, r in df_base.iterrows()}
+    for b in web_data["baselines_7"]:
+        name = b["name"]
+        assert name in base_dict, f"Mô hình {name} không có trong baseline_metrics.csv"
+        assert abs(b["pr_auc"] - base_dict[name]) < 1e-4, f"Lệch PR-AUC tại {name}: {b['pr_auc']} vs {base_dict[name]}"
+
 
 def test_research_reports_docx_and_md_exist_and_complete():
     """Kiểm tra báo cáo nghiên cứu hoàn chỉnh có cả bản Word .docx và Markdown .md."""

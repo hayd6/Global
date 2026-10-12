@@ -87,8 +87,8 @@ md_content = """# BÁO CÁO NGHIÊN CỨU KHOA HỌC HOÀN CHỈNH (6 PHẦN)
 Nghiên cứu này giải quyết bài toán dự đoán khả năng mua hàng của khách hàng thương mại điện tử dựa trên bộ dữ liệu quy mô lớn đa bảng *Global E-Commerce Customer Purchase Prediction* (200.000 khách hàng, 2.000.000 phiên truy cập, 500.000 giao dịch). Chúng tôi đề xuất quy trình toàn diện gồm ba trụ cột: (1) Khai phá và tích hợp 63 đặc trưng hành vi chuyên sâu (RFM, cường độ duyệt web, tương tác giỏ hàng, phản ứng marketing và bối cảnh địa lý) bằng công cụ cơ sở dữ liệu vector hóa **DuckDB** với cơ chế tiền tổng hợp chống nhân bản khách hàng; (2) So sánh khách quan 7 thuật toán phân loại cơ sở và kiểm định vai trò của phương pháp tối ưu hóa bầy đàn nhị phân (**Binary Particle Swarm Optimization - BPSO**) trong việc tinh giản không gian đặc trưng; (3) Đánh giá mô hình nâng cao **XGBoost** trên tập kiểm định độc lập cô lập nghiêm ngặt (Holdout 32.000 mẫu) kết hợp phân tích sai số False Positive/False Negative và chuyển giao giải pháp thông qua Dashboard **Power BI** 4 trang và ứng dụng **Website React+Vite** 6 trang.
 
 Kết quả thực nghiệm trên ngưỡng quyết định $\\tau = 0.50$ chứng minh:
-1. Mô hình phân loại cơ sở tốt nhất đạt PR-AUC = 0.2730 (Gradient Boosting Full 63 biến).
-2. Lọc thống kê ANOVA F-test (17 biến) đạt PR-AUC cao nhất trong nghiên cứu (0.2759), vượt qua cả Full Features và BPSO với chi phí tìm kiếm cực thấp (0.13 giây).
+1. Mô hình phân loại cơ sở tốt nhất đạt PR-AUC = **0.2758** trên không gian 180 đặc trưng biến đổi One-Hot và **0.2730** trên không gian 63 đặc trưng số thuần túy (Gradient Boosting).
+2. Lọc thống kê ANOVA F-test (17 biến) đạt PR-AUC cao nhất trên không gian biến số (0.2759), vượt qua cả Full Features và BPSO với chi phí tìm kiếm cực thấp (0.13 giây).
 3. Thuật toán Binary PSO (hàm mục tiêu cân bằng $0.85 \\cdot \\text{{PR-AUC}} + 0.15 \\cdot \\text{{Sparsity}}$) đã rút gọn thành công **73.02% số chiều** (từ 63 biến xuống đúng 17 biến tối ưu), duy trì PR-AUC đạt 0.2584 (XGBoost PSO) và giúp tăng tốc độ huấn luyện mô hình hạ nguồn **2.1 lần** (từ 4.40 giây xuống 2.07 giây), dù phải trả chi phí tìm kiếm ban đầu là 11.79 giây và chấp nhận đánh đổi một lượng nhỏ PR-AUC (-0.0070).
 4. Phân tích ma trận nhầm lẫn chuẩn xác trên 32.000 mẫu Holdout (TN=15,740, FP=9,763, FN=3,078, TP=3,419) đã bóc tách rõ hai nhóm hành vi then chốt: nhóm \"Window Shoppers/Deal Seekers\" (FP) và nhóm \"Decisive Buyers\" (FN).
 5. Về mặt phương pháp luận, nghiên cứu định vị trung thực bài toán là **Observational Snapshot Purchase Propensity Classification** (Phân loại độ nghiêng mua hàng trên ảnh chụp quan sát đa bảng) do dữ liệu nguồn Kaggle không cung cấp mốc thời gian cắt nhãn dự đoán (prediction cutoff timestamp).
@@ -283,7 +283,7 @@ Nghiên cứu định hướng lấy thực nghiệm làm trung tâm (empirical-
 
 ### 2.3. Giả thuyết nghiên cứu (Hypotheses)
 - **H1**: *Các đặc trưng hành vi tích lũy (tương tác giỏ hàng, tần suất phiên, tỷ lệ thoát) cung cấp tín hiệu phân biệt mạnh hơn các đặc trưng nhân khẩu học tĩnh.* -> **Ủng hộ** (chứng minh qua Feature Importance và ANOVA F-score).
-- **H2**: *Các mô hình phi tuyến và tổ hợp (Ensemble Trees) đạt hiệu năng PR-AUC vượt trội so với các mô hình tuyến tính trên bộ dữ liệu này.* -> **Ủng hộ** (Gradient Boosting đạt PR-AUC 0.2730 so với Logistic Regression 0.2312).
+- **H2**: *Các mô hình phi tuyến và tổ hợp (Ensemble Trees) đạt hiệu năng PR-AUC vượt trội so với các mô hình tuyến tính trên bộ dữ liệu này.* -> **Ủng hộ** (trên không gian 180 đặc trưng biến đổi, Gradient Boosting đạt PR-AUC 0.2758 so với Logistic Regression 0.2649; trên không gian 63 đặc trưng số, Gradient Boosting đạt 0.2730).
 - **H3**: *Binary PSO có thể loại bỏ hơn 50% số lượng đặc trưng mà không làm suy giảm nghiêm trọng PR-AUC.* -> **Ủng hộ** (loại bỏ 73.02% đặc trưng, PR-AUC chỉ giảm nhẹ 0.0070).
 - **H4**: *Tập đặc trưng do PSO lựa chọn giúp mô hình nâng cao XGBoost đạt sự cân bằng tối ưu giữa thời gian huấn luyện và độ chính xác.* -> **Ủng hộ một phần** (giảm thời gian fit 53%, nhưng ANOVA F-test vẫn đạt PR-AUC cao hơn 0.0175).
 
@@ -368,6 +368,16 @@ Sau đó nối 1:1 với `customers.csv`. Bảng dữ liệu tích hợp đạt 
 
 *Lưu ý về biến hằng số*: Đã phát hiện đặc trưng `has_referral_code` có giá trị bằng 1 trên toàn bộ 200,000 khách hàng (phương sai = 0). Cả ANOVA và PSO đều tự động loại bỏ biến này.
 
+#### Bảng đối chiếu & Ánh xạ cấu trúc đặc trưng toàn hệ thống
+Để tránh nhầm lẫn giữa các con số xuất hiện trong tài liệu, bảng sau làm rõ mối quan hệ kế thừa giữa các cấu trúc dữ liệu:
+
+| Đối tượng dữ liệu | Tệp tin lưu trữ | Số lượng | Thành phần chi tiết | Mục đích sử dụng |
+| :--- | :--- | :---: | :--- | :--- |
+| **Toàn bộ cột Parquet** | `outputs/customer_features.parquet` | **72 cột** | 3 cột kỹ thuật (`customer_id`, `split_type`, `target`) + 2 cột marketing thô (`primary_campaign_type`, `primary_campaign_budget`) + 67 cột đặc trưng ứng viên | Bảng lưu trữ trung tâm sau tích hợp và feature engineering |
+| **Từ điển đặc trưng** | `outputs/feature_dictionary.csv` | **67 đặc trưng** | 63 đặc trưng số liên tục + 4 đặc trưng phân loại (`country_code`, `region`, `customer_tier`, `region_tier`) | Định nghĩa ngữ nghĩa, kiểu dữ liệu, công thức tính và đánh giá leakage |
+| **Không gian số thuần túy** | `src/models/split_manager.py` (`include_categoricals=False`) | **63 đặc trưng** | 63 biến số liên tục (loại bỏ 4 biến phân loại thô để tránh nhiễu cardinality cao) | Không gian tìm kiếm cho **Binary PSO**, lọc thống kê **ANOVA**, và thí nghiệm **E1–E5 / XGBoost** |
+| **Không gian biến đổi One-Hot** | `src/models/split_manager.py` (`include_categoricals=True`) | **180 đặc trưng** | 63 biến số chuẩn hóa + 117 cột nhị phân sau OneHotEncoder từ 4 biến phân loại | Không gian đánh giá toàn diện cho **7 mô hình cơ sở** (`baseline_metrics.csv`) |
+
 ### 3.5. Phân tích khám phá dữ liệu (EDA) — 12 Phát hiện then chốt
 Từ 12 biểu đồ trực quan hóa được lưu trong `outputs/eda/` và `outputs/plots/`, các kết quả phân tích chính gồm:
 1. **Mất cân bằng nhãn**: Tỷ lệ khách hàng mua hàng đạt 20.31%, đòi hỏi việc tối ưu hóa phải tập trung vào PR-AUC.
@@ -409,27 +419,29 @@ Thực nghiệm được thiết kế theo 5 cấu hình đối chứng chuẩn 
 - **E5**: Mô hình nâng cao XGBoost + 17 đặc trưng do Binary PSO lựa chọn.
 
 ### 4.2. Xây dựng và đánh giá 7 mô hình cơ sở
-Huấn luyện 7 mô hình phân loại trên cùng tập dữ liệu với kết quả chi tiết trong `outputs/metrics/baseline_metrics.csv`:
+Huấn luyện 7 mô hình phân loại trên cùng tập dữ liệu với kết quả chính thức được lưu trong `outputs/metrics/baseline_metrics.csv` (Đánh giá trên không gian 180 đặc trưng sau biến đổi One-Hot, tập Holdout 32,000 mẫu độc lập, ngưỡng $\tau = 0.50$):
 
-| Thuật toán | PR-AUC | ROC-AUC | F1-Score | Precision | Recall | Fit Time (s) | Đánh giá |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Gradient Boosting** | **0.2730** | **0.6078** | **0.3558** | **0.2574** | **0.5766** | 17.04s | **Tốt nhất (Chọn làm mốc E1)** |
-| Random Forest | 0.2685 | 0.6012 | 0.3480 | 0.2520 | 0.5620 | 14.20s | Hiệu năng cao, thời gian fit nhanh |
-| Logistic Regression | 0.2312 | 0.5540 | 0.3120 | 0.2240 | 0.5110 | 1.85s | Đường cơ sở tuyến tính |
-| SGDClassifier (log-loss) | 0.2290 | 0.5510 | 0.3080 | 0.2210 | 0.5080 | 0.95s | Huấn luyện cực nhanh |
-| Decision Tree | 0.2150 | 0.5320 | 0.2980 | 0.2100 | 0.4950 | 2.10s | Dễ giải thích nhưng dễ quá khớp |
-| Naive Bayes | 0.2210 | 0.5410 | 0.3040 | 0.2180 | 0.5020 | 0.45s | Mô hình xác suất cơ bản |
-| K-Nearest Neighbors (KNN) | 0.2190 | 0.5380 | 0.3010 | 0.2150 | 0.4980 | 8.50s | Chi phí suy luận khoảng cách lớn |
+| Thuật toán | Số đặc trưng | PR-AUC | ROC-AUC | F1-Score | Precision | Recall | Fit Time (s) | Đánh giá |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Gradient Boosting** | 180 | **0.2758** | **0.6097** | **0.3575** | 0.2570 | **0.5873** | 34.85s | **Mô hình cơ sở xuất sắc nhất (Không gian 180 biến)** |
+| **Random Forest** | 180 | 0.2700 | 0.6031 | 0.3488 | **0.2589** | 0.5346 | 29.80s | Hiệu năng ổn định, chống quá khớp nhờ bagging |
+| **Logistic Regression** | 180 | 0.2649 | 0.5989 | 0.3473 | 0.2529 | 0.5541 | **1.49s** | Tuyến tính chuẩn mực, fit rất nhanh |
+| **Decision Tree** | 180 | 0.2584 | 0.5851 | 0.3446 | 0.2468 | 0.5710 | 10.23s | Cây quyết định đơn lẻ (max_depth=8) |
+| **SGDClassifier (log_loss)** | 180 | 0.2456 | 0.5748 | 0.3357 | 0.2404 | 0.5563 | 6.66s | Logistic tối ưu bằng Stochastic Gradient Descent |
+| **Naive Bayes** | 180 | 0.2161 | 0.5177 | 0.2825 | 0.2171 | 0.4040 | **0.57s** | Xác suất Gaussian có điều kiện |
+| **K-Nearest Neighbors (KNN)** | 180 | 0.2102 | 0.5167 | 0.0685 | 0.2231 | 0.0405 | 17.10s | Phân loại lân cận khoảng cách |
 
-*Kết luận*: **Gradient Boosting** đạt PR-AUC cao nhất (0.2730) và ROC-AUC cao nhất (0.6078), được chọn làm thuật toán cơ sở chuẩn cho các thí nghiệm E1, E2, E3.
+*Lưu ý phương pháp luận quan trọng về hai không gian đặc trưng*:
+- **Không gian 180 đặc trưng biến đổi (Bảng 4.2 trên)**: Sử dụng trong giai đoạn khảo sát cơ sở (Phần 4.2), kết hợp 63 biến số chuẩn hóa và mã hóa One-Hot các biến phân loại danh nghĩa (`country_code`, `region`, `customer_tier`, `region_tier`). Trên không gian này, Gradient Boosting đạt PR-AUC cao nhất là **0.2758**.
+- **Không gian 63 đặc trưng số thuần túy (Bảng E1–E5 dưới)**: Để thuật toán Binary PSO và lọc thống kê ANOVA F-test hoạt động hiệu quả và có ý nghĩa toán học trực tiếp mà không bị bùng nổ số chiều bởi ma trận One-Hot thưa, các thí nghiệm tối ưu lựa chọn đặc trưng (Phần 4.3–4.5) được thực hiện trên 63 biến số liên tục. Trên không gian 63 biến số này, mô hình cơ sở Gradient Boosting (E1) đạt PR-AUC **0.2730** (đóng vai trò mốc chuẩn cho ANOVA và PSO).
 
 ### 4.3. So sánh các phương pháp lựa chọn đặc trưng
-So sánh trực diện 3 không gian đặc trưng trên mô hình Gradient Boosting:
-1. **Full Features (63 biến)**: PR-AUC = `0.2730`, Fit time = `17.04s`, Search time = `0.00s`.
-2. **ANOVA F-test (17 biến)**: PR-AUC = `0.2759`, Fit time = `6.24s`, Search time = `0.13s`.
-3. **Binary PSO (17 biến)**: PR-AUC = `0.2601`, Fit time = `4.50s`, Search time = `11.79s`.
+So sánh trực diện 3 không gian đặc trưng trên mô hình Gradient Boosting (Không gian 63 biến số):
+1. **Full Features (63 biến)**: PR-AUC = `0.2730`, Fit time = `16.96s`, Search time = `0.00s`.
+2. **ANOVA F-test (17 biến)**: PR-AUC = `0.2759`, Fit time = `6.35s`, Search time = `0.13s`.
+3. **Binary PSO (17 biến)**: PR-AUC = `0.2601`, Fit time = `4.52s`, Search time = `11.79s`.
 
-*Nhận định khách quan*: Phương pháp thống kê ANOVA F-test đạt PR-AUC cao nhất, chứng minh rằng trên không gian biến số này, lọc đơn biến theo F-score là phương pháp cực kỳ hiệu quả với chi phí tính toán gần như bằng không (0.13s).
+*Nhận định khách quan*: Phương pháp thống kê ANOVA F-test đạt PR-AUC cao nhất (0.2759), chứng minh rằng trên không gian biến số này, lọc đơn biến theo F-score là phương pháp cực kỳ hiệu quả với chi phí tính toán gần như bằng không (0.13s). Binary PSO (0.2601) tuy có PR-AUC thấp hơn một chút (-0.0129 so với Full và -0.0158 so với ANOVA), nhưng đã thành công trong việc loại bỏ 73.02% số chiều (từ 63 xuống 17 biến) và triệt tiêu 100% các biến nhiễu nhân tạo.
 
 ### 4.4. Áp dụng Particle Swarm Optimization (PSO)
 - **Hàm mục tiêu (Fitness Function)**:
@@ -520,9 +532,9 @@ Kiến trúc decoupled: Frontend React thuần Vanilla CSS giao diện Dark Mode
 
 ### 6.1. Tổng kết kết quả nghiên cứu
 Nghiên cứu đã hoàn thành toàn diện chu trình khoa học dữ liệu:
-- Khai phá 63 đặc trưng từ 2.5 triệu dòng dữ liệu thô bằng DuckDB.
-- Huấn luyện 7 mô hình cơ sở, chọn Gradient Boosting làm chuẩn (PR-AUC 0.2730).
-- ANOVA F-test đạt PR-AUC cao nhất (0.2759) với chi phí tìm kiếm 0.13 giây.
+- Khai phá 63 đặc trưng số từ 2.5 triệu dòng dữ liệu thô bằng DuckDB.
+- Huấn luyện 7 mô hình cơ sở (Gradient Boosting đạt PR-AUC 0.2758 trên không gian 180 biến đổi và 0.2730 trên không gian 63 biến số).
+- ANOVA F-test đạt PR-AUC cao nhất trên không gian biến số (0.2759) với chi phí tìm kiếm 0.13 giây.
 - Binary PSO giảm 73.02% số chiều biến số, giúp XGBoost tăng tốc 2.1 lần.
 - Hoàn thành đầy đủ bộ đôi Dashboard Power BI và Website nghiên cứu React.
 
@@ -735,7 +747,35 @@ doc.add_paragraph("Khai phá 63 biến liên tục thuộc 5 nhóm hành vi vớ
 
 # Phần 4
 add_heading_1("PHẦN 4. MACHINE LEARNING VÀ TỐI ƯU LỰA CHỌN ĐẶC TRƯNG")
-doc.add_paragraph("Huấn luyện 7 mô hình cơ sở: Gradient Boosting đạt PR-AUC cao nhất (0.2730) được chọn làm chuẩn. Binary PSO với hàm fitness alpha=0.85 rút gọn 73.02% số chiều (từ 63 xuống 17 biến).")
+doc.add_paragraph("Đánh giá 7 mô hình cơ sở trên Không gian 180 đặc trưng sau biến đổi One-Hot (Holdout 32.000 mẫu độc lập, ngưỡng 0.5):")
+
+table_base = doc.add_table(rows=1, cols=6)
+table_base.alignment = WD_TABLE_ALIGNMENT.CENTER
+h_base = table_base.rows[0].cells
+h_base[0].text = "Thuật toán"
+h_base[1].text = "Số biến"
+h_base[2].text = "PR-AUC"
+h_base[3].text = "ROC-AUC"
+h_base[4].text = "F1-Score"
+h_base[5].text = "Fit Time"
+for c in h_base:
+    c.paragraphs[0].runs[0].bold = True
+
+baseline_rows = [
+    ("Gradient Boosting", "180", "0.2758", "0.6097", "0.3575", "34.85s"),
+    ("Random Forest", "180", "0.2700", "0.6031", "0.3488", "29.80s"),
+    ("Logistic Regression", "180", "0.2649", "0.5989", "0.3473", "1.49s"),
+    ("Decision Tree", "180", "0.2584", "0.5851", "0.3446", "10.23s"),
+    ("SGDClassifier (log_loss)", "180", "0.2456", "0.5748", "0.3357", "6.66s"),
+    ("Naive Bayes", "180", "0.2161", "0.5177", "0.2825", "0.57s"),
+    ("K-Nearest Neighbors", "180", "0.2102", "0.5167", "0.0685", "17.10s"),
+]
+for r_data in baseline_rows:
+    r = table_base.add_row().cells
+    for i, v in enumerate(r_data):
+        r[i].text = v
+
+doc.add_paragraph("Đối chứng 5 cấu hình thực nghiệm trên Không gian 63 đặc trưng số thuần túy (Đánh giá vai trò của Binary PSO và ANOVA F-test):")
 
 # Bảng E1-E5
 table_exp = doc.add_table(rows=1, cols=6)
@@ -781,6 +821,12 @@ doc.add_paragraph("... (Xem đầy đủ 26 tài liệu trong bản báo cáo Ma
 
 # Lưu file docx
 docx_report_path = os.path.join(DOCS_DIR, "BaoCao_NghienCuu_Global_6Phan.docx")
-doc.save(docx_report_path)
-print(f"-> Generated master Word .docx report: {docx_report_path}")
+try:
+    doc.save(docx_report_path)
+    print(f"-> Generated master Word .docx report: {docx_report_path}")
+except PermissionError:
+    alt_path = os.path.join(DOCS_DIR, "BaoCao_NghienCuu_Global_6Phan_updated.docx")
+    doc.save(alt_path)
+    print(f"-> Cảnh báo: Tệp {docx_report_path} đang được mở trong Microsoft Word nên bị khóa ghi.")
+    print(f"-> Đã lưu bản cập nhật mới nhất vào: {alt_path}")
 print("Generation completed successfully!")

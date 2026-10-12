@@ -371,73 +371,73 @@ FROM sessions GROUP BY customer_id;</pre>
             <tbody>
               <tr>
                 <td><strong>Gradient Boosting</strong></td>
-                <td><strong>0.2730</strong></td>
-                <td><strong>0.6078</strong></td>
-                <td><strong>0.3558</strong></td>
-                <td>0.2574</td>
-                <td><strong>0.5766</strong></td>
-                <td>17.04s</td>
-                <td>Mô hình cơ sở xuất sắc nhất, khai thác tốt quan hệ phi tuyến</td>
+                <td><strong>0.2758</strong></td>
+                <td><strong>0.6097</strong></td>
+                <td><strong>0.3575</strong></td>
+                <td>0.2570</td>
+                <td><strong>0.5873</strong></td>
+                <td>34.85s</td>
+                <td>Mô hình cơ sở xuất sắc nhất trên không gian biến đổi 180 chiều</td>
               </tr>
               <tr>
                 <td><strong>Random Forest</strong></td>
-                <td>0.2685</td>
-                <td>0.6012</td>
-                <td>0.3480</td>
-                <td>0.2520</td>
-                <td>0.5620</td>
-                <td>14.20s</td>
+                <td>0.2700</td>
+                <td>0.6031</td>
+                <td>0.3488</td>
+                <td><strong>0.2589</strong></td>
+                <td>0.5346</td>
+                <td>29.80s</td>
                 <td>Hiệu năng ổn định, chống quá khớp tốt nhờ cơ chế bagging</td>
               </tr>
               <tr>
                 <td><strong>Logistic Regression</strong></td>
-                <td>0.2312</td>
-                <td>0.5540</td>
-                <td>0.3120</td>
-                <td>0.2240</td>
-                <td>0.5110</td>
-                <td>1.85s</td>
-                <td>Đường cơ sở tuyến tính chuẩn mực, dễ giải thích trọng số</td>
-              </tr>
-              <tr>
-                <td><strong>SGDClassifier (log-loss)</strong></td>
-                <td>0.2290</td>
-                <td>0.5510</td>
-                <td>0.3080</td>
-                <td>0.2210</td>
-                <td>0.5080</td>
-                <td>0.95s</td>
-                <td>Logistic Regression tối ưu bằng SGD, huấn luyện siêu tốc</td>
-              </tr>
-              <tr>
-                <td><strong>Naive Bayes</strong></td>
-                <td>0.2210</td>
-                <td>0.5410</td>
-                <td>0.3040</td>
-                <td>0.2180</td>
-                <td>0.5020</td>
-                <td>0.45s</td>
-                <td>Mô hình xác suất có điều kiện, giả định độc lập biến</td>
-              </tr>
-              <tr>
-                <td><strong>K-Nearest Neighbors</strong></td>
-                <td>0.2190</td>
-                <td>0.5380</td>
-                <td>0.3010</td>
-                <td>0.2150</td>
-                <td>0.4980</td>
-                <td>8.50s</td>
-                <td>Phân loại dựa trên khoảng cách Euclide trong không gian 63 chiều</td>
+                <td>0.2649</td>
+                <td>0.5989</td>
+                <td>0.3473</td>
+                <td>0.2529</td>
+                <td>0.5541</td>
+                <td><strong>1.49s</strong></td>
+                <td>Đường cơ sở tuyến tính chuẩn mực, huấn luyện rất nhanh</td>
               </tr>
               <tr>
                 <td><strong>Decision Tree</strong></td>
-                <td>0.2150</td>
-                <td>0.5320</td>
-                <td>0.2980</td>
-                <td>0.2100</td>
-                <td>0.4950</td>
-                <td>2.10s</td>
-                <td>Cây quyết định đơn lẻ, dễ bị quá khớp trên dữ liệu phức tạp</td>
+                <td>0.2584</td>
+                <td>0.5851</td>
+                <td>0.3446</td>
+                <td>0.2468</td>
+                <td>0.5710</td>
+                <td>10.23s</td>
+                <td>Cây quyết định đơn lẻ (max_depth=8, min_samples_leaf=50)</td>
+              </tr>
+              <tr>
+                <td><strong>SGDClassifier (log-loss)</strong></td>
+                <td>0.2456</td>
+                <td>0.5748</td>
+                <td>0.3357</td>
+                <td>0.2404</td>
+                <td>0.5563</td>
+                <td>6.66s</td>
+                <td>Logistic Regression tối ưu bằng SGD với hàm mất mát log_loss</td>
+              </tr>
+              <tr>
+                <td><strong>Naive Bayes</strong></td>
+                <td>0.2161</td>
+                <td>0.5177</td>
+                <td>0.2825</td>
+                <td>0.2171</td>
+                <td>0.4040</td>
+                <td><strong>0.57s</strong></td>
+                <td>Mô hình xác suất Gaussian, thời gian fit nhanh nhất</td>
+              </tr>
+              <tr>
+                <td><strong>K-Nearest Neighbors</strong></td>
+                <td>0.2102</td>
+                <td>0.5167</td>
+                <td>0.0685</td>
+                <td>0.2231</td>
+                <td>0.0405</td>
+                <td>17.10s</td>
+                <td>Phân loại dựa trên khoảng cách lân cận k=7</td>
               </tr>
             </tbody>
           </table>

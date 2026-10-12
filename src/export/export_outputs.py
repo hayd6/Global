@@ -43,8 +43,41 @@ def export_powerbi_tables():
     shutil.copy(FEATURE_SEL_DIR / "feature_importance.csv", POWERBI_DIR / "feature_importance.csv")
     logger.info("Copied metrics, PSO results, and feature importance to outputs/powerbi/.")
 
-    # 2. Generate outputs/powerbi/dashboard_customer_summary.csv
-    # Macro summary grouped by Customer Tier and Region Tier
+    # 2. Generate outputs/powerbi/dashboard_customer_summary.csv (Granular Customer Level - 200,000 rows)
+    # Matches DanY6Phan.md, DATA_MODEL_SCHEMA.md, and POWER_BI_SPECIFICATION.md
+    con.execute(
+        f"""
+        COPY (
+            SELECT 
+                customer_id,
+                split_type AS split_group,
+                target,
+                age,
+                country_code AS country,
+                customer_tier,
+                ROUND(loyalty_score, 4) AS loyalty_score,
+                ROUND(total_spend, 2) AS total_spend,
+                trans_count AS transaction_count,
+                sess_count AS total_sessions,
+                ROUND(avg_session_duration, 1) AS avg_session_duration_sec,
+                ROUND(avg_pages_viewed, 2) AS avg_pages_per_session,
+                total_cart_additions,
+                ROUND(bounce_rate, 4) AS bounce_rate,
+                COALESCE(region_tier, 'Unknown') AS marketing_campaign_tier,
+                CASE 
+                    WHEN pct_mobile_sessions >= 0.5 THEN 'Mobile'
+                    WHEN pct_desktop_sessions >= 0.5 THEN 'Desktop'
+                    WHEN pct_tablet_sessions >= 0.5 THEN 'Tablet'
+                    ELSE 'Mixed'
+                END AS preferred_device
+            FROM read_parquet('{parquet_path.as_posix()}')
+            ORDER BY customer_id
+        ) TO '{(POWERBI_DIR / "dashboard_customer_summary.csv").as_posix()}' (HEADER, DELIMITER ',')
+        """
+    )
+    logger.info("Exported outputs/powerbi/dashboard_customer_summary.csv (200,000 rows)")
+
+    # 2b. Generate outputs/powerbi/dashboard_tier_region_summary.csv (Macro 17-row cohort aggregate)
     con.execute(
         f"""
         COPY (
@@ -62,10 +95,10 @@ def export_powerbi_tables():
             WHERE split_type = 'train'
             GROUP BY customer_tier, region_tier
             ORDER BY customer_tier, region_tier
-        ) TO '{(POWERBI_DIR / "dashboard_customer_summary.csv").as_posix()}' (HEADER, DELIMITER ',')
+        ) TO '{(POWERBI_DIR / "dashboard_tier_region_summary.csv").as_posix()}' (HEADER, DELIMITER ',')
         """
     )
-    logger.info("Exported outputs/powerbi/dashboard_customer_summary.csv")
+    logger.info("Exported outputs/powerbi/dashboard_tier_region_summary.csv (17 cohort rows)")
 
     # 3. Generate outputs/powerbi/dashboard_behavior_summary.csv
     # Behavioral summary grouped by target, primary traffic channels and devices
