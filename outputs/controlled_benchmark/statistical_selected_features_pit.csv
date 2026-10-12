@@ -1,0 +1,17 @@
+feature_name,is_selected
+loyalty_score,1
+account_age_days,1
+sess_count,1
+total_session_duration,1
+max_session_duration,1
+total_pages_viewed,1
+total_cart_additions,1
+trans_count,1
+total_spend,1
+max_order_value,1
+total_items_count,1
+days_since_last_transaction,1
+spend_per_session,1
+spend_per_item,1
+loyalty_spend_product,1
+review_loyalty_score,1

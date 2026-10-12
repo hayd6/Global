@@ -1,0 +1,17 @@
+feature_name,is_selected
+account_age_days,1
+total_session_duration,1
+total_pages_viewed,1
+avg_pages_viewed,1
+total_cart_additions,1
+avg_cart_additions,1
+pct_mobile_sessions,1
+pct_desktop_sessions,1
+has_transactions,1
+pct_debit_card,1
+pct_standard_shipping,1
+pct_overnight_shipping,1
+average_income,1
+urban_ratio,1
+spend_per_session,1
+activity_recency_ratio,1

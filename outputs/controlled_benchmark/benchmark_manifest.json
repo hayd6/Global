@@ -1,0 +1,31 @@
+{
+    "dataset_name": "Controlled Synthetic Benchmark Dataset",
+    "methodology": "Point-in-Time Longitudinal Causal Generation",
+    "random_state": 42,
+    "n_customers": 25000,
+    "n_sessions": 89666,
+    "n_transactions": 21534,
+    "study_start_date": "2023-01-01",
+    "cutoff_date": "2024-06-01",
+    "prediction_end_date": "2024-07-01",
+    "prediction_window_days": 30,
+    "target_positive_rate": 0.0878,
+    "target_positives": 2195,
+    "target_negatives": 22805,
+    "guaranteed_invariants": {
+        "no_session_before_signup": true,
+        "no_transaction_before_signup": true,
+        "items_count_strictly_positive": true,
+        "marketing_session_within_campaign_window": true,
+        "target_strictly_evaluates_future_window": true,
+        "zero_variance_referral_eliminated": true
+    },
+    "files_sha256": {
+        "customers.csv": "73f6eac27fd4074850eebc02c045735a7742d3149f0787f43587cc2962a6b53a",
+        "sessions.csv": "98e20cb03e16b2b2e06f9ebb0727a2fdb0c2789ebd7e7a5c92a8b58671240e60",
+        "transactions.csv": "af9a31b87715c28ba2e93f9ec904166ebaba82935efea4ae9865447bcadf2f45",
+        "marketing_campaigns.csv": "fe48fb5d61c527d180eb31e520c5e2a42387f852c9c68d72f61e9aecfd548c50",
+        "geo_data.csv": "9e889ff182029caa11038a81815c3d66ba78c90feea0eda320386f167b9909ff",
+        "customer_labels_pit.csv": "ec49cf9ca10a98f59c4c921a50a19120dbc7ac040167689c460ec6ef28a47d10"
+    }
+}
