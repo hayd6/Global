@@ -16,3 +16,12 @@
 | **Audit Khắc phục 1** | Xác minh định nghĩa bài toán & kiểm toán cutoff | **HOÀN THÀNH** | Chứng minh thực nghiệm target độc lập với GD 30 ngày cuối; chuẩn hóa phạm vi Observational Snapshot Propensity Classification |
 | **Audit Khắc phục 2** | Sửa quy trình thí nghiệm & Quản lý phân vùng tập trung | **HOÀN THÀNH** | Tạo `split_manager.py`, cô lập 32k Holdout, tiền xử lý Fit-on-Train only, chuẩn hóa split IDs |
 | **Audit Khắc phục 3** | Kiểm tra PSO & Báo cáo trung thực Trade-off | **HOÀN THÀNH** | Tách riêng search time (11.79s) và fit time (4.52s); báo cáo khách quan: giảm 73% số chiều, tăng tốc fit, trade-off nhẹ PR-AUC |
+| **Kế hoạch 6 phần — GĐ 1** | Kiểm chứng hiện trạng & Hiệu chỉnh kế hoạch (ARL Mức 1) | **ĐÃ PHÊ DUYỆT** | Phê duyệt theo docs/IMPLEMENTATION_PLAN.md v2.0 & docs/PHASE1_FINAL_REVIEW.md |
+| **Kế hoạch 6 phần — GĐ 2** | Hoàn thiện nghiên cứu học thuật & Bằng chứng (ARL Mức 2-3) | **HOÀN THÀNH & ĐÃ KIỂM ĐỊNH (CHỜ DUYỆT)** | Kiểm toán 26 tài liệu 2021–2026 độc quyền 4 trạng thái (7 Khớp hoàn toàn, 9 Đã hiệu chỉnh, 10 Thay thế, 0 Chưa xác minh) trong `docs/LITERATURE_REVIEW.md`; Bằng chứng khớp nối khách hàng 1-1 trên Holdout 32k; Xuất bản artifact tái lập `outputs/holdout_predictions.csv` & `holdout_prediction_metadata.json`; Đối chiếu exact `scale_pos_weight` (102,011 / 25,989 = 3.92516...); 25/25 pytest passed (100%); Lập `docs/PHASE2_ACCEPTANCE_REPORT.md` v2.1; Dừng chờ duyệt trước Giai đoạn 3 |
+| **Kế hoạch 6 phần — GĐ 3** | Xây dựng Website nghiên cứu React + Vite (ARL Mức 2-4) | *Chưa thực hiện (Chờ duyệt GĐ 2)* | Frontend web app 6 trang trong web/ độc lập với Power BI |
+| **Kế hoạch 6 phần — GĐ 4** | Giải pháp Power BI Dashboard 4 trang (ARL Mức 2-3) | *Chưa thực hiện (Chờ duyệt GĐ 2)* | DATA_MODEL_SCHEMA.md, POWER_BI_DESIGN_GUIDE.md, hướng dẫn manual .pbix |
+| **Kế hoạch 6 phần — GĐ 5** | Biên tập Báo cáo học thuật 6 phần hoàn chỉnh (ARL Mức 3) | *Chưa thực hiện (Chờ duyệt GĐ 2)* | 6 file docs/report/Phan_1.md đến Phan_6.md theo DanY6Phan.md |
+| **Kế hoạch 6 phần — GĐ 6** | Nghiệm thu cuối & Báo cáo nghiệm thu (ARL Mức 4) | *Chưa thực hiện (Chờ duyệt GĐ 2)* | docs/FINAL_ACCEPTANCE_REPORT.md và kiểm thử tích hợp chéo |
+
+
+

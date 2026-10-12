@@ -1,0 +1,14 @@
+check_type,relationship,violations_count,status,details
+Primary Key Uniqueness,customers.customer_id is unique,0,PASS,Zero duplicate keys expected. Found 0 duplicates.
+Primary Key Uniqueness,sessions.session_id is unique,0,PASS,Zero duplicate keys expected. Found 0 duplicates.
+Primary Key Uniqueness,transactions.transaction_id is unique,0,PASS,Zero duplicate keys expected. Found 0 duplicates.
+Primary Key Uniqueness,marketing_campaigns.campaign_id is unique,0,PASS,Zero duplicate keys expected. Found 0 duplicates.
+Primary Key Uniqueness,geo_data.geo_ip_region is unique,0,PASS,Zero duplicate keys expected. Found 0 duplicates.
+Primary Key Uniqueness,train.customer_id is unique,0,PASS,Zero duplicate keys expected. Found 0 duplicates.
+Primary Key Uniqueness,test.customer_id is unique,0,PASS,Zero duplicate keys expected. Found 0 duplicates.
+Train-Test Leakage / Disjointness,train.customer_id INTERSECT test.customer_id,0,PASS,Train and test sets must have 0 overlapping customer_id. Overlap = 0
+Foreign Key Integrity,train.customer_id -> customers.customer_id,0,PASS,Unmatched customers in train: 0
+Foreign Key Integrity,test.customer_id -> customers.customer_id,0,PASS,Unmatched customers in test: 0
+Foreign Key Integrity,sessions.customer_id -> customers.customer_id,0,PASS,Unmatched customer_id in sessions: 0
+Foreign Key Integrity,transactions.customer_id -> customers.customer_id,0,PASS,Unmatched customer_id in transactions: 0
+Foreign Key Integrity,sessions.geo_ip_region -> geo_data.geo_ip_region,0,PASS,Unmatched geo_ip_region in sessions: 0

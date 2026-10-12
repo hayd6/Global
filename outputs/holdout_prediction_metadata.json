@@ -1,0 +1,39 @@
+{
+    "artifact_name": "holdout_predictions.csv",
+    "split_id": "stratified_80_20_v1",
+    "evaluation_set": "holdout_32k",
+    "total_samples": 32000,
+    "model_name": "XGBoost (Full Features)",
+    "threshold": 0.5,
+    "confusion_matrix": {
+        "true_negatives": 15740,
+        "false_positives": 9763,
+        "false_negatives": 3078,
+        "true_positives": 3419
+    },
+    "metrics": {
+        "accuracy": 0.5987,
+        "precision": 0.2594,
+        "recall": 0.5262,
+        "specificity": 0.6172,
+        "f1_score": 0.3475
+    },
+    "scale_pos_weight": {
+        "train_negative_count": 102011,
+        "train_positive_count": 25989,
+        "exact_value": 3.925160644888222
+    },
+    "holdout_sha256": "008236ea0d8461b4d5f58b34e973766d4a696a20c97b8d28a4b9d025c99a5da2",
+    "feature_count": 63,
+    "random_state": 42,
+    "reproducibility_recipe": {
+        "generator_script": "scratch/export_holdout_artifact.py",
+        "model_architecture": "XGBClassifier(n_estimators=150, max_depth=6, learning_rate=0.08, scale_pos_weight=3.925160644888222, subsample=0.85, colsample_bytree=0.85, random_state=42, n_jobs=-1, eval_metric='logloss')",
+        "preprocessing_pipeline": "SimpleImputer(strategy='median') + StandardScaler() fit strictly on Train (128,000 samples) and transform on Holdout (32,000 samples)",
+        "feature_space": "63 continuous/numerical candidate features from outputs/customer_features.parquet",
+        "split_definition": "80% Train (128,000) / 20% Holdout (32,000) stratified by target from 160,000 train pool",
+        "decision_threshold": "fixed_0.50 (anti-threshold leakage)",
+        "source_data_order": "SELECT * FROM read_parquet('customer_features.parquet') WHERE split_type = 'train' ORDER BY customer_id",
+        "methodological_caveat": "Observational Snapshot Propensity Classification; prediction cutoff timestamp remains unverified in raw data."
+    }
+}

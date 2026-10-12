@@ -1,0 +1,31 @@
+target,device_persona,acquisition_channel,customer_count,avg_session_count,avg_session_duration_sec,avg_pages_viewed,avg_cart_additions,avg_bounce_rate,avg_spend_usd
+0,Balanced Device,Organic,16615,10.3,478.9,58.7,20.55,0.4996,299.84
+0,Balanced Device,Multi-channel,14515,11.42,476.6,65.1,22.8,0.5024,302.73
+0,Mobile Heavy,Organic,14192,9.34,467.5,53.3,18.58,0.4974,303.9
+0,Balanced Device,Paid Ads,14109,10.47,475.3,59.7,20.88,0.502,295.82
+0,Desktop Heavy,Organic,13362,9.49,472.1,54.2,18.95,0.4999,301.45
+0,Mobile Heavy,Paid Ads,11969,9.47,472.1,53.9,18.88,0.5002,297.89
+0,Mobile Heavy,Multi-channel,11414,10.28,478.6,58.8,20.45,0.5009,300.43
+0,Desktop Heavy,Paid Ads,11238,9.58,471.1,54.8,19.03,0.4955,301.6
+0,Desktop Heavy,Multi-channel,10593,10.41,476.3,59.4,20.79,0.5018,301.47
+0,Balanced Device,Email,1753,9.25,486.4,52.8,18.52,0.4992,303.42
+0,Balanced Device,Social,1666,9.29,479.1,52.7,18.53,0.4937,308.9
+0,Mobile Heavy,Email,1584,8.0,486.6,45.7,16.02,0.499,309.21
+0,Mobile Heavy,Social,1543,8.33,472.9,47.7,16.61,0.4971,289.81
+0,Desktop Heavy,Social,1485,8.41,492.8,48.0,16.77,0.4939,304.0
+0,Desktop Heavy,Email,1476,8.38,481.1,47.5,16.72,0.5065,295.52
+1,Balanced Device,Organic,4169,10.34,485.5,59.0,20.79,0.4978,301.93
+1,Balanced Device,Paid Ads,3662,10.43,488.6,59.8,21.1,0.4997,300.65
+1,Balanced Device,Multi-channel,3652,11.53,495.1,65.6,23.29,0.4968,302.74
+1,Mobile Heavy,Organic,3534,9.4,484.1,53.7,19.1,0.4964,299.82
+1,Desktop Heavy,Organic,3487,9.44,485.1,53.9,19.21,0.5003,295.15
+1,Mobile Heavy,Paid Ads,3053,9.48,471.9,53.7,18.95,0.4988,294.98
+1,Desktop Heavy,Paid Ads,2906,9.47,479.2,53.8,19.13,0.4984,299.92
+1,Mobile Heavy,Multi-channel,2846,10.28,473.2,58.5,20.93,0.5055,291.4
+1,Desktop Heavy,Multi-channel,2686,10.53,497.4,59.9,21.3,0.4964,306.66
+1,Balanced Device,Email,464,9.03,497.5,51.8,18.5,0.4864,268.85
+1,Mobile Heavy,Email,435,8.36,500.3,47.3,16.84,0.4996,320.94
+1,Mobile Heavy,Social,417,8.3,487.6,47.5,16.73,0.4885,299.5
+1,Balanced Device,Social,398,9.49,478.9,54.0,18.9,0.4954,309.62
+1,Desktop Heavy,Email,389,8.38,490.5,48.7,16.31,0.4974,302.14
+1,Desktop Heavy,Social,388,8.5,501.8,48.3,17.1,0.4903,302.69

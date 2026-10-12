@@ -1,0 +1,8 @@
+model_name,feature_count,pr_auc,roc_auc,f1_score,precision,recall,accuracy,threshold,threshold_source,best_f1_threshold_ref,true_negatives,false_positives,false_negatives,true_positives,fit_time_seconds,split_id,feature_space,evaluation_set
+Logistic Regression,180,0.2649,0.5989,0.3473,0.2529,0.5541,0.5771,0.5,fixed_0.5,0.4545,14868,10635,2897,3600,1.49,stratified_80_20_v1,180_transformed,holdout_32k
+Naive Bayes,180,0.2161,0.5177,0.2825,0.2171,0.404,0.5832,0.5,fixed_0.5,0.0,16038,9465,3872,2625,0.57,stratified_80_20_v1,180_transformed,holdout_32k
+Decision Tree,180,0.2584,0.5851,0.3446,0.2468,0.571,0.559,0.5,fixed_0.5,0.4551,14178,11325,2787,3710,10.23,stratified_80_20_v1,180_transformed,holdout_32k
+Random Forest,180,0.27,0.6031,0.3488,0.2589,0.5346,0.5948,0.5,fixed_0.5,0.4691,15561,9942,3024,3473,29.8,stratified_80_20_v1,180_transformed,holdout_32k
+Gradient Boosting,180,0.2758,0.6097,0.3575,0.257,0.5873,0.5714,0.5,fixed_0.5,0.4357,14468,11035,2681,3816,34.85,stratified_80_20_v1,180_transformed,holdout_32k
+K-Nearest Neighbors,180,0.2102,0.5167,0.0685,0.2231,0.0405,0.7766,0.5,fixed_0.5,0.0,24587,916,6234,263,17.1,stratified_80_20_v1,180_transformed,holdout_32k
+SGDClassifier (log_loss),180,0.2456,0.5748,0.3357,0.2404,0.5563,0.5531,0.5,fixed_0.5,0.431,14085,11418,2883,3614,6.66,stratified_80_20_v1,180_transformed,holdout_32k
