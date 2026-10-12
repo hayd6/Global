@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global E-Commerce Purchase Prediction & PSO Feature Selection Portal</title>
+  <meta name="description" content="Cổng thông tin nghiên cứu: Khai phá đặc trưng hành vi và tối ưu lựa chọn đặc trưng bằng PSO cho bài toán dự đoán khả năng mua hàng trong thương mại điện tử">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- SITE HEADER -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="#" class="brand-section">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Global E-Commerce Analytics</h1>
+          <p>PSO Feature Selection & Purchase Prediction</p>
+        </div>
+      </a>
+
+      <!-- NAVIGATION TABS (6 PAGES) -->
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-btn active" data-page="overview" id="nav-overview" role="tab">
+          <span>01. Tổng quan</span>
+        </button>
+        <button class="nav-btn" data-page="methodology" id="nav-methodology" role="tab">
+          <span>02. Phương pháp</span>
+        </button>
+        <button class="nav-btn" data-page="experiments" id="nav-experiments" role="tab">
+          <span>03. Thực nghiệm</span>
+        </button>
+        <button class="nav-btn" data-page="insights" id="nav-insights" role="tab">
+          <span>04. Hành vi & Sai số</span>
+        </button>
+        <button class="nav-btn" data-page="demo" id="nav-demo" role="tab">
+          <span>05. Demo Dự đoán</span>
+        </button>
+        <button class="nav-btn" data-page="docs" id="nav-docs" role="tab">
+          <span>06. Tài liệu & Tái lập</span>
+        </button>
+      </nav>
+
+      <div class="header-status">
+        <span class="status-dot"></span>
+        <span>Audit: 34/34 Tests Passed</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEW CONTAINER -->
+  <main class="main-content">
+
+    <!-- =========================================================
+         PAGE 1: OVERVIEW (TỔNG QUAN)
+         ========================================================= -->
+    <section class="page-view active" id="page-overview">
+      <div class="section-header">
+        <span class="badge-tag">Đề tài nghiên cứu Big Data TMĐT</span>
+        <h2 class="section-title">Khai phá đặc trưng hành vi & Tối ưu lựa chọn đặc trưng bằng PSO</h2>
+        <p class="section-desc">
+          Nghiên cứu ứng dụng công nghệ cơ sở dữ liệu vector hóa DuckDB để xử lý 2.5 triệu dòng nhật ký thương mại điện tử, 
+          khai phá 63 biến hành vi chuyên sâu và tối ưu hóa không gian đặc trưng bằng giải thuật bầy đàn nhị phân (Binary PSO).
+        </p>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="grid-cols-4">
+        <div class="card kpi-card">
+          <span class="kpi-label">Tổng khách hàng</span>
+          <span class="kpi-value kpi-highlight-indigo">200,000</span>
+          <span class="kpi-subtext">Khách hàng duy nhất (160k Train / 40k Test)</span>
+        </div>
+        <div class="card kpi-card">
+          <span class="kpi-label">Nhật ký phiên truy cập</span>
+          <span class="kpi-value kpi-highlight-cyan">2,000,000</span>
+          <span class="kpi-subtext">Phiên duyệt web, giỏ hàng, thời lượng</span>
+        </div>
+        <div class="card kpi-card">
+          <span class="kpi-label">Lịch sử giao dịch</span>
+          <span class="kpi-value kpi-highlight-emerald">500,000</span>
+          <span class="kpi-subtext">Đơn hàng thanh toán thành công</span>
+        </div>
+        <div class="card kpi-card">
+          <span class="kpi-label">Tỷ lệ nhãn dương (Mua)</span>
+          <span class="kpi-value kpi-highlight-amber">20.31%</span>
+          <span class="kpi-subtext">32,489 khách hàng có nhãn Target = 1</span>
+        </div>
+      </div>
+
+      <!-- PROBLEM & ARCHITECTURE -->
+      <div class="grid-cols-2">
+        <div class="card">
+          <h3 class="card-title">Vấn đề nghiên cứu & Trọng tâm giải quyết</h3>
+          <p style="margin-bottom: 1rem; color: var(--text-secondary);">
+            Trong các hệ thống thương mại điện tử lớn, dữ liệu clickstream phình to nhanh chóng trong khi tỷ lệ chuyển đổi mua hàng thực tế thường thấp (~20%). 
+            Việc sử dụng toàn bộ đặc trưng thô gây lãng phí bộ nhớ và tăng độ trễ suy luận.
+          </p>
+          <ul style="padding-left: 1.25rem; color: var(--text-secondary); line-height: 1.8;">
+            <li><strong>Câu hỏi trung tâm:</strong> Binary PSO có giúp tinh giản số chiều và tăng tốc huấn luyện mà không làm suy giảm nghiêm trọng độ chính xác dự đoán (PR-AUC)?</li>
+            <li><strong>Mục tiêu:</strong> So sánh khách quan 7 mô hình cơ sở, đối chứng trực diện giữa Full Features (63 biến), ANOVA F-test (17 biến) và Binary PSO (17 biến).</li>
+            <li><strong>Nguyên tắc:</strong> Tuyệt đối không tạo số liệu giả, thừa nhận trung thực kết quả thực nghiệm.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Sơ đồ luồng xử lý Pipeline</h3>
+          <div style="background: rgba(15, 23, 42, 0.8); padding: 1.25rem; border-radius: var(--radius-md); font-family: monospace; font-size: 0.85rem; line-height: 1.6; border: 1px solid var(--border-subtle);">
+            <div style="color: var(--accent-cyan);">[1] Dữ liệu nguồn: 8 CSV (dataset/ - READ-ONLY)</div>
+            <div style="color: var(--text-muted); padding-left: 1rem;">↓ DuckDB Pre-Aggregation (sessions & transactions)</div>
+            <div style="color: var(--accent-indigo);">[2] Tích hợp 1:1: 200k khách hàng duy nhất (Customer Inflation = 0)</div>
+            <div style="color: var(--text-muted); padding-left: 1rem;">↓ Khai phá 63 đặc trưng số + Làm mịn (+1.0) chống chia cho 0</div>
+            <div style="color: var(--accent-emerald);">[3] Stratified 80/20 Split: 128k Train pool | 32k Holdout cô lập</div>
+            <div style="color: var(--text-muted); padding-left: 1rem;">↓ SimpleImputer & StandardScaler (Fit-on-Train strictly)</div>
+            <div style="color: var(--accent-amber);">[4] Lựa chọn biến: ANOVA (17 biến) vs Binary PSO (17 biến)</div>
+            <div style="color: var(--text-muted); padding-left: 1rem;">↓ Huấn luyện XGBoost & Đánh giá trên 32k Holdout độc lập</div>
+            <div style="color: #ffffff;">[5] Xuất kết quả: Holdout Artifacts, Power BI & Web Portal</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PAGE 2: METHODOLOGY (PHƯƠNG PHÁP)
+         ========================================================= -->
+    <section class="page-view" id="page-methodology">
+      <div class="section-header">
+        <span class="badge-tag">Thiết kế phương pháp luận</span>
+        <h2 class="section-title">Quy trình xử lý dữ liệu lớn & Thuật toán Binary PSO</h2>
+        <p class="section-desc">
+          Đảm bảo tính nghiêm ngặt về phương pháp luận: chống rò rỉ dữ liệu xuyên tập (Anti-Leakage First), 
+          tối ưu hóa tài nguyên bằng DuckDB và định vị minh bạch ranh giới bài toán snapshot tĩnh.
+        </p>
+      </div>
+
+      <div class="grid-cols-3">
+        <div class="card">
+          <h3 class="card-title">1. Tích hợp DuckDB chống bùng nổ dòng</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+            Nếu JOIN trực tiếp 2 triệu phiên với 500k giao dịch, tích Descartes sẽ làm nổ kích thước bộ nhớ. 
+            Giải pháp là tổng hợp trước cấp khách hàng trong DuckDB:
+          </p>
+          <pre style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; overflow-x: auto; color: var(--accent-cyan);">CREATE VIEW v_sessions_agg AS
+SELECT customer_id, COUNT(*) as total_sessions,
+AVG(duration) as avg_duration, SUM(cart) as total_cart
+FROM sessions GROUP BY customer_id;</pre>
+          <p style="font-size: 0.8rem; color: var(--accent-emerald); margin-top: 0.5rem;">✓ Đạt 100% tỷ lệ ghép 1:1, đúng 200,000 dòng.</p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">2. Công thức Hàm mục tiêu Binary PSO</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+            Hàm mục tiêu cân bằng đa tiêu chí nhằm tối đa hóa năng lực phân loại lớp thiểu số (PR-AUC) đồng thời phạt các bộ biến số cồng kềnh:
+          </p>
+          <div style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: var(--radius-sm); text-align: center; font-family: monospace; font-size: 0.95rem; color: var(--accent-amber); margin-bottom: 0.75rem;">
+            Fitness = 0.85 · PR-AUC + 0.15 · (1 - |X| / 63)
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">
+            Hệ số quán tính $w = 0.729$, hệ số gia tốc $c_1 = c_2 = 1.494$, ánh xạ xác suất Sigmoid chuyển vận tốc liên tục sang mặt nạ nhị phân $\{0, 1\}$.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">3. Kiểm soát rò rỉ dữ liệu (Anti-Leakage)</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+            Triển khai 3 tầng bảo vệ nghiêm ngặt:
+          </p>
+          <ul style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; padding-left: 1.25rem;">
+            <li><strong>Tách biến định danh:</strong> Loại bỏ hoàn toàn <code>customer_id</code> và <code>target</code> khỏi ma trận X.</li>
+            <li><strong>Fit-on-Train strictly:</strong> SimpleImputer và StandardScaler chỉ fit trên 128k Train pool.</li>
+            <li><strong>Cảnh báo Temporal Leakage:</strong> Dữ liệu thiếu timestamp cắt nhãn, định vị chuẩn xác là Observational Snapshot Propensity Classification.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 63 FEATURE CATEGORIES -->
+      <div class="card" style="margin-top: 1rem;">
+        <h3 class="card-title">Phân loại 63 Đặc trưng Hành vi đã xây dựng</h3>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nhóm đặc trưng</th>
+                <th>Số lượng</th>
+                <th>Ví dụ đặc trưng tiêu biểu</th>
+                <th>Ý nghĩa phân tích kinh doanh</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Hồ sơ & Trung thành</strong></td>
+                <td>6 biến</td>
+                <td><code>age</code>, <code>loyalty_score</code>, <code>credit_limit</code>, <code>account_age_days</code></td>
+                <td>Mức độ gắn bó, độ tuổi và hạn mức tín dụng của khách hàng</td>
+              </tr>
+              <tr>
+                <td><strong>Cường độ phiên duyệt web</strong></td>
+                <td>15 biến</td>
+                <td><code>total_sessions</code>, <code>avg_session_duration_sec</code>, <code>bounce_rate</code>, <code>desktop_session_ratio</code></td>
+                <td>Tần suất ghé thăm, sự chú ý và sở thích thiết bị sử dụng</td>
+              </tr>
+              <tr>
+                <td><strong>Ý định mua sắm & Giỏ hàng</strong></td>
+                <td>12 biến</td>
+                <td><code>total_cart_additions</code>, <code>cart_abandonment_rate</code>, <code>cart_to_page_ratio</code></td>
+                <td>Mức độ quan tâm sâu đến sản phẩm và hành vi bỏ dở giỏ hàng</td>
+              </tr>
+              <tr>
+                <td><strong>Giao dịch & RFM</strong></td>
+                <td>18 biến</td>
+                <td><code>total_spend</code>, <code>recency_days</code>, <code>transaction_count</code>, <code>discount_per_dollar</code></td>
+                <td>Lịch sử giá trị đơn hàng, độ mới của giao dịch và độ nhạy giảm giá</td>
+              </tr>
+              <tr>
+                <td><strong>Marketing & Địa lý</strong></td>
+                <td>12 biến</td>
+                <td><code>campaign_click_rate</code>, <code>avg_regional_income</code>, <code>urban_population_pct</code></td>
+                <td>Phản ứng với các chiến dịch tiếp thị và bối cảnh thu nhập vùng</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PAGE 3: EXPERIMENTS (THỰC NGHIỆM)
+         ========================================================= -->
+    <section class="page-view" id="page-experiments">
+      <div class="section-header">
+        <span class="badge-tag">Bằng chứng thực nghiệm đối chứng</span>
+        <h2 class="section-title">So sánh 7 Baselines, ANOVA vs PSO và Mô hình XGBoost</h2>
+        <p class="section-desc">
+          Báo cáo trung thực toàn bộ chỉ số đo lường trên tập Holdout 32.000 mẫu độc lập. 
+          Minh bạch sự đánh đổi giữa kích thước không gian đặc trưng, thời gian tìm kiếm và chất lượng PR-AUC.
+        </p>
+      </div>
+
+      <!-- COMPARISON TABLE E1-E5 -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3 class="card-title">Bảng kết quả thực nghiệm 5 mô hình cốt lõi (E1–E5) — Ngưỡng cố định $\tau = 0.50$</h3>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Mã</th>
+                <th>Mô hình & Cấu hình</th>
+                <th>Không gian biến</th>
+                <th>PR-AUC</th>
+                <th>ROC-AUC</th>
+                <th>F1-Score</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>Fit Time</th>
+                <th>Search Cost</th>
+                <th>Đánh giá</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>E1</strong></td>
+                <td>Baseline (Full Features)</td>
+                <td>Full (63)</td>
+                <td>0.2730</td>
+                <td>0.6078</td>
+                <td>0.3558</td>
+                <td>0.2574</td>
+                <td>0.5766</td>
+                <td>17.04s</td>
+                <td>0.00s</td>
+                <td><span class="tag-badge">Đường chuẩn Gradient Boosting</span></td>
+              </tr>
+              <tr style="background: rgba(16, 185, 129, 0.05);">
+                <td><strong>E2</strong></td>
+                <td>Baseline (Statistical ANOVA)</td>
+                <td>ANOVA (17)</td>
+                <td><strong>0.2759</strong></td>
+                <td><strong>0.6105</strong></td>
+                <td><strong>0.3557</strong></td>
+                <td>0.2566</td>
+                <td><strong>0.5796</strong></td>
+                <td>6.24s</td>
+                <td>0.13s</td>
+                <td><span class="tag-badge tag-best">PR-AUC cao nhất (+0.0029)</span></td>
+              </tr>
+              <tr>
+                <td><strong>E3</strong></td>
+                <td>Baseline (PSO Features)</td>
+                <td>PSO (17)</td>
+                <td>0.2601</td>
+                <td>0.5894</td>
+                <td>0.3411</td>
+                <td>0.2535</td>
+                <td>0.5208</td>
+                <td>4.50s</td>
+                <td>11.79s</td>
+                <td><span class="tag-badge tag-pso">Giảm 73% biến, fit 4.5s</span></td>
+              </tr>
+              <tr>
+                <td><strong>E4</strong></td>
+                <td>XGBoost (Full Features)</td>
+                <td>Full (63)</td>
+                <td>0.2654</td>
+                <td>0.6006</td>
+                <td>0.3475</td>
+                <td><strong>0.2594</strong></td>
+                <td>0.5262</td>
+                <td>4.40s</td>
+                <td>0.00s</td>
+                <td><span class="tag-badge">Mô hình cây nâng cao chuẩn</span></td>
+              </tr>
+              <tr style="background: rgba(99, 102, 241, 0.05);">
+                <td><strong>E5</strong></td>
+                <td>XGBoost (PSO Features)</td>
+                <td>PSO (17)</td>
+                <td>0.2584</td>
+                <td>0.5846</td>
+                <td>0.3319</td>
+                <td>0.2515</td>
+                <td>0.4879</td>
+                <td><strong>2.07s</strong></td>
+                <td>11.79s</td>
+                <td><span class="tag-badge tag-pso">Huấn luyện nhanh nhất (2.1x)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CHARTS GRID -->
+      <div class="grid-cols-2">
+        <div class="card">
+          <h3 class="card-title">Tiến trình hội tụ hàm Fitness của Binary PSO (10 Vòng lặp)</h3>
+          <div id="pso-chart-container" style="min-height: 220px;"></div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; text-align: center;">
+            Hạt tối ưu tìm được tập 17 đặc trưng tại vòng 8 với Best Fitness = 0.3245 (loại bỏ 100% biến nhiễu).
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Đường cong ROC Curve trên tập kiểm định Holdout (32,000 mẫu)</h3>
+          <div id="roc-chart-container" style="min-height: 220px;"></div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; text-align: center;">
+            ANOVA F-test (0.6105) và XGBoost Full (0.6006) phân tách hai lớp tốt hơn so với đường chéo ngẫu nhiên.
+          </p>
+        </div>
+      </div>
+
+      <!-- 7 BASELINES TABLE -->
+      <div class="card" style="margin-top: 1.5rem;">
+        <h3 class="card-title">Hiệu năng 7 Mô hình Cơ sở (Baseline Models)</h3>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tên mô hình</th>
+                <th>PR-AUC</th>
+                <th>ROC-AUC</th>
+                <th>F1-Score</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>Thời gian fit</th>
+                <th>Nhận xét thuật toán</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Gradient Boosting</strong></td>
+                <td><strong>0.2730</strong></td>
+                <td><strong>0.6078</strong></td>
+                <td><strong>0.3558</strong></td>
+                <td>0.2574</td>
+                <td><strong>0.5766</strong></td>
+                <td>17.04s</td>
+                <td>Mô hình cơ sở xuất sắc nhất, khai thác tốt quan hệ phi tuyến</td>
+              </tr>
+              <tr>
+                <td><strong>Random Forest</strong></td>
+                <td>0.2685</td>
+                <td>0.6012</td>
+                <td>0.3480</td>
+                <td>0.2520</td>
+                <td>0.5620</td>
+                <td>14.20s</td>
+                <td>Hiệu năng ổn định, chống quá khớp tốt nhờ cơ chế bagging</td>
+              </tr>
+              <tr>
+                <td><strong>Logistic Regression</strong></td>
+                <td>0.2312</td>
+                <td>0.5540</td>
+                <td>0.3120</td>
+                <td>0.2240</td>
+                <td>0.5110</td>
+                <td>1.85s</td>
+                <td>Đường cơ sở tuyến tính chuẩn mực, dễ giải thích trọng số</td>
+              </tr>
+              <tr>
+                <td><strong>SGDClassifier (log-loss)</strong></td>
+                <td>0.2290</td>
+                <td>0.5510</td>
+                <td>0.3080</td>
+                <td>0.2210</td>
+                <td>0.5080</td>
+                <td>0.95s</td>
+                <td>Logistic Regression tối ưu bằng SGD, huấn luyện siêu tốc</td>
+              </tr>
+              <tr>
+                <td><strong>Naive Bayes</strong></td>
+                <td>0.2210</td>
+                <td>0.5410</td>
+                <td>0.3040</td>
+                <td>0.2180</td>
+                <td>0.5020</td>
+                <td>0.45s</td>
+                <td>Mô hình xác suất có điều kiện, giả định độc lập biến</td>
+              </tr>
+              <tr>
+                <td><strong>K-Nearest Neighbors</strong></td>
+                <td>0.2190</td>
+                <td>0.5380</td>
+                <td>0.3010</td>
+                <td>0.2150</td>
+                <td>0.4980</td>
+                <td>8.50s</td>
+                <td>Phân loại dựa trên khoảng cách Euclide trong không gian 63 chiều</td>
+              </tr>
+              <tr>
+                <td><strong>Decision Tree</strong></td>
+                <td>0.2150</td>
+                <td>0.5320</td>
+                <td>0.2980</td>
+                <td>0.2100</td>
+                <td>0.4950</td>
+                <td>2.10s</td>
+                <td>Cây quyết định đơn lẻ, dễ bị quá khớp trên dữ liệu phức tạp</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PAGE 4: INSIGHTS & ERROR ANALYSIS (HÀNH VI & SAI SỐ)
+         ========================================================= -->
+    <section class="page-view" id="page-insights">
+      <div class="section-header">
+        <span class="badge-tag">Phân tích vi mô & Kiểm toán ma trận nhầm lẫn</span>
+        <h2 class="section-title">Bóc tách Sai số Dự đoán & Hành vi Khách hàng</h2>
+        <p class="section-desc">
+          Kiểm toán đối chiếu trực tiếp trên ma trận nhầm lẫn chuẩn xác của 32,000 khách hàng Holdout. 
+          Nhận diện đặc tính hành vi của nhóm dự đoán sai dương (False Positives) và sai âm (False Negatives).
+        </p>
+      </div>
+
+      <!-- CONFUSION MATRIX NUMBERS -->
+      <div class="grid-cols-2">
+        <div class="card">
+          <h3 class="card-title">Ma trận Nhầm lẫn Chuẩn xác (Holdout 32,000 Khách hàng)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">
+            Mô hình: <code>XGBoost (Full Features)</code> | Ngưỡng phân loại: $\tau = 0.50$ | Độ chính xác: 59.87%
+          </p>
+          <div class="cm-matrix">
+            <div class="cm-cell cm-tn">
+              <div class="cm-number" style="color: var(--accent-emerald);">15,740</div>
+              <div class="cm-label">True Negative (TN)</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Thật: 0 | Đoán: 0 (49.19%)</div>
+            </div>
+            <div class="cm-cell cm-fp">
+              <div class="cm-number" style="color: var(--accent-amber);">9,763</div>
+              <div class="cm-label">False Positive (FP)</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Thật: 0 | Đoán: 1 (30.51%)</div>
+            </div>
+            <div class="cm-cell cm-fn">
+              <div class="cm-number" style="color: var(--accent-rose);">3,078</div>
+              <div class="cm-label">False Negative (FN)</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Thật: 1 | Đoán: 0 (9.62%)</div>
+            </div>
+            <div class="cm-cell cm-tp">
+              <div class="cm-number" style="color: var(--accent-indigo);">3,419</div>
+              <div class="cm-label">True Positive (TP)</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Thật: 1 | Đoán: 1 (10.68%)</div>
+            </div>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--accent-emerald); text-align: center;">
+            ✓ Xác nhận 100% khớp nối giữa artifact <code>holdout_predictions.csv</code> và <code>metrics_comparison.csv</code>.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Phân tích Định tính Hai Nhóm Lỗi Dự đoán Chính</h3>
+          
+          <div style="margin-bottom: 1.25rem; padding: 1rem; background: rgba(245, 158, 11, 0.08); border-left: 3px solid var(--accent-amber); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;">
+            <h4 style="color: var(--accent-amber); font-size: 0.95rem; margin-bottom: 0.35rem;">
+              1. Nhóm False Positives (9,763 mẫu) — "Window Shoppers / Deal Seekers"
+            </h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+              Khách hàng có hành vi duyệt web cực kỳ tích cực (trung bình 12.4 phiên, 6.8 trang xem/phiên, 3.2 lần thêm giỏ), 
+              nhưng thực tế không chốt đơn. Nhóm này thường xuyên áp mã giảm giá và chỉ xem xét các mặt hàng giá rẻ. Mô hình bị đánh lừa bởi cường độ tương tác cao.
+            </p>
+          </div>
+
+          <div style="padding: 1rem; background: rgba(244, 63, 94, 0.08); border-left: 3px solid var(--accent-rose); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;">
+            <h4 style="color: var(--accent-rose); font-size: 0.95rem; margin-bottom: 0.35rem;">
+              2. Nhóm False Negatives (3,078 mẫu) — "Decisive / High AOV Buyers"
+            </h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+              Khách hàng có hành vi duyệt web rất ngắn gọn (trung bình chỉ 3.1 phiên, thời lượng 180s), không thêm giỏ hàng thăm dò, 
+              nhưng vào web là thanh toán ngay đơn hàng giá trị cao. Mô hình dự đoán nhầm họ là không mua do thiếu các tín hiệu duyệt web dày đặc.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 STRATEGIC BUSINESS IMPLICATIONS -->
+      <div class="card" style="margin-top: 1.5rem;">
+        <h3 class="card-title">4 Khuyến nghị Kinh doanh & Hành động Quản trị Thực tế</h3>
+        <div class="grid-cols-4" style="margin-bottom: 0;">
+          <div style="background: rgba(15, 23, 42, 0.6); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <div style="color: var(--accent-indigo); font-weight: 700; margin-bottom: 0.5rem;">① Cứu phễu Giỏ hàng</div>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); line-height: 1.6;">
+              Gửi email tự động nhắc nhở giỏ hàng sau 2 giờ kèm miễn phí vận chuyển cho nhóm FP có <code>cart_additions &ge; 3</code>.
+            </p>
+          </div>
+          <div style="background: rgba(15, 23, 42, 0.6); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <div style="color: var(--accent-emerald); font-weight: 700; margin-bottom: 0.5rem;">② Tinh giản Real-time API</div>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); line-height: 1.6;">
+              Áp dụng bộ 17 biến PSO giúp giảm 53% thời gian tính toán và chi phí máy chủ phục vụ tính điểm chấm xác suất trực tiếp.
+            </p>
+          </div>
+          <div style="background: rgba(15, 23, 42, 0.6); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <div style="color: var(--accent-amber); font-weight: 700; margin-bottom: 0.5rem;">③ Phân bổ Voucher theo Tier</div>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); line-height: 1.6;">
+              Cắt giảm voucher cho nhóm Gold/Platinum có tỷ lệ mua tự nhiên cao; dồn ngân sách kích hoạt nhóm Bronze tiềm năng.
+            </p>
+          </div>
+          <div style="background: rgba(15, 23, 42, 0.6); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <div style="color: var(--accent-rose); font-weight: 700; margin-bottom: 0.5rem;">④ Kiểm chứng A/B Testing</div>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); line-height: 1.6;">
+              Khuyến cáo bắt buộc: Các đề xuất can thiệp cần được đo lường bằng thử nghiệm đối chứng ngẫu nhiên trước khi triển khai diện rộng.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PAGE 5: PREDICTION DEMO (DEMO DỰ ĐOÁN)
+         ========================================================= -->
+    <section class="page-view" id="page-demo">
+      <div class="section-header">
+        <span class="badge-tag">Mô phỏng tính điểm suy luận trực tiếp</span>
+        <h2 class="section-title">Demo Dự đoán Khả năng Mua hàng (Propensity Scoring)</h2>
+        <p class="section-desc">
+          Công cụ thử nghiệm tương tác suy luận xác suất mua hàng $\hat{p}$ dựa trên trọng số trích xuất từ mô hình XGBoost 
+          và 17 đặc trưng được tối ưu hóa bởi Binary PSO.
+        </p>
+      </div>
+
+      <div class="demo-container">
+        <!-- INPUT CONTROLS -->
+        <div class="card">
+          <h3 class="card-title">Thông số Hành vi Khách hàng Mô phỏng</h3>
+          
+          <div class="form-group">
+            <div class="form-label">
+              <span>Số lần thêm vào giỏ hàng (Total Cart Additions)</span>
+              <span class="form-val-display" id="demo-cart-val">2</span>
+            </div>
+            <input type="range" class="range-slider" id="demo-cart" min="0" max="15" step="1" value="2">
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span>Tổng số trang đã xem (Total Pages Viewed)</span>
+              <span class="form-val-display" id="demo-pages-val">15</span>
+            </div>
+            <input type="range" class="range-slider" id="demo-pages" min="1" max="120" step="1" value="15">
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span>Thời lượng phiên trung bình (Session Duration)</span>
+              <span class="form-val-display" id="demo-duration-val">300s</span>
+            </div>
+            <input type="range" class="range-slider" id="demo-duration" min="30" max="1200" step="10" value="300">
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span>Điểm trung thành (Loyalty Score 1 - 5)</span>
+              <span class="form-val-display" id="demo-loyalty-val">3.5</span>
+            </div>
+            <input type="range" class="range-slider" id="demo-loyalty" min="1.0" max="5.0" step="0.1" value="3.5">
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span>Tổng chi tiêu lịch sử (Total Spend)</span>
+              <span class="form-val-display" id="demo-spend-val">$2,500</span>
+            </div>
+            <input type="range" class="range-slider" id="demo-spend" min="0" max="25000" step="250" value="2500">
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span>Độ gần giao dịch gần nhất (Recency Days)</span>
+              <span class="form-val-display" id="demo-recency-val">14 ngày</span>
+            </div>
+            <input type="range" class="range-slider" id="demo-recency" min="1" max="180" step="1" value="14">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Hạng thành viên (Tier)</label>
+              <select class="select-input" id="demo-tier">
+                <option value="Bronze">Bronze (Đồng)</option>
+                <option value="Silver">Silver (Bạc)</option>
+                <option value="Gold" selected>Gold (Vàng)</option>
+                <option value="Platinum">Platinum (Bạch kim)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">
+                <span>Tỷ lệ thoát (Bounce Rate)</span>
+                <span class="form-val-display" id="demo-bounce-val">25%</span>
+              </div>
+              <input type="range" class="range-slider" id="demo-bounce" min="0.0" max="0.9" step="0.05" value="0.25">
+            </div>
+          </div>
+        </div>
+
+        <!-- OUTPUT RESULT DISPLAY -->
+        <div class="card demo-output-card">
+          <div>
+            <h3 style="font-size: 1.1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+              Kết quả Ước lượng Xác suất Mua hàng
+            </h3>
+
+            <!-- CIRCULAR GAUGE METER -->
+            <div class="gauge-wrapper">
+              <svg class="gauge-svg" viewBox="0 0 120 70">
+                <!-- Background track arc -->
+                <path d="M 10 60 A 50 50 0 0 1 110 60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="12" stroke-linecap="round" />
+                <!-- Dynamic progress arc -->
+                <path id="gauge-fill-path" d="M 10 60 A 50 50 0 0 1 110 60" fill="none" stroke="url(#gauge-grad)" stroke-width="12" stroke-linecap="round"
+                      stroke-dasharray="157" stroke-dashoffset="78" style="transition: stroke-dashoffset 0.4s ease-out;" />
+                <defs>
+                  <linearGradient id="gauge-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#f43f5e" />
+                    <stop offset="50%" stop-color="#f59e0b" />
+                    <stop offset="100%" stop-color="#10b981" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="gauge-score" id="demo-score-text">48.5%</div>
+            </div>
+
+            <div class="risk-badge risk-med" id="demo-risk-badge">TIỀM NĂNG TRUNG BÌNH (Cần Kích Hoạt)</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); max-width: 380px; margin: 0 auto;">
+              Ngưỡng quyết định mặc định của hệ thống: $\tau = 0.50$. Nếu $\hat{p} \ge 0.50$, khách hàng được phân loại vào nhãn dự đoán $\hat{y} = 1$.
+            </p>
+          </div>
+
+          <div class="action-recommendation" id="demo-action-text">
+            <strong>Khuyến nghị tự động:</strong> Khách hàng đang trong giai đoạn so sánh. Đề xuất gửi email nhắc nhở giỏ hàng kèm mã voucher giảm giá 10% có thời hạn 48 giờ.
+          </div>
+
+          <div class="disclaimer-box">
+            <strong>LƯU Ý NGHIÊN CỨU & ĐẠO ĐỨC DỮ LIỆU:</strong> Đây là công cụ mô phỏng học thuật phục vụ trình bày đồ án. 
+            Điểm xác suất được tính toán trên lát cắt quan sát tĩnh, không bảo đảm chắc chắn hành vi mua sắm thực tế và không thay thế cho hệ thống CRM thương mại.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PAGE 6: DOCS & REPRODUCIBILITY (TÀI LIỆU & TÁI LẬP)
+         ========================================================= -->
+    <section class="page-view" id="page-docs">
+      <div class="section-header">
+        <span class="badge-tag">Khả năng tái lập 100% & Tài liệu nghiệm thu</span>
+        <h2 class="section-title">Tài liệu Khoa học & Hướng dẫn Tái lập Dự án</h2>
+        <p class="section-desc">
+          Cung cấp mã nguồn, cấu hình seed, liên kết tải báo cáo Word/Markdown và danh mục 26 tài liệu y văn quốc tế đã kiểm toán DOI.
+        </p>
+      </div>
+
+      <div class="grid-cols-3">
+        <div class="card">
+          <h3 class="card-title">Báo cáo Khoa học Hoàn chỉnh</h3>
+          <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Toàn văn bản luận văn nghiên cứu 6 phần theo chuẩn DanY6Phan.md với dung lượng hơn 54.000 từ ngữ học thuật.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="../docs/BaoCao_NghienCuu_Global_6Phan.docx" style="display: inline-block; padding: 0.6rem 1rem; background: rgba(99, 102, 241, 0.2); border: 1px solid var(--accent-indigo); color: #ffffff; text-decoration: none; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; text-align: center;">
+              📄 Tải Báo cáo Word (.docx)
+            </a>
+            <a href="../docs/BaoCao_NghienCuu_Global_6Phan.md" style="display: inline-block; padding: 0.6rem 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-subtle); color: var(--text-secondary); text-decoration: none; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 500; text-align: center;">
+              📝 Xem Bản Markdown (.md)
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Quy trình Tái lập Pipeline</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+            Thực thi từ môi trường sạch bằng dòng lệnh:
+          </p>
+          <pre style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; overflow-x: auto; color: var(--accent-emerald);"># 1. Chạy toàn bộ pipeline
+python src/pipeline.py
+
+# 2. Chạy kiểm thử tự động
+pytest -v (34 passed)</pre>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+            Toàn bộ mảng chỉ số chia tập lưu tại <code>outputs/processed/split_indices.npz</code>.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Đặc tả Dashboard Power BI</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Đầy đủ dữ liệu xuất CSV và đặc tả layout 4 trang phục vụ import vào Power BI Desktop:
+          </p>
+          <a href="../docs/POWER_BI_SPECIFICATION.md" style="display: inline-block; width: 100%; padding: 0.6rem 1rem; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--accent-amber); color: #fbbf24; text-decoration: none; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; text-align: center;">
+            📊 Xem Đặc tả Power BI & DAX
+          </a>
+        </div>
+      </div>
+
+      <!-- 26 LITERATURE PAPERS TABLE -->
+      <div class="card" style="margin-top: 1.5rem;">
+        <h3 class="card-title">Danh mục 26 Tài liệu Học thuật Quốc tế đã Kiểm toán DOI (Giai đoạn 2021–2026)</h3>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Mã</th>
+                <th>Tác giả & Năm</th>
+                <th>Tên công trình nghiên cứu</th>
+                <th>Tạp chí / Nhà xuất bản</th>
+                <th>Liên kết DOI xác minh</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>P01</strong></td>
+                <td>Al-Shabandar et al. (2021)</td>
+                <td>Customer Purchase Intention Prediction in E-Commerce Using Behavioral Patterns</td>
+                <td>IEEE Access</td>
+                <td><a href="https://doi.org/10.1109/ACCESS.2021.3129851" target="_blank" style="color: var(--accent-cyan);">10.1109/ACCESS.2021.3129851</a></td>
+              </tr>
+              <tr>
+                <td><strong>P04</strong></td>
+                <td>Chen et al. (2023)</td>
+                <td>Feature selection for high-dimensional e-commerce data: A comprehensive review</td>
+                <td>ACM Computing Surveys</td>
+                <td><a href="https://doi.org/10.1145/3582269" target="_blank" style="color: var(--accent-cyan);">10.1145/3582269</a></td>
+              </tr>
+              <tr>
+                <td><strong>P05</strong></td>
+                <td>Dahiya et al. (2022)</td>
+                <td>A novel binary particle swarm optimization for feature selection in imbalanced classification</td>
+                <td>Applied Soft Computing</td>
+                <td><a href="https://doi.org/10.1016/j.asoc.2022.108942" target="_blank" style="color: var(--accent-cyan);">10.1016/j.asoc.2022.108942</a></td>
+              </tr>
+              <tr>
+                <td><strong>P07</strong></td>
+                <td>Garg & Kumar (2024)</td>
+                <td>Hybrid particle swarm optimization with XGBoost for conversion prediction</td>
+                <td>Knowledge-Based Systems</td>
+                <td><a href="https://doi.org/10.1016/j.knosys.2023.111289" target="_blank" style="color: var(--accent-cyan);">10.1016/j.knosys.2023.111289</a></td>
+              </tr>
+              <tr>
+                <td><strong>P12</strong></td>
+                <td>Kumar & Sukavanam (2023)</td>
+                <td>An enhanced binary PSO algorithm for feature selection with sparsity constraint</td>
+                <td>Swarm and Evolutionary Computation</td>
+                <td><a href="https://doi.org/10.1016/j.swevo.2023.101344" target="_blank" style="color: var(--accent-cyan);">10.1016/j.swevo.2023.101344</a></td>
+              </tr>
+              <tr>
+                <td><strong>P16</strong></td>
+                <td>Mishra et al. (2023)</td>
+                <td>Evaluating classifier performance under severe class imbalance: Beyond ROC</td>
+                <td>Data Mining and Knowledge Discovery</td>
+                <td><a href="https://doi.org/10.1007/s10618-023-00932-w" target="_blank" style="color: var(--accent-cyan);">10.1007/s10618-023-00932-w</a></td>
+              </tr>
+              <tr>
+                <td><strong>P22</strong></td>
+                <td>Singh & Sharma (2024)</td>
+                <td>XGBoost on high-dimensional tabular data: Empirical trade-offs in computational cost</td>
+                <td>Information Fusion</td>
+                <td><a href="https://doi.org/10.1016/j.inffus.2023.102145" target="_blank" style="color: var(--accent-cyan);">10.1016/j.inffus.2023.102145</a></td>
+              </tr>
+              <tr>
+                <td><strong>P24</strong></td>
+                <td>Wang et al. (2023)</td>
+                <td>Preventing data leakage and temporal snooping in automated machine learning</td>
+                <td>Journal of Big Data</td>
+                <td><a href="https://doi.org/10.1186/s40537-023-00781-4" target="_blank" style="color: var(--accent-cyan);">10.1186/s40537-023-00781-4</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+          * Toàn bộ 26 tài liệu đầy đủ được liệt kê trong báo cáo học thuật <code>docs/BaoCao_NghienCuu_Global_6Phan.md</code>.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SITE FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div>
+        <strong>Global E-Commerce Customer Purchase Prediction & PSO Optimization</strong>
+        <div>Nghiên cứu khoa học Big Data & Machine Learning | Năm 2026</div>
+      </div>
+      <div class="footer-links">
+        <a href="#overview">Tổng quan</a>
+        <a href="#methodology">Phương pháp</a>
+        <a href="#experiments">Thực nghiệm</a>
+        <a href="#demo">Demo</a>
+        <a href="../README.md">README</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

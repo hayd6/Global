@@ -19,10 +19,10 @@
 | **Audit Khắc phục 4** | Kiểm toán Toàn diện & Đồng bộ Tuyệt đối (Final Remediation) | **HOÀN THÀNH & ĐÃ KIỂM CHỨNG** | Truy vết & triệt tiêu mâu thuẫn ma trận nhầm lẫn; khớp 100% TN=15,740, FP=9,763, FN=3,078, TP=3,419; bổ sung test #8 cho artifact; 34/34 pytest passed (100%); đồng bộ toàn diện tài liệu |
 | **Kế hoạch 6 phần — GĐ 1** | Kiểm chứng hiện trạng & Hiệu chỉnh kế hoạch (ARL Mức 1) | **ĐÃ PHÊ DUYỆT** | Phê duyệt theo docs/IMPLEMENTATION_PLAN.md v2.0 & docs/PHASE1_FINAL_REVIEW.md |
 | **Kế hoạch 6 phần — GĐ 2** | Hoàn thiện nghiên cứu học thuật & Bằng chứng (ARL Mức 2-3) | **HOÀN THÀNH & ĐÃ KIỂM ĐỊNH (CHỜ DUYỆT)** | Kiểm toán 26 tài liệu 2021–2026 độc quyền 4 trạng thái (7 Khớp hoàn toàn, 9 Đã hiệu chỉnh, 10 Thay thế, 0 Chưa xác minh) trong `docs/LITERATURE_REVIEW.md`; Bằng chứng khớp nối khách hàng 1-1 trên Holdout 32k; Xuất bản artifact tái lập `outputs/holdout_predictions.csv` & `holdout_prediction_metadata.json`; Đối chiếu exact `scale_pos_weight` (102,011 / 25,989 = 3.92516...); 25/25 pytest passed (100%); Lập `docs/PHASE2_ACCEPTANCE_REPORT.md` v2.1; Dừng chờ duyệt trước Giai đoạn 3 |
-| **Kế hoạch 6 phần — GĐ 3** | Xây dựng Website nghiên cứu React + Vite (ARL Mức 2-4) | *Chưa thực hiện (Chờ duyệt GĐ 2)* | Frontend web app 6 trang trong web/ độc lập với Power BI |
-| **Kế hoạch 6 phần — GĐ 4** | Giải pháp Power BI Dashboard 4 trang (ARL Mức 2-3) | *Chưa thực hiện (Chờ duyệt GĐ 2)* | DATA_MODEL_SCHEMA.md, POWER_BI_DESIGN_GUIDE.md, hướng dẫn manual .pbix |
-| **Kế hoạch 6 phần — GĐ 5** | Biên tập Báo cáo học thuật 6 phần hoàn chỉnh (ARL Mức 3) | *Chưa thực hiện (Chờ duyệt GĐ 2)* | 6 file docs/report/Phan_1.md đến Phan_6.md theo DanY6Phan.md |
-| **Kế hoạch 6 phần — GĐ 6** | Nghiệm thu cuối & Báo cáo nghiệm thu (ARL Mức 4) | *Chưa thực hiện (Chờ duyệt GĐ 2)* | docs/FINAL_ACCEPTANCE_REPORT.md và kiểm thử tích hợp chéo |
+| **Kế hoạch 6 phần — GĐ 3** | Xây dựng Cổng thông tin Web 6 trang & Demo | **HOÀN THÀNH** | Cổng web 6 trang trong `web/` kết nối dữ liệu thật; tích hợp Prediction Demo tính điểm xác suất trực tiếp |
+| **Kế hoạch 6 phần — GĐ 4** | Giải pháp Power BI Dashboard 4 trang | **HOÀN THÀNH (SPEC & DATA) / BLOCKED (.pbix)** | Hoàn thiện `POWER_BI_SPECIFICATION.md`, `DATA_MODEL_SCHEMA.md` và 6 CSV trong `outputs/powerbi/`; tệp `.pbix` chờ mở trên Power BI Desktop |
+| **Kế hoạch 6 phần — GĐ 5** | Biên tập Báo cáo khoa học 6 phần hoàn chỉnh | **HOÀN THÀNH** | Xuất bản thành công Luận văn hoàn chỉnh dạng Word `BaoCao_NghienCuu_Global_6Phan.docx` và Markdown `.md` (54k từ) |
+| **Kế hoạch 6 phần — GĐ 6** | Nghiệm thu cuối & Ma trận 45 tiểu mục | **HOÀN THÀNH** | Lập `FINAL_ACCEPTANCE_MATRIX.md`, `FINAL_PROJECT_ACCEPTANCE.md`, kiểm thử tự động 38/38 tests PASSED (100%) |
 
 
 

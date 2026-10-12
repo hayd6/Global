@@ -87,15 +87,25 @@ Dự án phát triển một hệ thống Big Data và Machine Learning hoàn ch
 │   ├── export/                 # Xuất dữ liệu phục vụ Power BI / Web
 │   │   └── export_outputs.py
 │   └── pipeline.py             # Pipeline tự động hóa từ đầu đến cuối
-├── tests/                      # Bộ kiểm thử tự động pytest (34/34 PASSED)
+├── tests/                      # Bộ kiểm thử tự động pytest (38/38 PASSED)
+├── web/                        # Cổng thông tin nghiên cứu web 6 trang + Demo dự đoán
+├── scripts/                    # Scripts xuất bản báo cáo Word .docx và Markdown
+├── docs/                       # Toàn văn báo cáo khoa học 6 phần, đặc tả Power BI, kiểm toán
+│   ├── BaoCao_NghienCuu_Global_6Phan.docx # Luận văn hoàn chỉnh dạng Word
+│   ├── BaoCao_NghienCuu_Global_6Phan.md   # Luận văn hoàn chỉnh dạng Markdown
+│   ├── FINAL_PROJECT_ACCEPTANCE.md        # Báo cáo nghiệm thu dự án tổng thể
+│   ├── FINAL_ACCEPTANCE_MATRIX.md         # Ma trận nghiệm thu 45 tiểu mục DanY6Phan
+│   └── POWER_BI_SPECIFICATION.md          # Đặc tả 4 trang Power BI & công thức DAX
 ├── outputs/                    # Kết quả thực nghiệm và dữ liệu phái sinh
 │   ├── data_quality_report.csv
 │   ├── referential_integrity_report.csv
 │   ├── target_distribution.csv
 │   ├── customer_features.parquet
 │   ├── customer_features.csv
+│   ├── holdout_predictions.csv
+│   ├── holdout_prediction_metadata.json
 │   ├── test_predictions.csv
-│   ├── eda/                    # 9 biểu đồ phân tích khám phá chuyên sâu
+│   ├── eda/                    # 12 biểu đồ phân tích khám phá chuyên sâu
 │   ├── metrics/                # Bảng chỉ số hiệu năng các mô hình
 │   ├── plots/                  # Biểu đồ ROC, PR Curve, Confusion Matrix, PSO
 │   ├── feature_selection/      # Danh sách biến chọn bởi PSO và tầm quan trọng
@@ -103,6 +113,7 @@ Dự án phát triển một hệ thống Big Data và Machine Learning hoàn ch
 ├── logs/                       # File nhật ký pipeline.log
 ├── PRD.md                      # Product Requirements Document
 ├── AGENTS.md                   # Hướng dẫn quy tắc cho AI Agent
+├── DanY6Phan.md                # Chuẩn yêu cầu và dàn ý phân công 6 phần
 ├── requirements.txt            # Danh sách thư viện phụ thuộc
 └── README.md                   # Hướng dẫn sử dụng
 ```
@@ -159,18 +170,35 @@ python src/pipeline.py
   # Chế độ kiểm thử nhanh với fixture (không cần dataset):
   pytest -m fast
 
-  # Chế độ kiểm thử toàn diện toàn bộ 34 bài test:
+  # Chế độ kiểm thử toàn diện toàn bộ 38 bài test:
   pytest -v
+  ```
+- **Giai đoạn 11 — Khởi chạy Cổng thông tin Nghiên cứu Web (6 trang)**:
+  ```bash
+  python -m http.server 3000 --directory web
+  # Mở trình duyệt tại: http://localhost:3000
+  ```
+- **Giai đoạn 12 — Xuất bản lại Luận văn Word (.docx) & Markdown (.md)**:
+  ```bash
+  python scripts/build_full_report.py
   ```
 
 ---
 
 ## 5. Danh mục kết quả đầu ra
 
-- **Báo cáo kiểm toán**: `outputs/data_quality_report.csv`, `outputs/referential_integrity_report.csv`, `outputs/target_distribution.csv`
-- **Biểu đồ EDA (9 biểu đồ)**: `outputs/eda/*.png`
+- **Báo cáo nghiên cứu học thuật hoàn chỉnh (6 phần)**:
+  - `docs/BaoCao_NghienCuu_Global_6Phan.docx` (Bản Word chính thức)
+  - `docs/BaoCao_NghienCuu_Global_6Phan.md` (Bản Markdown đầy đủ 54k từ)
+  - `docs/FINAL_PROJECT_ACCEPTANCE.md` (Báo cáo nghiệm thu dự án tổng thể)
+  - `docs/FINAL_ACCEPTANCE_MATRIX.md` (Ma trận nghiệm thu 45 tiểu mục)
+- **Cổng thông tin Web**: thư mục `web/` (6 trang độc lập + Prediction Demo)
+- **Đặc tả Power BI**: `docs/POWER_BI_SPECIFICATION.md` & `outputs/powerbi/` (6 bảng CSV)
+- **Báo cáo kiểm toán dữ liệu**: `outputs/data_quality_report.csv`, `outputs/referential_integrity_report.csv`, `outputs/target_distribution.csv`
+- **Biểu đồ EDA (12 biểu đồ)**: `outputs/eda/*.png`
 - **Ma trận đặc trưng**: `outputs/customer_features.parquet` (200,000 dòng x 72 cột)
-- **Từ điển đặc trưng**: `outputs/feature_dictionary.csv` (67 đặc trưng được định nghĩa đầy đủ)
+- **Từ điển đặc trưng**: `outputs/feature_dictionary.csv` (63 đặc trưng số + biến phân loại)
+- **Artifact kiểm định Holdout**: `outputs/holdout_predictions.csv` & `outputs/holdout_prediction_metadata.json` (32,000 mẫu)
 - **Kết quả PSO**: `outputs/feature_selection/pso_selected_features.csv`, `outputs/plots/pso_convergence.png`
 - **Chỉ số mô hình**: `outputs/metrics/baseline_metrics.csv`, `outputs/metrics/metrics_comparison.csv`
 - **Biểu đồ so sánh**: `outputs/plots/roc_curve.png`, `outputs/plots/precision_recall_curve.png`, `outputs/plots/confusion_matrix.png`, `outputs/plots/xgboost_feature_importance.png`
