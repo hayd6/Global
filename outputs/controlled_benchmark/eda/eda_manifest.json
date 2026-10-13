@@ -1,8 +1,16 @@
 {
     "manifest_name": "Controlled Benchmark EDA Manifest",
-    "execution_timestamp": "2026-10-13T09:13:22.673119+00:00",
+    "execution_timestamp": "2026-10-13T09:50:59.651782+00:00",
     "script": "scripts/eda_controlled_benchmark.py",
     "input_directory": "D:/HuyD/\u0110\u1ea1i H\u1ecdc/BigData/Global/outputs/controlled_benchmark",
+    "timestamp_resolution": "DATE (YYYY-MM-DD)",
+    "cutoff_point_in_time": {
+        "observation_cutoff": "2024-06-01",
+        "observation_definition": "Inclusive of end of day 2024-06-01",
+        "prediction_window_start": "2024-06-02",
+        "prediction_window_end": "2024-07-01",
+        "prediction_window_days": 30
+    },
     "input_files_audited": {
         "customers.csv": {
             "size_bytes": 2730903,
@@ -76,7 +84,29 @@
             "pre_cutoff_sessions": 78836,
             "future_window_sessions": 10830,
             "feature_store_sess_count_sum": 78836,
-            "evidence": "Feature store aggregates exactly match pre-cutoff events (trans=19,061/19,061, sess=78,836/78,836). Exactly 0 future events (2,473 txs, 10,830 sess) leaked into features."
+            "evidence": "Feature store aggregates match pre-cutoff events (trans=19,061/19,061, sess=78,836/78,836). Exactly 0 future events (2,473 txs, 10,830 sess) leaked into features."
+        },
+        "customer_id_and_target_alignment": {
+            "status": "PASS",
+            "customer_id_align_customers_csv": true,
+            "customer_id_align_labels_csv": true,
+            "target_mismatches_count": 0,
+            "evidence": "Customer ID order matches 100% (25,000/25,000); Target row-by-row alignment matches exactly (mismatches=0)."
+        },
+        "customer_level_aggregation_parity": {
+            "status": "PASS",
+            "max_discrepancies": {
+                "trans_count": 0,
+                "total_spend": 0.0,
+                "total_items_count": 0,
+                "days_since_last_transaction": 0,
+                "sess_count": 0,
+                "total_session_duration": 0.0,
+                "total_pages_viewed": 0,
+                "total_cart_additions": 0,
+                "days_since_last_session": 0
+            },
+            "evidence": "Customer-level aggregations match pre-cutoff events perfectly across all 25,000 customers (max error = 0.0)"
         },
         "feature_space_cleanliness": {
             "status": "PASS",
@@ -97,88 +127,94 @@
         "total_sessions": 89666,
         "total_transactions": 21534,
         "cutoff_date": "2024-06-01",
-        "prediction_window_days": 30,
+        "prediction_start_date": "2024-06-02",
         "prediction_end_date": "2024-07-01",
+        "prediction_window_days": 30,
         "target_positive_count": 2195,
         "target_positive_rate": 0.0878,
         "target_negative_count": 22805,
         "target_negative_rate": 0.9122,
         "ground_truth_reconciliation_mismatches": 0,
+        "ground_truth_reconciliation_match_rate": 100.0,
         "candidate_predictors_count": 68,
         "continuous_predictors_count": 64,
-        "categorical_predictors_count": 4
+        "categorical_predictors_count": 4,
+        "audited_columns_count": 123,
+        "columns_with_missing_count": 4,
+        "columns_without_missing_count": 119
     },
     "output_artifacts": {
         "data_inventory.csv": {
             "size_bytes": 1446,
             "sha256": "67950b0b762a1a91163e7b44d7c1dd73368f55f022ea29cbd7445ef9a6303b7b",
-            "generated_at": "2026-10-13T09:13:22.596455+00:00"
+            "generated_at": "2026-10-13T09:50:59.581079+00:00"
         },
         "data_quality.csv": {
             "size_bytes": 8708,
             "sha256": "a2ad2f8ed9648d274a6150026765fffe9c8c1165ce9f47c3698357c6c53cda40",
-            "generated_at": "2026-10-13T09:13:22.596690+00:00"
+            "generated_at": "2026-10-13T09:50:59.581291+00:00"
         },
         "target_distribution.csv": {
             "size_bytes": 126,
             "sha256": "18725a3a10fb59ae33aa7fe5720f3d6bd41b3698a5387ec362ce9260f26bc9c1",
-            "generated_at": "2026-10-13T09:13:22.596900+00:00"
+            "generated_at": "2026-10-13T09:50:59.581462+00:00"
         },
         "numeric_summary.csv": {
             "size_bytes": 6347,
             "sha256": "016032e600e452d3a485ce639c10ac1038b468ef295587c715d68176fcce5c5e",
-            "generated_at": "2026-10-13T09:13:22.597147+00:00"
+            "generated_at": "2026-10-13T09:50:59.581629+00:00"
         },
         "categorical_summary.csv": {
             "size_bytes": 1764,
             "sha256": "35fdaf03367d83573231029bd45b6a5b375761ce3d4d2ac22a1a7e4626de1753",
-            "generated_at": "2026-10-13T09:13:22.597449+00:00"
+            "generated_at": "2026-10-13T09:50:59.581805+00:00"
         },
         "correlation_matrix.csv": {
             "size_bytes": 4836,
             "sha256": "745d11f4e8f80bd231c33d892e5bdd3f9a84933d71f671087274e8bfbdec8b68",
-            "generated_at": "2026-10-13T09:13:22.597694+00:00"
+            "generated_at": "2026-10-13T09:50:59.581999+00:00"
         },
         "eda_1_table_scales.png": {
             "size_bytes": 59843,
             "sha256": "34360cd7de2b5ee2dbae876df8b9c7f973f24a1cc80b2c6b93aff00d530f08c5",
-            "generated_at": "2026-10-13T09:13:22.608400+00:00"
+            "generated_at": "2026-10-13T09:50:59.589491+00:00"
         },
         "eda_2_target_distribution_pit.png": {
             "size_bytes": 58707,
             "sha256": "39ec616767478a60f3144c1cc5405a84aff3150d7482cf604a600c58af9cfcfc",
-            "generated_at": "2026-10-13T09:13:22.619540+00:00"
+            "generated_at": "2026-10-13T09:50:59.600067+00:00"
         },
         "eda_3_missing_values.png": {
-            "size_bytes": 88016,
-            "sha256": "d76eb16b799d76f87a7d2c30535c5fe75642292e64f7bfe592d55b81dc22cd0e",
-            "generated_at": "2026-10-13T09:13:22.628023+00:00"
+            "size_bytes": 88238,
+            "sha256": "3099dbd5ac5544cb4734d77c3daa6b09b6b3df28bb6e1a8aa57eb8ddfca4c37a",
+            "generated_at": "2026-10-13T09:50:59.609087+00:00"
         },
         "eda_4_numeric_distributions.png": {
             "size_bytes": 167062,
             "sha256": "55c60ab9b17483e7375aa004606de7fe7daf5b5a39176e9a673f92fd0367bc0f",
-            "generated_at": "2026-10-13T09:13:22.635922+00:00"
+            "generated_at": "2026-10-13T09:50:59.617666+00:00"
         },
         "eda_5_correlation_heatmap.png": {
             "size_bytes": 247843,
             "sha256": "349f0b5423fb7950b006504f35f0391d14d171d7737e9a5bc6b73f1dc0d54f3f",
-            "generated_at": "2026-10-13T09:13:22.645260+00:00"
+            "generated_at": "2026-10-13T09:50:59.625300+00:00"
         },
         "eda_6_feature_comparison_by_target.png": {
             "size_bytes": 106229,
             "sha256": "3dfa241bbb9e7a6917173eed9a0c49f0f057c8512786bb41958de24679b85349",
-            "generated_at": "2026-10-13T09:13:22.654325+00:00"
+            "generated_at": "2026-10-13T09:50:59.634127+00:00"
         },
         "eda_7_temporal_activity.png": {
-            "size_bytes": 146272,
-            "sha256": "9c1dcd8bf81bfce047c4d9749c5ae99777bd7ef55d808c110ebe92d0016a01ab",
-            "generated_at": "2026-10-13T09:13:22.664335+00:00"
+            "size_bytes": 146767,
+            "sha256": "b9857e70734df6cbe03a3c04f8c7cd08a40245e166da917c37d9a191015cf4db",
+            "generated_at": "2026-10-13T09:50:59.643904+00:00"
         },
         "eda_8_cart_and_engagement_matrix.png": {
             "size_bytes": 185183,
             "sha256": "6ce77dd0a459c29eb6f28d1a0c40597802db94f7eec80e935dbc200786d280af",
-            "generated_at": "2026-10-13T09:13:22.673093+00:00"
+            "generated_at": "2026-10-13T09:50:59.651754+00:00"
         }
     },
-    "status": "COMPLETED_SUCCESSFULLY"
+    "overall_status": "ALL_AUDIT_CHECKS_PASSED",
+    "audit_checks_passed_ratio": "9/9"
 }

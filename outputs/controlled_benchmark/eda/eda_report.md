@@ -2,10 +2,11 @@
 ## CONTROLLED SYNTHETIC BENCHMARK DATASET (POINT-IN-TIME)
 
 - **Đơn vị thẩm định:** Senior Data Scientist & Experiment Auditor
-- **Ngày thực thi:** 13/10/2026 16:13:22
+- **Ngày thực thi:** 13/10/2026 16:50:59
 - **Nguồn dữ liệu:** `outputs/controlled_benchmark/`
 - **Mã kịch bản thực thi:** `scripts/eda_controlled_benchmark.py`
-- **Trạng thái kiểm toán:** HOÀN TẤT & ĐÃ XÁC MINH TOÀN VẸN (100% PASS)
+- **Độ phân giải thời gian thực tế:** `DATE (YYYY-MM-DD)`
+- **Trạng thái kiểm toán tổng hợp:** PASS (9/9 hạng mục đạt - 100.0%)
 
 ---
 
@@ -44,7 +45,7 @@ Bộ dữ liệu **Controlled Synthetic Benchmark Dataset** được kiểm toá
 | `campaign_id` | `sessions.csv` | 49,324 | **55.01%** |
 | `email_open_rate` | `customers.csv` | 2,532 | **10.13%** |
 | `email_open_rate` | `customer_features_pit.parquet` | 2,532 | **10.13%** |
-   - **Tất cả 68 cột còn lại trên toàn bộ các bảng:** Tỷ lệ thiếu = **0.00%**.
+   - **Thống kê tổng hợp thuộc tính:** Trong tổng số 123 thuộc tính được kiểm toán trên toàn bộ 7 bảng, có 4 cột chứa giá trị khuyết thiếu tự nhiên và 119 cột đạt tỷ lệ hoàn chỉnh 100.0% (tỷ lệ thiếu = 0.00%).
    - *Diễn giải nghiệp vụ:* Việc thiếu giá trị ở `referral_code` (khách hàng không qua giới thiệu), `campaign_id` (phiên truy cập tự nhiên organic/direct) và `email_open_rate` (khách chưa đăng ký nhận thư) hoàn toàn phản ánh đặc trưng tự nhiên của bài toán thương mại điện tử.
 
 > *Hình minh họa giá trị thiếu:* `outputs/controlled_benchmark/eda/eda_3_missing_values.png`
@@ -53,15 +54,17 @@ Bộ dữ liệu **Controlled Synthetic Benchmark Dataset** được kiểm toá
 
 ## 3. PHÂN BỐ NHÃN MỤC TIÊU VÀ ĐỐI CHIẾU LONGITUDINAL POINT-IN-TIME
 
-- **Mốc chốt đặc trưng ($t_0$):** `2024-06-01`.
-- **Cửa sổ nhãn tương lai:** $(t_0, t_0 + 30\text{ ngày}] = (2024-06-01, 2024-07-01]$.
+- **Độ phân giải thời gian:** Dữ liệu có độ phân giải theo ngày (`DATE`).
+- **Mốc chốt đặc trưng ($t_0$):** Sau khi kết thúc ngày `2024-06-01`.
+- **Cửa sổ nhãn tương lai:** 30 ngày, từ ngày `2024-06-02` đến hết ngày `2024-07-01` ($[2024-06-02, 2024-07-01]$).
 - **Thống kê nhãn mục tiêu:**
    - Nhãn âm ($Y_i = 0$): **22,805 khách hàng** (**91.22%**).
    - Nhãn dương ($Y_i = 1$): **2,195 khách hàng** (**8.78%**).
 - **Kiểm chứng truy nguyên đối chiếu (Reconciliation Audit):**
-   - Số lượng khách hàng duy nhất có giao dịch thực tế phát sinh trong khoảng $(2024-06-01, 2024-07-01]$ trong `transactions.csv` = **2,195**.
-   - Số trường hợp sai lệch giữa nhãn $Y_i$ và dữ liệu giao dịch = **0** (Khớp **100.0%**).
-   - Khẳng định: **Tỷ lệ nhãn dương 8.78% được chứng minh 100% bằng dữ liệu thực nghiệm.**
+   - Số lượng khách hàng duy nhất có giao dịch thực tế phát sinh trong khoảng $[2024-06-02, 2024-07-01]$ trong `transactions.csv` = **2,195**.
+   - Số trường hợp sai lệch giữa nhãn $Y_i$ và dữ liệu giao dịch tương lai = **0**.
+   - Tỷ lệ khớp đối chiếu thực tế: **100.00%** (25,000/25,000 khách hàng).
+   - Khẳng định: **Tỷ lệ nhãn dương 8.78% được chứng minh bằng dữ liệu thực nghiệm.**
 
 > *Hình minh họa phân bố nhãn:* `outputs/controlled_benchmark/eda/eda_2_target_distribution_pit.png`
 
@@ -103,9 +106,12 @@ Bộ dữ liệu **Controlled Synthetic Benchmark Dataset** được kiểm toá
 2. **Cách ly cửa sổ thời gian (Cutoff Isolation & Anti-Leakage):**
    - Bảng đặc trưng `customer_features_pit.parquet` chỉ tổng hợp các sự kiện có `timestamp <= 2024-06-01`.
    - Tổng giao dịch lịch sử trước mốc chốt: **19,061 giao dịch**.
-   - Tổng giao dịch tính trong `customer_features_pit.parquet` (`SUM(trans_count)`): **19,061 giao dịch** (Khớp **100%**, chênh lệch = 0).
-   - Tổng số giao dịch trong cửa sổ tương lai (2,473 giao dịch) hoàn toàn **không xuất hiện** trong không gian đặc trưng (`point_in_time_isolation`: **PASS**).
-3. **Phân tách không gian thuộc tính dự báo:**
+   - Tổng giao dịch tính trong `customer_features_pit.parquet` (`SUM(trans_count)`): **19,061 giao dịch** (Khớp, sai lệch = 0).
+   - Tổng số giao dịch trong cửa sổ tương lai (2,473 giao dịch từ ngày 2024-06-02 đến 2024-07-01) hoàn toàn **không xuất hiện** trong không gian đặc trưng (`point_in_time_isolation`: **PASS**).
+3. **Đối chiếu cấp khách hàng từng bản ghi (Customer-level Parity Audit):**
+   - Khóa khách hàng `customer_id` và nhãn `target` khớp thứ tự và giá trị 100% giữa các bảng (`customer_id_and_target_alignment`: **PASS**).
+   - So sánh từng khách hàng (25,000 khách hàng) giữa sự kiện thô và bảng đặc trưng: sai lệch tối đa trên `trans_count`, `total_spend`, `total_items_count`, `sess_count`, `total_session_duration`, `total_pages_viewed`, `total_cart_additions`, `days_since_last_session`, `days_since_last_transaction` đạt **0.0** (`customer_level_aggregation_parity`: **PASS**).
+4. **Phân tách không gian thuộc tính dự báo:**
    - Không gian đặc trưng dự báo (candidate predictors) gồm đúng **68 đặc trưng** (64 biến số liên tục, 4 biến phân loại).
    - Các trường định danh (`customer_id`), nhãn mục tiêu tương lai (`target`) và cờ phân chia quản trị (`split_type`) hoàn toàn bị cô lập khỏi tập biến đầu vào của mô hình (`feature_space_cleanliness`: **PASS**).
 
@@ -118,13 +124,13 @@ Bộ dữ liệu **Controlled Synthetic Benchmark Dataset** được kiểm toá
 Tất cả các tệp đầu ra được lưu trữ độc lập tại `outputs/controlled_benchmark/eda/`, hoàn toàn tách biệt khỏi các artifact của snapshot 200k ban đầu:
 
 1. `data_inventory.csv`: Danh mục 7 tệp dữ liệu, kích thước và mã hash SHA-256 thực tế.
-2. `data_quality.csv`: Thống kê giá trị thiếu, tính duy nhất của khóa và dòng trùng lặp.
+2. `data_quality.csv`: Thống kê giá trị thiếu, tính duy nhất của khóa và dòng trùng lặp trên 123 thuộc tính.
 3. `target_distribution.csv`: Tỷ lệ nhãn mục tiêu 8.78% đã xác minh đối chiếu.
 4. `numeric_summary.csv`: Thống kê mô tả 64 biến số dự báo (phân định rõ với trường `target`).
 5. `categorical_summary.csv`: Tần suất và tỷ lệ phần trăm của các biến phân loại.
 6. `correlation_matrix.csv`: Ma trận tương quan 24 đặc trưng chủ chốt.
 7. 8 tệp biểu đồ định dạng PNG chất lượng cao (200 DPI), tạo động 100% không hardcode.
-8. `eda_manifest.json`: Siêu dữ liệu kiểm toán, bộ kiểm tra 7 hạng mục PASS/FAIL và mã băm toàn vẹn.
+8. `eda_manifest.json`: Siêu dữ liệu kiểm toán, bộ kiểm tra 9 hạng mục động và mã băm toàn vẹn.
 9. `eda_run.log`: Nhật ký ghi chép chi tiết quá trình thực thi.
 
 ---

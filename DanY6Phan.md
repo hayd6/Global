@@ -462,15 +462,9 @@ Mục tiêu: Giới thiệu nguồn dữ liệu, quy mô, cấu trúc và vai tr
 
 3.1.2. Bộ chuẩn kiểm soát độc lập (Controlled Synthetic Benchmark Dataset)
 Để đảm bảo tính nghiêm ngặt khoa học, tái lập và triệt tiêu hoàn toàn temporal leakage, nhóm nghiên cứu thiết lập và kiểm định độc lập bộ chuẩn kiểm soát tại thư mục `outputs/controlled_benchmark/` theo chuẩn Point-in-Time dọc (Longitudinal Point-in-Time):
-- Mốc chốt đặc trưng ($t_0$): `2024-06-01`.
-- Cửa sổ quan sát nhãn tương lai: 30 ngày, từ $(2024-06-01, 2024-07-01]$.
-- Quy mô và cấu trúc đã kiểm toán thực tế (tính từ `outputs/controlled_benchmark/eda/data_inventory.csv`):
-
-| STT | Tệp dữ liệu | Vai trò | Số dòng | Số cột | Khóa chính | Kích thước | Mã băm SHA-256 (rút gọn) |
-3.1.2. Bộ chuẩn kiểm soát độc lập (Controlled Synthetic Benchmark Dataset)
-Để đảm bảo tính nghiêm ngặt khoa học, tái lập và triệt tiêu hoàn toàn temporal leakage, nhóm nghiên cứu thiết lập và kiểm định độc lập bộ chuẩn kiểm soát tại thư mục `outputs/controlled_benchmark/` theo chuẩn Point-in-Time dọc (Longitudinal Point-in-Time):
-- Mốc chốt đặc trưng ($t_0$): `2024-06-01`.
-- Cửa sổ quan sát nhãn tương lai: 30 ngày, từ $(2024-06-01, 2024-07-01]$.
+- Độ phân giải thời gian thực tế: `DATE (YYYY-MM-DD)`.
+- Mốc chốt đặc trưng ($t_0$): Sau khi kết thúc ngày `2024-06-01` (`timestamp <= 2024-06-01`).
+- Cửa sổ quan sát nhãn tương lai: 30 ngày theo lịch, bắt đầu từ ngày `2024-06-02` đến hết ngày `2024-07-01` ($[2024-06-02, 2024-07-01]$).
 - Quy mô và cấu trúc đã kiểm toán thực tế (tính từ `outputs/controlled_benchmark/eda/data_inventory.csv`):
 
 | STT | Tệp dữ liệu | Vai trò | Số dòng | Số cột | Khóa chính | Kích thước | Mã băm SHA-256 (rút gọn) |
@@ -658,7 +652,8 @@ Toàn bộ phân tích khám phá dữ liệu dưới đây được tính toán
    - Toàn bộ 64 đặc trưng số học trong bảng `customer_features_pit.parquet` chỉ được tính toán từ các sự kiện xảy ra trước hoặc đúng thời điểm $t_0$.
    - Tổng giao dịch lịch sử trước mốc chốt trên nhật ký thô: **19.061 giao dịch**.
    - Tổng giao dịch tích hợp trong feature store (`SUM(trans_count)`): đúng **19.061 giao dịch** (Khớp **100%**, chênh lệch = 0).
-   - Toàn bộ 2.473 giao dịch phát sinh trong khoảng $(2024-06-01, 2024-07-01]$ hoàn toàn bị cô lập khỏi bước tạo đặc trưng và chỉ được sử dụng duy nhất ở bước gán nhãn $Y_i$.
+   - Toàn bộ 2.473 giao dịch phát sinh trong cửa sổ nhãn tương lai $[2024-06-02, 2024-07-01]$ hoàn toàn bị cô lập khỏi bước tạo đặc trưng và chỉ được sử dụng duy nhất ở bước gán nhãn $Y_i$.
+   - **Kiểm toán đối chiếu cấp khách hàng (Customer-level Parity Audit):** Đối chiếu chi tiết 100% khách hàng (25.000/25.000 bản ghi) giữa dữ liệu sự kiện thô và bảng đặc trưng: sai lệch tối đa trên `trans_count`, `total_spend`, `total_items_count`, `sess_count`, `total_session_duration`, `total_pages_viewed`, `total_cart_additions`, `days_since_last_session`, `days_since_last_transaction` đều đạt đúng **0.0**.
    - Khẳng định: Pipeline đặc trưng của Controlled Benchmark hoàn toàn không bị rò rỉ dữ liệu tương lai (Trạng thái: **PASS**).
 
 > **Tham chiếu trực quan:** Biểu đồ dòng thời gian giao dịch thực tế được lưu tại [`outputs/controlled_benchmark/eda/eda_7_temporal_activity.png`](outputs/controlled_benchmark/eda/eda_7_temporal_activity.png).  
@@ -667,82 +662,79 @@ Toàn bộ phân tích khám phá dữ liệu dưới đây được tính toán
 3.5.6. Danh mục artifact EDA đã kiểm chứng và lưu trữ
 Toàn bộ kết quả phân tích khám phá trên bộ Controlled Benchmark đã được kết xuất và lưu trữ độc lập tại thư mục `outputs/controlled_benchmark/eda/`, bao gồm:
 1. `data_inventory.csv`: Danh mục 7 tệp dữ liệu, số dòng, cột, khóa chính và mã băm SHA-256.
-2. `data_quality.csv`: Kiểm toán tỷ lệ thiếu, khóa trùng và bản ghi mồ côi.
+2. `data_quality.csv`: Kiểm toán tỷ lệ thiếu, khóa trùng và bản ghi mồ côi trên 123 thuộc tính.
 3. `target_distribution.csv`: Thống kê tần suất và tỷ lệ nhãn Point-in-Time (8,78%).
 4. `numeric_summary.csv`: Thống kê mô tả 64 đặc trưng số học dự báo (phân định rõ với trường `target`).
 5. `categorical_summary.csv`: Tần suất và tỷ lệ của 34 nhóm phân loại.
 6. `correlation_matrix.csv`: Ma trận tương quan 24 đặc trưng chủ chốt.
 7. 8 tệp biểu đồ định dạng PNG chất lượng cao (200 DPI), tạo động 100% không hardcode.
-8. `eda_manifest.json`: Siêu dữ liệu thực thi, bộ kiểm tra 7 hạng mục PASS/FAIL và mã kiểm tra tính toàn vẹn.
+8. `eda_manifest.json`: Siêu dữ liệu thực thi, bộ kiểm tra 9 hạng mục PASS/FAIL và mã kiểm tra tính toàn vẹn.
 9. `eda_report.md`: Báo cáo kiểm toán độc lập chi tiết.
 10. `eda_run.log`: Nhật ký thực thi pipeline tái lập.
-3.6. Chuẩn bị dữ liệu cho Machine Learning
-Mục tiêu: Đảm bảo dữ liệu đầu vào nhất quán và quy trình huấn luyện không gây rò rỉ dữ liệu.
-Các công việc:
-Tách đặc trưng và nhãn.
-Xác định biến số, biến phân loại và các trường cần loại khỏi đầu vào.
-Xây dựng pipeline xử lý thiếu, mã hóa và chuẩn hóa.
-Chia tập huấn luyện và xác thực từ dữ liệu huấn luyện được cung cấp.
-Giữ tập test.csv ngoài quá trình lựa chọn đặc trưng và tinh chỉnh mô hình.
-Kiểm tra sự nhất quán giữa tập huấn luyện và tập xác thực.
-Có thể dùng stratified split để duy trì tỷ lệ nhãn khi chưa có cơ sở xác định cách chia theo thời gian. Nếu nghiên cứu xác nhận được mốc thời gian dự đoán và cách tạo nhãn, cần cân nhắc chia dữ liệu theo thời gian để đánh giá sát hơn với triển khai thực tế.
-Tất cả bước tiền xử lý có học tham số từ dữ liệu, chẳng hạn chuẩn hóa hoặc lựa chọn đặc trưng, phải được fit trên tập huấn luyện tương ứng. Không dùng toàn bộ dữ liệu rồi mới chia tập.
-Đầu ra cần có:
-Pipeline tiền xử lý.
-Báo cáo cách chia dữ liệu.
-Danh sách đặc trưng đầu vào.
-Kiểm tra rò rỉ dữ liệu và xác nhận target không xuất hiện trong đầu vào.
-Phụ trách: Thành viên 1 thực hiện; Thành viên 3 kiểm tra quy trình để bảo đảm kết quả đánh giá ở Phần 4 có thể tin cậy.
-3.7. Tổng hợp phát hiện và chuyển tiếp sang Phần 4
-Phần cuối chương cần tổng hợp những gì EDA cho biết và những vấn đề chưa thể kết luận.
-Nội dung cần có:
-Chất lượng dữ liệu và các bước làm sạch chính.
-Nhóm đặc trưng hành vi đã xây dựng.
-Mức độ mất cân bằng nhãn.
-Những đặc trưng có biểu hiện khác nhau giữa các nhóm mục tiêu.
-Các đặc trưng cần kiểm chứng bằng mô hình.
-Hạn chế liên quan đến thời điểm dự đoán và nguy cơ rò rỉ dữ liệu.
-Không viết trước rằng PSO hoặc XGBoost chắc chắn tốt hơn. Đây là các phương pháp cần được đánh giá ở Phần 4.
-Đầu ra: Bảng tổng hợp phát hiện EDA và danh sách câu hỏi cần kiểm chứng bằng Machine Learning.
+
+3.6. Chuẩn bị dữ liệu cho Machine Learning và Kiểm soát Phân tách Không Gian Huấn luyện
+Nhóm nghiên cứu đã thiết lập và đóng gói quy trình chuẩn bị dữ liệu cho mô hình hóa Machine Learning tại `src/models/train_pit_models.py` với các cơ chế kiểm soát nghiêm ngặt:
+
+1. **Phân định không gian đặc trưng và cách ly nhãn (Feature Space Cleanliness):**
+   - Từ bảng `customer_features_pit.parquet` (71 cột), toàn bộ các trường định danh (`customer_id`), cờ phân chia quản trị (`split_type`) và nhãn mục tiêu tương lai (`target`) bị loại bỏ hoàn toàn khỏi tập biến dự báo đầu vào.
+   - Tập đặc trưng ứng viên (Candidate Predictors) gồm đúng **68 đặc trưng**, chia thành:
+     + **64 biến số liên tục (Continuous features):** phản ánh các hành vi tổng hợp lịch sử trước mốc chốt (chi tiêu, tần suất, thời lượng, giỏ hàng, độ trễ RFM, tỷ lệ mở email, v.v.).
+     + **4 biến phân loại (Categorical features):** `country_code`, `region`, `customer_tier` và `region_tier`.
+
+2. **Phân chia tập dữ liệu nghiêm ngặt (Stratified Train/Holdout Split):**
+   - Áp dụng phương pháp phân chia phân tầng (Stratified Splitting) theo tỷ lệ 80/20 với hạt giống ngẫu nhiên cố định `random_state=42`.
+   - **Tập Train:** 20.000 khách hàng (1.756 nhãn dương, tỷ lệ 8,781%).
+   - **Tập Holdout:** 5.000 khách hàng (439 nhãn dương, tỷ lệ 8,780%).
+   - **Bảo toàn tính độc lập:** Số lượng khách hàng trùng lặp giữa hai tập = **0** ($\text{Train} \cap \text{Holdout} = \emptyset$). Toàn bộ chỉ số phân chia được lưu trữ cố định tại `outputs/controlled_benchmark/split_indices_pit.npz`. Tập Holdout được giữ nguyên độc lập làm tập kiểm thử khách quan, tuyệt đối không tham gia vào bước chọn đặc trưng hay tinh chỉnh siêu tham số.
+
+3. **Pipeline tiền xử lý chống rò rỉ dữ liệu (Anti-Leakage Preprocessing Pipeline):**
+   - Xây dựng thông qua kiến trúc `ColumnTransformer` của scikit-learn:
+     + *Nhánh biến số liên tục:* `SimpleImputer(strategy="median")` điền khuyết thiếu bằng trung vị, sau đó chuẩn hóa bằng `StandardScaler()`.
+     + *Nhánh biến phân loại:* `SimpleImputer(strategy="most_frequent")` điền khuyết thiếu bằng giá trị xuất hiện nhiều nhất, sau đó mã hóa qua `OneHotEncoder(handle_unknown="ignore", sparse_output=False)`.
+   - **Nguyên tắc fit/transform bất khả xâm phạm:** Toàn bộ `ColumnTransformer` chỉ được gọi lệnh `fit` duy nhất trên tập Train (20.000 khách hàng), sau đó gọi `transform` trên tập Holdout (5.000 khách hàng). Tuyệt đối không tính toán giá trị trung vị hoặc độ lệch chuẩn trên toàn bộ dữ liệu trước khi chia tập.
+   - Đối với các phương pháp lựa chọn đặc trưng chuyên biệt (như PSO và ANOVA F-value), nhóm triển khai pipeline liên tục tương ứng trên 64 biến số để tối ưu hóa không gian tìm kiếm.
+
+3.7. Tổng hợp phát hiện EDA và Định hướng Thực nghiệm Phần 4
+Quá trình phân tích khám phá dữ liệu (EDA) và kiểm toán khoa học đã xác lập các nền tảng thực nghiệm quan trọng:
+
+1. **Tổng hợp chất lượng dữ liệu và tính chân thực:**
+   - Dữ liệu đạt độ sạch và toàn vẹn tham chiếu 100%: 0 khóa chính trùng lặp/rỗng, 0 dòng trùng lặp, 0 bản ghi mồ côi trên cả 6 liên kết khóa ngoại.
+   - Giá trị khuyết thiếu chỉ xuất hiện ở 3 thuộc tính tự nhiên (`referral_code`: 64,97%, `campaign_id`: 55,01%, `email_open_rate`: 10,13%). 119 thuộc tính còn lại hoàn chỉnh 100%.
+   - Mốc chốt thời gian Point-in-Time được chuẩn hóa ở độ phân giải ngày (`DATE`): kết thúc ngày `2024-06-01`. Cửa sổ nhãn tương lai 30 ngày: $[2024-06-02, 2024-07-01]$.
+   - Kiểm toán đối chiếu cấp khách hàng (Customer-level Parity Audit) trên toàn bộ 25.000 khách hàng chứng minh sai lệch tối đa giữa dữ liệu sự kiện thô và bảng đặc trưng bằng đúng 0,0 trên toàn bộ 9 biến tổng hợp cốt lõi. Toàn bộ 2.473 giao dịch tương lai hoàn toàn không bị rò rỉ vào feature store.
+
+2. **Những phát hiện then chốt cho mô hình hóa:**
+   - **Mất cân bằng nhãn mạnh (8,78% nhãn dương):** Tỷ lệ chuyển đổi mua hàng trong tương lai chỉ chiếm 8,78% (2.195/25.000 khách hàng). Do đó, chỉ số Accuracy thông thường không có ý nghĩa đánh giá; nhóm nghiên cứu lựa chọn PR-AUC (Precision-Recall AUC), ROC-AUC và F1-Score làm các thước đo trung tâm cho Phần 4.
+   - **Sự khác biệt hành vi rõ rệt:** Khách hàng mua hàng trong tương lai có cường độ tương tác lịch sử cao hơn rõ rệt so với khách hàng không mua: lượt thêm giỏ hàng gấp 1,59 lần (3,45 vs 2,17), thời lượng truy cập gấp 1,58 lần (890,87s vs 563,68s), tổng chi tiêu gấp 1,84 lần ($180,31 vs $98,12).
+   - **Hiện tượng đa cộng tuyến cao giữa các biến hành vi:** Tồn tại tương quan tuyến tính rất mạnh giữa các biến tổng hợp lịch sử (chẳng hạn $r = 0,91$ giữa `trans_count` và `total_spend`, $r = 0,89$ giữa `sess_count` và `total_pages_viewed`). Hiện tượng này cho thấy không gian đặc trưng chứa nhiều thông tin dư thừa.
+
+3. **Giới hạn đã xác nhận và Chuyển tiếp sang Phần 4:**
+   - *Giới hạn độ phân giải thời gian:* Dữ liệu gốc sử dụng định dạng ngày (`DATE`), không có trường giờ/phút/giây. Do đó, mốc chốt được quy ước bảo toàn trọn vẹn sự kiện của ngày `2024-06-01` vào quá khứ và sự kiện từ ngày `2024-06-02` vào tương lai.
+   - *Chuyển tiếp thực nghiệm sang Phần 4:* Sự tồn tại của 68 đặc trưng dự báo cùng hiện tượng đa cộng tuyến đặt ra nhu cầu cấp thiết về việc chọn lọc đặc trưng tối ưu. Phần 4 sẽ trực tiếp đưa không gian đặc trưng này vào đánh giá thực nghiệm: so sánh 7 mô hình cơ sở (Logistic Regression, Decision Tree, Random Forest, XGBoost, LightGBM, CatBoost, Multi-Layer Perceptron), đối chiếu phương pháp chọn đặc trưng thống kê (ANOVA F-value) với giải thuật tối ưu bầy đàn (Particle Swarm Optimization - PSO) để kiểm chứng liệu PSO có giúp cải thiện PR-AUC và tinh gọn mô hình hay không, hoàn toàn dựa trên số liệu thực nghiệm minh bạch.
+
 Phân công công việc Phần 3
-Hạng mục
-Thành viên chính
-Đầu ra
-3.1 Tổng quan dữ liệu
-Thành viên 1 + 2
-Bảng mô tả, data dictionary
-3.2 Chất lượng dữ liệu
-Thành viên 1 + 2
-Báo cáo lỗi, quy tắc làm sạch
-3.3 Tích hợp đa bảng
-Thành viên 1
-Bảng dữ liệu cấp khách hàng
-3.4 Feature Engineering
-Thành viên 1 + 2
-Feature dictionary
-3.5 EDA
-Thành viên 1 + 2
-Biểu đồ, thống kê, phát hiện
-3.6 Chuẩn bị ML
-Thành viên 1 + 3
-Pipeline và báo cáo chia tập
-3.7 Tổng hợp kết quả
-Thành viên 2
-Nhận xét và chuyển tiếp sang Phần 4
+Hạng mục | Thành viên chính | Đầu ra
+:--- | :--- | :---
+3.1 Tổng quan dữ liệu | Thành viên 1 + 2 | Bảng mô tả, data inventory, manifest hash
+3.2 Chất lượng dữ liệu | Thành viên 1 + 2 | Báo cáo kiểm toán data_quality, quy tắc xử lý
+3.3 Tích hợp đa bảng | Thành viên 1 | Bảng dữ liệu cấp khách hàng không mồ côi
+3.4 Feature Engineering | Thành viên 1 + 2 | 68 đặc trưng PIT (64 continuous, 4 categorical)
+3.5 EDA | Thành viên 1 + 2 | 8 biểu đồ động PNG, bảng thống kê mô tả, ma trận tương quan
+3.6 Chuẩn bị ML | Thành viên 1 + 3 | Pipeline tiền xử lý và file split_indices_pit.npz
+3.7 Tổng hợp kết quả | Thành viên 2 | Báo cáo kiểm toán, nhận xét và chuyển tiếp Phần 4
 
 Checklist hoàn thành Phần 3
-Tiến độ Phần 3
-0/10
-Thống kê và mô tả đủ 8 tệp dữ liệu
-Kiểm tra thiếu, trùng lặp, ngoại lệ và dữ liệu không nhất quán
-Chuẩn hóa kiểu dữ liệu và giá trị phân loại
-Tổng hợp sessions và transactions theo customer_id trước khi nối
-Xây dựng feature dictionary có công thức và ý nghĩa
-Tạo 8–12 biểu đồ EDA có nhận xét dựa trên số liệu
-Kiểm tra phân phối target và chọn chỉ số đánh giá phù hợp
-Xác định cách chia tập và kiểm soát rò rỉ dữ liệu
-Ghi rõ giới hạn về mốc thời gian dự đoán
-Xuất đầy đủ CSV, hình ảnh và tài liệu để viết báo cáo
+Tiến độ Phần 3: 10/10 (Hoàn thành 100%)
+- [x] Thống kê và mô tả đủ các tệp dữ liệu với mã băm SHA-256
+- [x] Kiểm tra thiếu, trùng lặp, ngoại lệ và dữ liệu không nhất quán trên 123 thuộc tính
+- [x] Chuẩn hóa kiểu dữ liệu và giá trị phân loại
+- [x] Tổng hợp sessions và transactions theo customer_id trước khi nối
+- [x] Xây dựng không gian đặc trưng Point-in-Time sạch (68 đặc trưng ứng viên)
+- [x] Tạo 8 biểu đồ EDA chuẩn publication (200 DPI) tạo động 100% không hardcode
+- [x] Kiểm tra phân phối target (8,78%) và đối chiếu truy nguyên đạt 100.00%
+- [x] Xác định cách chia tập Train/Holdout (80/20) và kiểm soát triệt để rò rỉ dữ liệu
+- [x] Ghi rõ giới hạn về mốc thời gian dự đoán và độ phân giải ngày (`DATE`)
+- [x] Xuất đầy đủ CSV, hình ảnh, manifest và báo cáo markdown để lưu trữ và tái lập
 Lưu ý về cách triển khai: Vì Thành viên 1 phụ trách toàn bộ code, không cần chia việc lập trình cho các thành viên còn lại. Tuy nhiên, Thành viên 2 cần nhận được CSV và biểu đồ có mô tả; Thành viên 3 cần hiểu cách tạo đặc trưng và chia tập; Thành viên 4 cần nhận các bảng đã được kiểm tra để xây dựng dashboard Power BI và website.
 PHẦN 4. XÂY DỰNG, HUẤN LUYỆN VÀ TỐI ƯU MÔ HÌNH MACHINE LEARNING
 Phần 4 là trọng tâm thực nghiệm của đề tài. Nhóm sẽ sử dụng dữ liệu và các đặc trưng đã xây dựng ở Phần 3 để huấn luyện nhiều mô hình, so sánh phương pháp lựa chọn đặc trưng và đánh giá hiệu quả của PSO kết hợp với mô hình tăng cường.
