@@ -1,0 +1,126 @@
+{
+    "manifest_name": "Controlled Benchmark EDA Manifest",
+    "execution_timestamp": "2026-10-13T08:39:14.122843+00:00",
+    "script": "scripts/eda_controlled_benchmark.py",
+    "input_directory": "D:/HuyD/\u0110\u1ea1i H\u1ecdc/BigData/Global/outputs/controlled_benchmark",
+    "input_files_audited": {
+        "customers.csv": {
+            "size_bytes": 2730903,
+            "sha256": "73f6eac27fd4074850eebc02c045735a7742d3149f0787f43587cc2962a6b53a"
+        },
+        "sessions.csv": {
+            "size_bytes": 5615808,
+            "sha256": "98e20cb03e16b2b2e06f9ebb0727a2fdb0c2789ebd7e7a5c92a8b58671240e60"
+        },
+        "transactions.csv": {
+            "size_bytes": 1500918,
+            "sha256": "af9a31b87715c28ba2e93f9ec904166ebaba82935efea4ae9865447bcadf2f45"
+        },
+        "marketing_campaigns.csv": {
+            "size_bytes": 2709,
+            "sha256": "fe48fb5d61c527d180eb31e520c5e2a42387f852c9c68d72f61e9aecfd548c50"
+        },
+        "geo_data.csv": {
+            "size_bytes": 4258,
+            "sha256": "9e889ff182029caa11038a81815c3d66ba78c90feea0eda320386f167b9909ff"
+        },
+        "customer_labels_pit.csv": {
+            "size_bytes": 213914,
+            "sha256": "ec49cf9ca10a98f59c4c921a50a19120dbc7ac040167689c460ec6ef28a47d10"
+        },
+        "customer_features_pit.parquet": {
+            "size_bytes": 3452521,
+            "sha256": "16b2bb9074fef8341bbab7b5d9c224338e091fd51f8779affaac66b60cb45384"
+        }
+    },
+    "key_metrics_reconciled": {
+        "total_customers": 25000,
+        "total_sessions": 89666,
+        "total_transactions": 21534,
+        "cutoff_date": "2024-06-01",
+        "prediction_window_days": 30,
+        "prediction_end_date": "2024-07-01",
+        "target_positive_count": 2195,
+        "target_positive_rate": 0.0878,
+        "target_negative_count": 22805,
+        "target_negative_rate": 0.9122,
+        "ground_truth_reconciliation_mismatches": 0,
+        "orphan_sessions": 0,
+        "orphan_transactions": 0,
+        "sessions_before_signup": 0,
+        "transactions_before_signup": 0
+    },
+    "output_artifacts": {
+        "data_inventory.csv": {
+            "size_bytes": 1446,
+            "sha256": "67950b0b762a1a91163e7b44d7c1dd73368f55f022ea29cbd7445ef9a6303b7b",
+            "generated_at": "2026-10-13T08:39:14.052490+00:00"
+        },
+        "data_quality.csv": {
+            "size_bytes": 8442,
+            "sha256": "43aaf97f052a0b00b1a121d8c16ff7e47cae9bf75366f494db574e6295221a9d",
+            "generated_at": "2026-10-13T08:39:14.052736+00:00"
+        },
+        "target_distribution.csv": {
+            "size_bytes": 126,
+            "sha256": "18725a3a10fb59ae33aa7fe5720f3d6bd41b3698a5387ec362ce9260f26bc9c1",
+            "generated_at": "2026-10-13T08:39:14.052947+00:00"
+        },
+        "numeric_summary.csv": {
+            "size_bytes": 5161,
+            "sha256": "0e9816c5ecdec5eb2702d7654345bdce89ddfa3f1c7ba00f3f887a2a51dc8308",
+            "generated_at": "2026-10-13T08:39:14.053150+00:00"
+        },
+        "categorical_summary.csv": {
+            "size_bytes": 1764,
+            "sha256": "35fdaf03367d83573231029bd45b6a5b375761ce3d4d2ac22a1a7e4626de1753",
+            "generated_at": "2026-10-13T08:39:14.053396+00:00"
+        },
+        "correlation_matrix.csv": {
+            "size_bytes": 4836,
+            "sha256": "745d11f4e8f80bd231c33d892e5bdd3f9a84933d71f671087274e8bfbdec8b68",
+            "generated_at": "2026-10-13T08:39:14.053661+00:00"
+        },
+        "eda_1_table_scales.png": {
+            "size_bytes": 58305,
+            "sha256": "5ec1212210a2e975df9c129a880e16018111540d49d6598b4da538375239e807",
+            "generated_at": "2026-10-13T08:39:14.062415+00:00"
+        },
+        "eda_2_target_distribution_pit.png": {
+            "size_bytes": 54135,
+            "sha256": "c7de943817feaf052f8bc80a112e087a26441399bdd5b3fc3a7fc65b82d370f2",
+            "generated_at": "2026-10-13T08:39:14.071073+00:00"
+        },
+        "eda_3_missing_values.png": {
+            "size_bytes": 78786,
+            "sha256": "d6dcf9b072de80bfc7cdd115d90a7d4993874e899174bc5ab251422536f8dc8c",
+            "generated_at": "2026-10-13T08:39:14.079627+00:00"
+        },
+        "eda_4_numeric_distributions.png": {
+            "size_bytes": 167062,
+            "sha256": "55c60ab9b17483e7375aa004606de7fe7daf5b5a39176e9a673f92fd0367bc0f",
+            "generated_at": "2026-10-13T08:39:14.087982+00:00"
+        },
+        "eda_5_correlation_heatmap.png": {
+            "size_bytes": 247843,
+            "sha256": "349f0b5423fb7950b006504f35f0391d14d171d7737e9a5bc6b73f1dc0d54f3f",
+            "generated_at": "2026-10-13T08:39:14.095382+00:00"
+        },
+        "eda_6_feature_comparison_by_target.png": {
+            "size_bytes": 106229,
+            "sha256": "3dfa241bbb9e7a6917173eed9a0c49f0f057c8512786bb41958de24679b85349",
+            "generated_at": "2026-10-13T08:39:14.105731+00:00"
+        },
+        "eda_7_temporal_activity.png": {
+            "size_bytes": 138319,
+            "sha256": "36d965818b7fb21feea4e7c96effad617083fb5a304440537a20f5892a08ae8f",
+            "generated_at": "2026-10-13T08:39:14.113868+00:00"
+        },
+        "eda_8_cart_and_engagement_matrix.png": {
+            "size_bytes": 185183,
+            "sha256": "6ce77dd0a459c29eb6f28d1a0c40597802db94f7eec80e935dbc200786d280af",
+            "generated_at": "2026-10-13T08:39:14.122820+00:00"
+        }
+    },
+    "status": "COMPLETED_SUCCESSFULLY"
+}

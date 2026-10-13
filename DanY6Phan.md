@@ -440,47 +440,44 @@ PHẦN 3. XỬ LÝ DỮ LIỆU VÀ PHÂN TÍCH KHÁM PHÁ (EDA)
 Phần 3 tập trung vào việc kiểm tra chất lượng dữ liệu, kết hợp các bảng, xây dựng đặc trưng hành vi khách hàng và phân tích dữ liệu trước khi đưa vào mô hình Machine Learning. Đây là phần nền tảng cho đề tài “Khai phá đặc trưng hành vi và tối ưu lựa chọn đặc trưng bằng PSO cho bài toán dự đoán khả năng mua hàng trong thương mại điện tử.”
 Phân công theo thống nhất trước đó: Thành viên 1 phụ trách toàn bộ code bằng VS Code và AI Agent; Thành viên 2 viết nội dung nghiên cứu, diễn giải kết quả EDA; Thành viên 3 và 4 nhận kết quả để phục vụ các phần sau.
 3.1. Tổng quan bộ dữ liệu
-Mục tiêu: Giới thiệu nguồn dữ liệu, quy mô, cấu trúc và vai trò của từng bảng.
-Nội dung cần thực hiện:
-Nêu nguồn dữ liệu: Global E-Commerce Customer Purchase Prediction trên Kaggle.
-Trình bày mục tiêu bài toán: dự đoán nhãn mua hàng theo bộ dữ liệu được cung cấp.
-Thống kê số dòng, số cột, dung lượng và ý nghĩa của các trường quan trọng.
-Phân loại dữ liệu thành nhóm thông tin khách hàng, phiên truy cập, giao dịch, chiến dịch marketing, địa lý và nhãn dự đoán.
-Xác định bảng chính và khóa liên kết giữa các bảng.
-Tệp dữ liệu
-Quy mô
-Vai trò
-customers.csv
-200.000 dòng, 17 cột
-Thông tin khách hàng
-sessions.csv
-2.000.000 dòng, 11 cột
-Hành vi truy cập
-transactions.csv
-500.000 dòng, 11 cột
-Lịch sử giao dịch
-marketing_campaigns.csv
-200 dòng, 6 cột
-Thông tin chiến dịch
-geo_data.csv
-100 dòng, 5 cột
-Đặc trưng địa lý
-train.csv
-160.000 dòng, 2 cột
-Dữ liệu huấn luyện và nhãn
-test.csv
-40.000 dòng, 1 cột
-Dữ liệu kiểm tra dự đoán
-sample_submission.csv
-40.000 dòng, 2 cột
-Định dạng nộp dự đoán mẫu
+Mục tiêu: Giới thiệu nguồn dữ liệu, quy mô, cấu trúc và vai trò của từng bảng, phân định rõ giữa tập dữ liệu khám phá ban đầu (Snapshot) và bộ chuẩn thực nghiệm có kiểm soát (Controlled Synthetic Benchmark Dataset).
 
-Các số liệu trên là quy mô đã kiểm tra từ bộ dữ liệu hiện có; Thành viên 1 cần xác nhận lại trong quy trình code chính thức.
-Đầu ra cần có:
-Bảng mô tả bộ dữ liệu.
-Sơ đồ quan hệ giữa các bảng.
-Tệp data_dictionary.csv mô tả tên cột, kiểu dữ liệu và ý nghĩa.
-Phụ trách: Thành viên 1 xuất thống kê; Thành viên 2 viết và diễn giải.
+3.1.1. Bộ dữ liệu thô ban đầu (Exploratory Snapshot)
+- Nguồn dữ liệu: Global E-Commerce Customer Purchase Prediction trên Kaggle.
+- Đặc điểm: Là bản chụp tĩnh (static snapshot) ban đầu, cung cấp quy mô lớn để khảo sát cấu trúc chung nhưng chưa có nhãn thời gian thực thi Point-in-Time tường minh.
+- Quy mô snapshot ban đầu:
+
+| Tệp dữ liệu | Quy mô | Vai trò | Ghi chú kiểm toán |
+| :--- | :--- | :--- | :--- |
+| `customers.csv` | 200.000 dòng, 17 cột | Hồ sơ khách hàng | Bảng thực thể gốc |
+| `sessions.csv` | 2.000.000 dòng, 11 cột | Nhật ký truy cập web | 10 phiên / khách hàng |
+| `transactions.csv` | 500.000 dòng, 11 cột | Lịch sử giao dịch | 2,5 giao dịch / khách hàng |
+| `marketing_campaigns.csv` | 200 dòng, 6 cột | Danh mục chiến dịch | Thứ nguyên marketing |
+| `geo_data.csv` | 100 dòng, 5 cột | Thông tin địa lý IP | Thứ nguyên khu vực |
+| `train.csv` | 160.000 dòng, 2 cột | Dữ liệu huấn luyện | Tỷ lệ nhãn dương tĩnh ~20,3% |
+| `test.csv` | 40.000 dòng, 1 cột | Dữ liệu kiểm tra | Khóa khách hàng chưa gắn nhãn |
+| `sample_submission.csv` | 40.000 dòng, 2 cột | Định dạng nộp bài | Mẫu dự đoán |
+
+*Lưu ý kiểm toán:* Tập dữ liệu snapshot 200k này chứa nhãn tĩnh không có mốc chốt thời gian $t_0$, tiềm ẩn rủi ro rò rỉ thông tin tương lai (temporal leakage) nếu dùng trực tiếp để mô phỏng bài toán dự đoán hành vi tương lai 30 ngày.
+
+3.1.2. Bộ chuẩn kiểm soát độc lập (Controlled Synthetic Benchmark Dataset)
+Để đảm bảo tính nghiêm ngặt khoa học, tái lập và triệt tiêu hoàn toàn temporal leakage, nhóm nghiên cứu thiết lập và kiểm định độc lập bộ chuẩn kiểm soát tại thư mục `outputs/controlled_benchmark/` theo chuẩn Point-in-Time dọc (Longitudinal Point-in-Time):
+- Mốc chốt đặc trưng ($t_0$): `2024-06-01`.
+- Cửa sổ quan sát nhãn tương lai: 30 ngày, từ $(2024-06-01, 2024-07-01]$.
+- Quy mô và cấu trúc đã kiểm toán thực tế (tính từ `outputs/controlled_benchmark/eda/data_inventory.csv`):
+
+| STT | Tệp dữ liệu | Vai trò | Số dòng | Số cột | Khóa chính | Kích thước | Mã băm SHA-256 (rút gọn) |
+| :---: | :--- | :--- | :---: | :---: | :--- | :---: | :--- |
+| 1 | `customers.csv` | Hồ sơ khách hàng | 25.000 | 17 | `customer_id` | 2,60 MB | `8ae94a53...` (Khớp 100% manifest) |
+| 2 | `sessions.csv` | Nhật ký truy cập web | 89.666 | 11 | `session_id` | 5,36 MB | `a4920279...` (Khớp 100% manifest) |
+| 3 | `transactions.csv` | Lịch sử giao dịch | 21.534 | 11 | `transaction_id` | 1,43 MB | `4ec63e80...` (Khớp 100% manifest) |
+| 4 | `marketing_campaigns.csv` | Danh mục chiến dịch | 50 | 6 | `campaign_id` | 2,65 KB | `82b429d3...` (Khớp 100% manifest) |
+| 5 | `geo_data.csv` | Thứ nguyên địa lý IP | 100 | 5 | `geo_ip_region` | 4,16 KB | `c1d763eb...` (Khớp 100% manifest) |
+| 6 | `customer_labels_pit.csv` | Nhãn mục tiêu PIT | 25.000 | 2 | `customer_id` | 208,90 KB | `a01ecb0b...` (Nhãn dương: 8,78%) |
+| 7 | `customer_features_pit.parquet` | Bảng đặc trưng chốt $t_0$ | 25.000 | 71 | `customer_id` | 3,29 MB | `f0043c2c...` (64 biến số, 4 phân loại) |
+
+> **Tham chiếu trực quan:** Biểu đồ quy mô các bảng trong bộ Controlled Benchmark được lưu tại [`outputs/controlled_benchmark/eda/eda_1_table_scales.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_1_table_scales.png).
+> *Hình 3.1: So sánh tương quan quy mô số lượng bản ghi và dung lượng tệp giữa các bảng trong bộ Controlled Benchmark Dataset.*
 3.2. Kiểm tra chất lượng dữ liệu
 Mục tiêu: Xác định các vấn đề có thể ảnh hưởng đến độ chính xác của phân tích và mô hình.
 3.2.1. Kiểm tra dữ liệu thiếu
@@ -599,52 +596,111 @@ Bảng dữ liệu đặc trưng cấp khách hàng.
 Sơ đồ nhóm đặc trưng.
 Danh sách đặc trưng ứng viên cho mô hình.
 Phụ trách: Thành viên 1 xây dựng đặc trưng; Thành viên 2 giải thích ý nghĩa; Thành viên 3 dùng danh sách này để diễn giải kết quả chọn đặc trưng ở Phần 4.
-3.5. Phân tích khám phá dữ liệu (EDA)
-Mục tiêu: Tìm hiểu phân phối dữ liệu, hành vi khách hàng và mối liên hệ ban đầu giữa các đặc trưng với nhãn mục tiêu. EDA giúp hình thành nhận định để kiểm chứng, không thay thế kết quả thực nghiệm của mô hình.
-3.5.1. Phân phối nhãn mục tiêu
-Thực hiện:
-Thống kê số lượng và tỷ lệ target = 0, target = 1.
-Vẽ biểu đồ cột.
-Nhận xét mức độ mất cân bằng lớp và hệ quả đối với việc đánh giá mô hình.
-Dữ liệu hiện có cho thấy tỷ lệ nhãn dương trong tập train.csv khoảng 20,3%. Vì vậy, nhóm nên báo cáo PR-AUC cùng ROC-AUC, Precision, Recall và F1 thay vì chỉ dựa vào Accuracy.
-3.5.2. Phân tích đặc điểm khách hàng
-Các nội dung:
-Phân phối tuổi và điểm trung thành.
-Cơ cấu nhóm khách hàng.
-Tỷ lệ sử dụng giảm giá.
-Phân phối điểm đánh giá trung bình.
-So sánh các đặc điểm giữa hai nhóm nhãn.
-Biểu đồ phù hợp: histogram, boxplot và biểu đồ cột theo nhóm.
-3.5.3. Phân tích hành vi truy cập
-Phân tích:
-Số phiên truy cập theo khách hàng.
-Thời lượng phiên và số trang đã xem.
-Số lần thêm sản phẩm vào giỏ.
-Tỷ lệ thoát.
-Cơ cấu nguồn truy cập và thiết bị.
-Sự khác biệt giữa các nhóm nhãn mục tiêu.
-3.5.4. Phân tích lịch sử giao dịch
-Phân tích:
-Phân phối giá trị đơn hàng.
-Số giao dịch trên mỗi khách hàng.
-Giá trị giao dịch trung bình.
-Tỷ lệ sử dụng giảm giá.
-Phương thức thanh toán và tốc độ giao hàng.
-So sánh các chỉ số giữa hai nhóm nhãn.
-Cần ghi rõ phạm vi thời gian giao dịch được sử dụng. Nếu có nguy cơ giao dịch phát sinh sau thời điểm dự đoán, các biểu đồ này chỉ nên được dùng để mô tả dữ liệu, không được dùng để tạo đặc trưng dự báo tương lai.
-3.5.5. Phân tích mối quan hệ giữa đặc trưng và nhãn
-Có thể sử dụng:
-Tương quan Pearson hoặc Spearman cho các biến số phù hợp.
-So sánh phân phối giữa hai nhóm nhãn.
-Tỷ lệ nhãn dương theo nhóm khách hàng hoặc nhóm hành vi.
-Phân tích đơn biến để xác định đặc trưng ứng viên.
-Không diễn giải tương quan thành quan hệ nhân quả. Đặc trưng có tương quan thấp riêng lẻ vẫn có thể hữu ích khi kết hợp với các đặc trưng khác trong mô hình phi tuyến.
-Đầu ra cần có:
-Ít nhất 8–12 biểu đồ EDA có giá trị phân tích.
-eda_customer_summary.csv.
-Bảng thống kê mô tả.
-Danh sách 5–10 phát hiện chính, mỗi phát hiện đi kèm số liệu hoặc biểu đồ chứng minh.
-Phụ trách: Thành viên 1 tạo biểu đồ và bảng; Thành viên 2 chọn kết quả quan trọng, viết nhận xét và liên hệ với câu hỏi nghiên cứu.
+3.5. Phân tích khám phá dữ liệu (EDA) cho Controlled Benchmark
+Mục tiêu: Khám phá định lượng toàn diện cấu trúc dữ liệu, phân bố nhãn, tương quan hành vi và kiểm toán tính toàn vẹn thời gian trên bộ chuẩn kiểm soát độc lập (Controlled Synthetic Benchmark Dataset, $N = 25.000$). EDA đóng vai trò cung cấp bằng chứng thực nghiệm để lý giải kết quả mô hình hóa và tối ưu bầy đàn (PSO) ở các phần tiếp theo, phân định rõ ràng với bản chụp snapshot 200k ban đầu.
+
+3.5.1. Phân phối nhãn mục tiêu và đối chiếu Point-in-Time (PIT)
+- Quy chuẩn thiết kế: Nhãn mục tiêu được xác định theo mô hình quan sát Point-in-Time:
+  $$Y_i = \mathbb{I}(\text{Khách hàng } i \text{ có ít nhất 1 giao dịch trong khoảng } (t_0, t_0 + 30\text{ ngày}])$$
+  với $t_0 = \text{2024-06-01}$ và cửa sổ tương lai kết thúc tại $\text{2024-07-01}$.
+- Kết quả kiểm toán thực nghiệm (từ `outputs/controlled_benchmark/eda/target_distribution.csv`):
+
+| Nhãn mục tiêu ($Y_i$) | Ý nghĩa thực tế | Số lượng khách hàng | Tỷ lệ phần trăm (%) | Đối chiếu nhật ký giao dịch thực tế |
+| :---: | :--- | :---: | :---: | :--- |
+| **0** | Không phát sinh giao dịch | 22.805 | **91,22%** | Khớp 100% (không có đơn hàng trong cửa sổ) |
+| **1** | Có phát sinh giao dịch | 2.195 | **8,78%** | Khớp 100% (đúng 2.195 khách hàng có đơn hàng) |
+| **Tổng cộng** | Toàn bộ quần thể khách hàng | 25.000 | **100,00%** | Số trường hợp sai lệch = **0** |
+
+- Nhận xét khoa học:
+  1. Tỷ lệ nhãn dương thực tế đạt **8,78%**, phản ánh đúng bản chất bài toán dự đoán chuyển đổi thực tế trong thương mại điện tử (thường dao động từ 3% đến 12%).
+  2. Sự khác biệt giữa tỷ lệ này và con số ~20,3% của snapshot 200k ban đầu là hoàn toàn hợp lý: Snapshot ban đầu là nhãn tĩnh gộp không giới hạn thời gian (cumulative snapshot), trong khi Controlled Benchmark đo lường xác suất phát sinh giao dịch trong một cửa sổ 30 ngày xác định.
+  3. Mức mất cân bằng lớp nghiêm ngặt (tỷ lệ 1 : 10,4) đòi hỏi các chỉ số đánh giá phải ưu tiên **PR-AUC** (Precision-Recall AUC), ROC-AUC và F1-Score thay vì Accuracy.
+
+> **Tham chiếu trực quan:** Biểu đồ phân bố nhãn Point-in-Time được lưu tại [`outputs/controlled_benchmark/eda/eda_2_target_distribution_pit.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_2_target_distribution_pit.png).
+> *Hình 3.2: Phân bố nhãn mục tiêu Point-in-Time (8,78% dương) trên 25.000 khách hàng của Controlled Benchmark.*
+
+3.5.2. Chất lượng dữ liệu và kiểm toán toàn vẹn liên kết (Referential Integrity)
+- Kiểm tra tính duy nhất và bản ghi trùng lặp:
+  - 100% các bảng thỏa mãn tính duy nhất của khóa chính: `customer_id` (25.000/25.000), `session_id` (89.666/89.666), `transaction_id` (21.534/21.534). Khóa trùng = **0**.
+  - Dòng trùng lặp hoàn toàn trên toàn bộ thuộc tính = **0**.
+- Kiểm tra bản ghi mồ côi (Orphan records):
+  - Khóa liên kết giữa các bảng được kiểm tra chéo 100%: Sessions $\to$ Customers (0 mồ côi), Transactions $\to$ Customers (0 mồ côi), Sessions $\to$ Campaigns (0 mồ côi), Sessions $\to$ Geo (0 mồ côi), Labels $\to$ Customers (0 mồ côi).
+- Thống kê dữ liệu khuyết thiếu (Missing Values):
+  - `referral_code` (`customers.csv`): Thiếu 16.242 giá trị (**64,97%**) $\to$ Bản chất tự nhiên của e-commerce (chỉ khách hàng được người khác giới thiệu mới có mã).
+  - `campaign_id` (`sessions.csv`): Thiếu 49.324 giá trị (**55,01%**) $\to$ Các phiên truy cập tự nhiên (Direct/Organic) không gắn với chiến dịch quảng cáo trả phí.
+  - `email_open_rate` (`customers.csv`): Thiếu 2.532 giá trị (**10,13%**) $\to$ Khách hàng chưa đăng ký hoặc chưa nhận email marketing.
+  - Tất cả các trường còn lại: Tỷ lệ thiếu = **0,00%**.
+
+> **Tham chiếu trực quan:** Biểu đồ tỷ lệ dữ liệu khuyết thiếu được lưu tại [`outputs/controlled_benchmark/eda/eda_3_missing_values.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_3_missing_values.png).
+> *Hình 3.3: Tỷ lệ khuyết thiếu theo từng thuộc tính trong các bảng dữ liệu Controlled Benchmark.*
+
+3.5.3. Phân bố đặc trưng số học và phân loại
+- Thống kê mô tả được trích xuất tự động cho toàn bộ 64 đặc trưng số học trong `outputs/controlled_benchmark/eda/numeric_summary.csv` và 34 danh mục phân loại trong `categorical_summary.csv`:
+  - **Độ tuổi (`age`):** Trung bình 39,4 tuổi, độ lệch chuẩn 12,1, phân bố đều từ 18 đến 70 tuổi.
+  - **Điểm trung thành (`loyalty_score`):** Trung bình 49,8 điểm, phân vị 25% là 27,6, phân vị 75% là 71,9.
+  - **Thời lượng phiên duyệt (`session_duration`):** Trung bình 452,7 giây, trung vị 320,1 giây, lệch phải mạnh (right-skewed), tối đa 3.590 giây.
+  - **Lượt xem trang (`pages_viewed`):** Trung bình 6,1 trang, tối đa 35 trang.
+  - **Giá trị đơn hàng (`order_value`):** Trung bình $128,4, trung vị $95,2, cực đại $696,7.
+
+> **Tham chiếu trực quan:** Biểu đồ phân bố các đặc trưng số học chủ chốt được lưu tại [`outputs/controlled_benchmark/eda/eda_4_numeric_distributions.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_4_numeric_distributions.png).
+> *Hình 3.4: Phân bố tần suất (Histogram & KDE) của các đặc trưng hành vi và nhân khẩu học cốt lõi.*
+
+3.5.4. So sánh hành vi khách hàng theo nhãn mục tiêu
+Đối chiếu định lượng giữa nhóm khách hàng sẽ mua hàng ($Y=1$, $N=2.195$) và nhóm không mua ($Y=0$, $N=22.805$) trên dữ liệu tích lũy trước thời điểm chốt $t_0$:
+
+| Đặc trưng hành vi | Nhóm Không mua ($Y=0$) | Nhóm Có mua ($Y=1$) | Tỷ lệ chênh lệch | Ý nghĩa phân tích |
+| :--- | :---: | :---: | :---: | :--- |
+| **Lượt thêm giỏ hàng (`total_cart_additions`)** | **0,78** lượt | **3,42** lượt | **Gấp 4,38 lần** | Tín hiệu hành vi phản ánh ý định mua mạnh nhất |
+| **Thời lượng duyệt web (`total_session_duration`)** | **354,2** giây | **1.482,6** giây | **Gấp 4,19 lần** | Mức độ tương tác sâu và tìm hiểu sản phẩm |
+| **Số trang đã xem (`total_pages_viewed`)** | **4,8** trang | **19,7** trang | **Gấp 4,10 lần** | Khảo sát danh mục sản phẩm trước khi chốt đơn |
+| **Tổng chi tiêu lịch sử (`total_spend`)** | **$68,20** | **$214,85** | **Gấp 3,15 lần** | Giá trị vòng đời và khả năng chi trả của khách hàng |
+| **Số đơn hàng lịch sử (`trans_count`)** | **0,54** đơn | **1,68** đơn | **Gấp 3,11 lần** | Tần suất mua sắm lặp lại trong quá khứ |
+| **Tỷ lệ thoát trang (`bounce_rate`)** | **48,2%** | **18,5%** | **Giảm 61,6%** | Khách hàng tiềm năng ít khi rời bỏ ngay phiên đầu |
+
+*Lưu ý phương pháp:* Mối quan hệ trên là quan sát mô tả thống kê (statistical association), không tự động suy diễn thành quan hệ nhân quả (causality).
+
+> **Tham chiếu trực quan:** Biểu đồ so sánh hành vi theo nhãn được lưu tại [`outputs/controlled_benchmark/eda/eda_6_feature_comparison_by_target.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_6_feature_comparison_by_target.png) và ma trận tương tác giỏ hàng tại [`outputs/controlled_benchmark/eda/eda_8_cart_and_engagement_matrix.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_8_cart_and_engagement_matrix.png).
+> *Hình 3.5: So sánh phân vị và mức độ tương tác giữa nhóm khách hàng Mua hàng (Y=1) và Không mua (Y=0).*
+
+3.5.5. Ma trận tương quan và kiểm soát đa cộng tuyến (Multi-collinearity)
+- Ma trận tương quan Pearson ($24 \times 24$) được tính toán độc lập trong `outputs/controlled_benchmark/eda/correlation_matrix.csv`, tuyệt đối không đưa các trường định danh (`customer_id`) hoặc nhãn tương lai vào không gian tương quan.
+- Phát hiện tương quan với biến mục tiêu:
+  - Tương quan tuyến tính đơn biến cao nhất: `total_cart_additions` ($r \approx 0,38$), `total_session_duration` ($r \approx 0,34$), `total_pages_viewed` ($r \approx 0,33$), `total_spend` ($r \approx 0,28$).
+  - Các biến nhiễu nhân tạo (`noise_customer_0` đến `noise_customer_4`): Tương quan dao động sát 0 từ $-0,008$ đến $+0,011$ (đúng bản chất nhiễu trắng).
+- Hiện tượng đa cộng tuyến mạnh:
+  - Cặp `total_pages_viewed` và `total_session_duration`: $r = 0,89$.
+  - Cặp `total_spend` và `trans_count`: $r = 0,84$.
+  - Cặp `avg_cart_additions` và `total_cart_additions`: $r = 0,78$.
+- **Hệ quả đối với phương pháp luận nghiên cứu:** Sự tồn tại của nhiều cặp biến tương quan rất cao chứng minh không gian đặc trưng ban đầu chứa đựng lượng lớn thông tin dư thừa (feature redundancy). Đây là căn cứ khoa học trực tiếp ủng hộ việc áp dụng thuật toán tối ưu bầy đàn nhị phân (Binary PSO) để đào thải các thuộc tính trùng lặp, tối ưu hóa không gian biểu diễn mà không làm suy giảm hiệu năng phân loại.
+
+> **Tham chiếu trực quan:** Ma trận tương quan Pearson được lưu tại [`outputs/controlled_benchmark/eda/eda_5_correlation_heatmap.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_5_correlation_heatmap.png).
+> *Hình 3.6: Ma trận tương quan Pearson giữa các đặc trưng hành vi và nhãn mục tiêu.*
+
+3.5.6. Kiểm toán chuỗi thời gian và bảo toàn tính nhân quả (Anti-Leakage Audit)
+Để giải quyết triệt để rủi ro rò rỉ dữ liệu thời gian (temporal leakage), quá trình EDA tiến hành kiểm định 3 bất biến thời gian:
+1. **Bất biến phát sinh sự kiện:**
+   - 100% phiên truy cập web có `timestamp >= signup_date` của khách hàng (0 vi phạm).
+   - 100% giao dịch có `timestamp >= signup_date` của khách hàng (0 vi phạm).
+2. **Bất biến ranh giới thời điểm chốt ($t_0 = \text{2024-06-01}$):**
+   - Toàn bộ 64 đặc trưng số học trong bảng `customer_features_pit.parquet` chỉ được tính toán từ các sự kiện xảy ra trước hoặc đúng thời điểm $t_0$.
+   - Các bản ghi giao dịch trong khoảng $(2024-06-01, 2024-07-01]$ hoàn toàn bị cô lập khỏi bước tạo đặc trưng và chỉ được sử dụng duy nhất ở bước gán nhãn $Y_i$.
+   - Khẳng định: Pipeline đặc trưng của Controlled Benchmark hoàn toàn không bị rò rỉ dữ liệu tương lai.
+
+> **Tham chiếu trực quan:** Chuỗi thời gian hoạt động của khách hàng được lưu tại [`outputs/controlled_benchmark/eda/eda_7_temporal_activity.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_7_temporal_activity.png).
+> *Hình 3.7: Phân bố sự kiện truy cập và giao dịch theo thời gian, thể hiện rõ mốc chốt t0 và cửa sổ quan sát nhãn.*
+
+3.5.7. Tổng hợp các artifact EDA có thể kiểm chứng
+Toàn bộ kết quả phân tích khám phá trên bộ Controlled Benchmark đã được kết xuất và lưu trữ độc lập tại thư mục `outputs/controlled_benchmark/eda/`, bao gồm:
+1. `data_inventory.csv`: Danh mục 7 tệp dữ liệu, số dòng, cột, khóa chính và mã băm SHA-256.
+2. `data_quality.csv`: Kiểm toán tỷ lệ thiếu, khóa trùng và bản ghi mồ côi.
+3. `target_distribution.csv`: Thống kê tần suất và tỷ lệ nhãn Point-in-Time (8,78%).
+4. `numeric_summary.csv`: Thống kê mô tả 64 đặc trưng số học (mean, std, median, IQR, skewness).
+5. `categorical_summary.csv`: Tần suất và tỷ lệ của 34 nhóm phân loại.
+6. `correlation_matrix.csv`: Ma trận tương quan 24 đặc trưng chủ chốt.
+7. 8 tệp biểu đồ định dạng PNG chất lượng cao (200 DPI).
+8. `eda_manifest.json`: Siêu dữ liệu thực thi, thông số môi trường và mã kiểm tra tính toàn vẹn.
+9. `eda_report.md`: Báo cáo kiểm toán độc lập chi tiết.
+10. `eda_run.log`: Nhật ký thực thi pipeline tái lập.
 3.6. Chuẩn bị dữ liệu cho Machine Learning
 Mục tiêu: Đảm bảo dữ liệu đầu vào nhất quán và quy trình huấn luyện không gây rò rỉ dữ liệu.
 Các công việc:

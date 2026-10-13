@@ -1,0 +1,8 @@
+table_name,role,row_count,column_count,primary_key,size_bytes,size_formatted,sha256,description
+customers.csv,Core Entity,25000,17,customer_id,2730903,2.60 MB,73f6eac27fd4074850eebc02c045735a7742d3149f0787f43587cc2962a6b53a,"Customer profile, demographics, loyalty, base tier"
+sessions.csv,Event Log,89666,11,session_id,5615808,5.36 MB,98e20cb03e16b2b2e06f9ebb0727a2fdb0c2789ebd7e7a5c92a8b58671240e60,"Web/app browsing logs, pages, cart additions, device, traffic"
+transactions.csv,Event Log,21534,11,transaction_id,1500918,1.43 MB,af9a31b87715c28ba2e93f9ec904166ebaba82935efea4ae9865447bcadf2f45,"Purchase orders, payment methods, shipping, discount, amount"
+marketing_campaigns.csv,Dimension,50,6,campaign_id,2709,2.65 KB,fe48fb5d61c527d180eb31e520c5e2a42387f852c9c68d72f61e9aecfd548c50,"Digital marketing campaign metadata, budget, target region"
+geo_data.csv,Dimension,100,5,geo_ip_region,4258,4.16 KB,9e889ff182029caa11038a81815c3d66ba78c90feea0eda320386f167b9909ff,"Regional socioeconomic statistics (income, urban, internet)"
+customer_labels_pit.csv,Target Label,25000,2,customer_id,213914,208.90 KB,ec49cf9ca10a98f59c4c921a50a19120dbc7ac040167689c460ec6ef28a47d10,Point-in-Time binary ground truth purchase target in window
+customer_features_pit.parquet,Feature Store,25000,71,customer_id,3452521,3.29 MB,16b2bb9074fef8341bbab7b5d9c224338e091fd51f8779affaac66b60cb45384,Integrated 71-column point-in-time engineered feature store

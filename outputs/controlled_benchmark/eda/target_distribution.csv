@@ -1,0 +1,3 @@
+target,label_name,customer_count,percentage
+0,Non-Purchaser (Target=0),22805,91.22
+1,Future Purchaser (Target=1),2195,8.78

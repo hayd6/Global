@@ -1,0 +1,35 @@
+table_source,column_name,category_value,frequency,percentage
+customer_features_pit,country_code,US,9992,39.97
+customer_features_pit,country_code,UK,3817,15.27
+customer_features_pit,country_code,DE,2971,11.88
+customer_features_pit,country_code,CA,2509,10.04
+customer_features_pit,country_code,FR,2488,9.95
+customer_features_pit,country_code,AU,2021,8.08
+customer_features_pit,country_code,JP,1202,4.81
+customer_features_pit,region,North,5069,20.28
+customer_features_pit,region,East,5022,20.09
+customer_features_pit,region,South,5003,20.01
+customer_features_pit,region,Central,4960,19.84
+customer_features_pit,region,West,4946,19.78
+customer_features_pit,customer_tier,Silver,12037,48.15
+customer_features_pit,customer_tier,Gold,8588,34.35
+customer_features_pit,customer_tier,Bronze,3508,14.03
+customer_features_pit,customer_tier,Platinum,867,3.47
+customer_features_pit,region_tier,Tier 2,11902,47.61
+customer_features_pit,region_tier,Tier 3,7039,28.16
+customer_features_pit,region_tier,Tier 1,6059,24.24
+sessions.csv,traffic_source,organic,31326,34.94
+sessions.csv,traffic_source,ads,22387,24.97
+sessions.csv,traffic_source,email,13590,15.16
+sessions.csv,traffic_source,social,13409,14.95
+sessions.csv,traffic_source,direct,8954,9.99
+sessions.csv,device_type,mobile,53895,60.11
+sessions.csv,device_type,desktop,28578,31.87
+sessions.csv,device_type,tablet,7193,8.02
+transactions.csv,payment_method,credit_card,10796,50.13
+transactions.csv,payment_method,debit_card,5307,24.64
+transactions.csv,payment_method,paypal,4343,20.17
+transactions.csv,payment_method,crypto,1088,5.05
+transactions.csv,shipping_speed,standard,14031,65.16
+transactions.csv,shipping_speed,express,5351,24.85
+transactions.csv,shipping_speed,overnight,2152,9.99
