@@ -467,140 +467,124 @@ Mục tiêu: Giới thiệu nguồn dữ liệu, quy mô, cấu trúc và vai tr
 - Quy mô và cấu trúc đã kiểm toán thực tế (tính từ `outputs/controlled_benchmark/eda/data_inventory.csv`):
 
 | STT | Tệp dữ liệu | Vai trò | Số dòng | Số cột | Khóa chính | Kích thước | Mã băm SHA-256 (rút gọn) |
+3.1.2. Bộ chuẩn kiểm soát độc lập (Controlled Synthetic Benchmark Dataset)
+Để đảm bảo tính nghiêm ngặt khoa học, tái lập và triệt tiêu hoàn toàn temporal leakage, nhóm nghiên cứu thiết lập và kiểm định độc lập bộ chuẩn kiểm soát tại thư mục `outputs/controlled_benchmark/` theo chuẩn Point-in-Time dọc (Longitudinal Point-in-Time):
+- Mốc chốt đặc trưng ($t_0$): `2024-06-01`.
+- Cửa sổ quan sát nhãn tương lai: 30 ngày, từ $(2024-06-01, 2024-07-01]$.
+- Quy mô và cấu trúc đã kiểm toán thực tế (tính từ `outputs/controlled_benchmark/eda/data_inventory.csv`):
+
+| STT | Tệp dữ liệu | Vai trò | Số dòng | Số cột | Khóa chính | Kích thước | Mã băm SHA-256 (rút gọn) |
 | :---: | :--- | :--- | :---: | :---: | :--- | :---: | :--- |
-| 1 | `customers.csv` | Hồ sơ khách hàng | 25.000 | 17 | `customer_id` | 2,60 MB | `8ae94a53...` (Khớp 100% manifest) |
-| 2 | `sessions.csv` | Nhật ký truy cập web | 89.666 | 11 | `session_id` | 5,36 MB | `a4920279...` (Khớp 100% manifest) |
-| 3 | `transactions.csv` | Lịch sử giao dịch | 21.534 | 11 | `transaction_id` | 1,43 MB | `4ec63e80...` (Khớp 100% manifest) |
-| 4 | `marketing_campaigns.csv` | Danh mục chiến dịch | 50 | 6 | `campaign_id` | 2,65 KB | `82b429d3...` (Khớp 100% manifest) |
-| 5 | `geo_data.csv` | Thứ nguyên địa lý IP | 100 | 5 | `geo_ip_region` | 4,16 KB | `c1d763eb...` (Khớp 100% manifest) |
-| 6 | `customer_labels_pit.csv` | Nhãn mục tiêu PIT | 25.000 | 2 | `customer_id` | 208,90 KB | `a01ecb0b...` (Nhãn dương: 8,78%) |
-| 7 | `customer_features_pit.parquet` | Bảng đặc trưng chốt $t_0$ | 25.000 | 71 | `customer_id` | 3,29 MB | `f0043c2c...` (64 biến số, 4 phân loại) |
+| 1 | `customers.csv` | Hồ sơ khách hàng | 25.000 | 17 | `customer_id` | 2,60 MB | `73f6eac2...` (Khớp 100% manifest) |
+| 2 | `sessions.csv` | Nhật ký truy cập web | 89.666 | 11 | `session_id` | 5,36 MB | `98e20cb0...` (Khớp 100% manifest) |
+| 3 | `transactions.csv` | Lịch sử giao dịch | 21.534 | 11 | `transaction_id` | 1,43 MB | `af9a31b8...` (Khớp 100% manifest) |
+| 4 | `marketing_campaigns.csv` | Danh mục chiến dịch | 50 | 6 | `campaign_id` | 2,65 KB | `fe48fb5d...` (Khớp 100% manifest) |
+| 5 | `geo_data.csv` | Thứ nguyên địa lý IP | 100 | 5 | `geo_ip_region` | 4,16 KB | `9e889ff1...` (Khớp 100% manifest) |
+| 6 | `customer_labels_pit.csv` | Nhãn mục tiêu PIT | 25.000 | 2 | `customer_id` | 208,90 KB | `ec49cf9c...` (Nhãn dương: 8,78%) |
+| 7 | `customer_features_pit.parquet` | Bảng đặc trưng chốt $t_0$ | 25.000 | 71 | `customer_id` | 3,29 MB | `16b2bb90...` (64 biến số, 4 phân loại) |
 
-> **Tham chiếu trực quan:** Biểu đồ quy mô các bảng trong bộ Controlled Benchmark được lưu tại [`outputs/controlled_benchmark/eda/eda_1_table_scales.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_1_table_scales.png).
+> **Tham chiếu trực quan:** Biểu đồ quy mô các bảng trong bộ Controlled Benchmark được lưu tại [`outputs/controlled_benchmark/eda/eda_1_table_scales.png`](outputs/controlled_benchmark/eda/eda_1_table_scales.png).  
 > *Hình 3.1: So sánh tương quan quy mô số lượng bản ghi và dung lượng tệp giữa các bảng trong bộ Controlled Benchmark Dataset.*
-3.2. Kiểm tra chất lượng dữ liệu
-Mục tiêu: Xác định các vấn đề có thể ảnh hưởng đến độ chính xác của phân tích và mô hình.
-3.2.1. Kiểm tra dữ liệu thiếu
-Cần thống kê số lượng và tỷ lệ thiếu theo từng cột, phân biệt giữa dữ liệu thiếu thực sự và giá trị được mã hóa bằng chuỗi như unknown.
-Phương pháp:
-Sử dụng SQL trong DuckDB hoặc Pandas để thống kê.
-Vẽ biểu đồ tỷ lệ thiếu theo cột.
-Đánh giá cách xử lý dựa trên ý nghĩa dữ liệu và loại mô hình.
-Không mặc định xóa toàn bộ dòng bị thiếu. Với các trường số, có thể cân nhắc trung vị; với trường phân loại, có thể dùng nhóm Unknown nếu phù hợp. Mọi cách xử lý phải được ghi lại.
-3.2.2. Kiểm tra dữ liệu trùng lặp và tính hợp lệ
-Cần kiểm tra:
-Dòng trùng lặp hoàn toàn.
-Trùng khóa định danh trong các bảng cần có khóa duy nhất.
-Tuổi, điểm đánh giá, tỷ lệ tương tác và giá trị giao dịch ngoài phạm vi hợp lý.
-Ngày tháng sai định dạng hoặc nằm ngoài khoảng thời gian ghi nhận.
-Khóa liên kết không tồn tại trong bảng tham chiếu.
-Không xóa các dòng chỉ vì giá trị khác thường; cần xác định đó là lỗi dữ liệu hay trường hợp thực tế.
-3.2.3. Chuẩn hóa dữ liệu không nhất quán
-Một số trường đã được phát hiện có biểu diễn không đồng nhất, chẳng hạn:
-Quốc gia: USA, US, U.S., usa.
-Trạng thái Boolean: 0, FALSE.
-Nguồn truy cập khác nhau về chữ hoa và chữ thường.
-Trường số tiền chứa ký hiệu tiền tệ hoặc dấu phân cách.
-Cần chuẩn hóa các trường này bằng quy tắc thống nhất, chuyển kiểu dữ liệu phù hợp và lưu lại quy tắc biến đổi.
-3.2.4. Phát hiện ngoại lệ
-Tập trung vào các trường như order_value, session_duration, pages_viewed, credit_limit và items_count.
-Có thể sử dụng:
-Boxplot.
-Phân vị 1%, 25%, 50%, 75%, 99%.
-IQR để xác định các giá trị cần kiểm tra.
-Ngoại lệ không đồng nghĩa với dữ liệu sai. Chỉ điều chỉnh hoặc loại bỏ khi có bằng chứng cho thấy dữ liệu không hợp lệ.
-Đầu ra cần có:
-data_quality_report.csv
-Biểu đồ dữ liệu thiếu.
-Bảng các giá trị bất thường và phương án xử lý.
-Tệp ghi lại các bước làm sạch dữ liệu.
-Phụ trách: Thành viên 1 thực hiện; Thành viên 2 trình bày phát hiện và giải thích lý do chọn phương pháp xử lý.
-3.3. Tích hợp dữ liệu đa bảng
-Mục tiêu: Xây dựng bảng dữ liệu cấp khách hàng, trong đó mỗi dòng đại diện cho một khách hàng và chứa các đặc trưng tổng hợp cần thiết cho việc dự đoán.
-3.3.1. Xác định khóa liên kết
-Các khóa chính cần sử dụng gồm:
-customer_id: liên kết khách hàng, phiên truy cập, giao dịch và nhãn.
-campaign_id: liên kết phiên truy cập với chiến dịch.
-geo_ip_region: liên kết thông tin địa lý với phiên truy cập.
-3.3.2. Tổng hợp dữ liệu phiên truy cập
-Từ sessions.csv, tổng hợp theo customer_id, chẳng hạn:
-Tổng số phiên truy cập.
-Thời lượng phiên trung bình.
-Tổng số trang đã xem.
-Tổng số lần thêm sản phẩm vào giỏ hàng.
-Tỷ lệ phiên thoát.
-Số lượng hoặc tỷ trọng phiên theo nguồn truy cập.
-Tỷ trọng sử dụng từng loại thiết bị.
-3.3.3. Tổng hợp dữ liệu giao dịch
-Từ transactions.csv, tổng hợp theo customer_id, chẳng hạn:
-Số giao dịch.
-Tổng giá trị giao dịch.
-Giá trị giao dịch trung bình.
-Số lượng sản phẩm trung bình mỗi đơn.
-Tỷ lệ đơn có áp dụng giảm giá.
-Tỷ trọng phương thức thanh toán.
-Tỷ lệ giao dịch giá trị cao.
-3.3.4. Kết hợp các bảng
-Quy trình đề xuất:
-Làm sạch từng bảng.
-Tổng hợp phiên truy cập về cấp khách hàng.
-Tổng hợp giao dịch về cấp khách hàng.
-Kết hợp hai bảng tổng hợp với customers.csv.
-Bổ sung dữ liệu địa lý và chiến dịch theo cách phù hợp.
-Kết hợp nhãn từ train.csv cho tập huấn luyện.
-Kiểm tra số lượng khách hàng và khóa sau mỗi bước.
-Lưu ý kỹ thuật: Không nối trực tiếp toàn bộ 2 triệu phiên truy cập với 500.000 giao dịch theo customer_id trước khi tổng hợp. Cách này có thể tạo ra số dòng trung gian rất lớn và làm sai lệch các phép tính. Nên sử dụng DuckDB để tổng hợp từng bảng trước, sau đó mới nối.
-Cần đặc biệt kiểm tra thời điểm dự đoán. Nếu mục tiêu là dự đoán mua hàng trong tương lai 30 ngày, các đặc trưng chỉ được sử dụng dữ liệu có trước thời điểm dự đoán. Vì bộ dữ liệu chưa thể hiện rõ mốc thời gian dự đoán, nhóm cần xác minh cách tạo nhãn trước khi khẳng định mô hình dự báo đúng theo thời gian.
-Đầu ra cần có:
-Sơ đồ pipeline tích hợp dữ liệu.
-Bảng dữ liệu cấp khách hàng.
-Báo cáo số dòng trước và sau khi kết hợp.
-Kiểm tra khóa trùng, khóa thiếu và nguy cơ rò rỉ dữ liệu.
-Phụ trách: Thành viên 1 xây dựng bằng DuckDB và Python; Thành viên 2 mô tả quy trình và lý do lựa chọn.
-3.4. Xây dựng đặc trưng hành vi khách hàng (Feature Engineering)
-Mục tiêu: Chuyển dữ liệu thô thành các đặc trưng có ý nghĩa đối với hành vi mua hàng.
-Chia đặc trưng thành các nhóm:
-Nhóm đặc trưng
-Ví dụ
-Ý nghĩa phân tích
-Đặc điểm khách hàng
-age, loyalty_score, customer_tier
-Mô tả đặc điểm và mức độ gắn bó
-Cường độ truy cập
-Số phiên, thời lượng trung bình
-Đo mức độ tương tác
-Ý định mua
-Số lần thêm giỏ, số trang xem
-Phản ánh hành vi tìm hiểu sản phẩm
-Lịch sử giao dịch
-Số đơn, tổng chi tiêu, giá trị đơn trung bình
-Mô tả lịch sử mua hàng
-Phản ứng marketing
-Tỷ lệ sử dụng giảm giá, tỷ trọng nguồn truy cập
-Phân tích tương tác với hoạt động marketing
-Đặc trưng địa lý
-Thu nhập trung bình, tỷ lệ đô thị, mức độ phổ cập Internet
-Bổ sung bối cảnh khu vực
 
-Có thể xây dựng thêm đặc trưng về thời gian như số ngày từ khi đăng ký, độ gần của phiên truy cập gần nhất hoặc giao dịch gần nhất. Chỉ thực hiện khi dữ liệu có thể hỗ trợ tính toán hợp lệ và không sử dụng thông tin nằm sau thời điểm dự đoán.
-Cần lưu ý:
-Mỗi đặc trưng phải có công thức và ý nghĩa rõ ràng.
-Mã hóa biến phân loại phù hợp với mô hình.
-Xử lý giá trị thiếu và chuẩn hóa số liệu bên trong pipeline huấn luyện khi cần.
-Không đưa customer*id vào mô hình như một đặc trưng hành vi thông thường.
-Không sử dụng target làm đặc trưng đầu vào.
-Các trường noise_customer*_ và noise*trans*_ cần được giữ riêng để đánh giá tác động của đặc trưng nhiễu, không mặc định xem chúng là thông tin hữu ích.
-Đầu ra cần có:
-feature_dictionary.csv: tên, công thức, kiểu dữ liệu và ý nghĩa của từng đặc trưng.
-Bảng dữ liệu đặc trưng cấp khách hàng.
-Sơ đồ nhóm đặc trưng.
-Danh sách đặc trưng ứng viên cho mô hình.
-Phụ trách: Thành viên 1 xây dựng đặc trưng; Thành viên 2 giải thích ý nghĩa; Thành viên 3 dùng danh sách này để diễn giải kết quả chọn đặc trưng ở Phần 4.
+3.2. Kiểm tra chất lượng dữ liệu thực nghiệm
+Quá trình kiểm toán chất lượng dữ liệu được thực thi tự động qua kịch bản `scripts/eda_controlled_benchmark.py` trên 100% dữ liệu của bộ Controlled Benchmark.
+
+3.2.1. Kiểm toán dữ liệu thiếu (Missing Values)
+- Kết quả rà soát toàn bộ 7 bảng và 71 thuộc tính ghi nhận dữ liệu khuyết thiếu chỉ xuất hiện ở 3 cột có căn cứ nghiệp vụ e-commerce rõ ràng:
+  - `referral_code` (`customers.csv`): Thiếu 16.242 dòng (**64,97%**), phản ánh khách hàng đăng ký tự nhiên không qua mã giới thiệu.
+  - `campaign_id` (`sessions.csv`): Thiếu 49.324 dòng (**55,01%**), tương ứng các phiên duyệt web tự nhiên (Direct/Organic) không đến từ chiến dịch trả phí.
+  - `email_open_rate` (`customers.csv`): Thiếu 2.532 dòng (**10,13%**), là nhóm khách hàng chưa đăng ký nhận bản tin email.
+  - **Tất cả 68 cột còn lại trên toàn bộ các bảng:** Tỷ lệ thiếu đạt chính xác **0,00%**.
+- Giải pháp xử lý trong pipeline mô hình hóa: Áp dụng `SimpleImputer(strategy='median')` cho các biến số và `SimpleImputer(strategy='most_frequent')` cho biến phân loại bên trong `sklearn.pipeline.Pipeline`, hoàn toàn không loại bỏ bản ghi thô.
+
+3.2.2. Kiểm toán tính duy nhất của khóa và toàn vẹn tham chiếu
+- **Tính duy nhất của khóa chính:** 100% bảng đạt tính duy nhất tuyệt đối của khóa chính: `customer_id` (25.000/25.000), `session_id` (89.666/89.666), `transaction_id` (21.534/21.534). Số khóa trùng lặp = **0**, số khóa rỗng = **0** (Trạng thái: **PASS**).
+- **Dòng trùng lặp hoàn toàn:** Toàn bộ 7 bảng không có bất kỳ dòng nào trùng lặp trên tất cả các cột: số dòng trùng = **0** (Trạng thái: **PASS**).
+- **Kiểm toán khóa ngoại (Foreign Keys):** Rà soát toàn bộ 6 mối quan hệ tham chiếu liên bảng:
+  - `sessions` $\to$ `customers`: 0 bản ghi mồ côi (100% phiên gắn đúng khách hàng).
+  - `transactions` $\to$ `customers`: 0 bản ghi mồ côi.
+  - `sessions` $\to$ `marketing_campaigns`: 0 bản ghi mồ côi.
+  - `sessions` $\to$ `geo_data`: 0 bản ghi mồ côi (`geo_ip_region` khớp chính xác 100 vùng).
+  - `customer_labels_pit` $\leftrightarrow$ `customers`: 0 bản ghi mồ côi hai chiều (khớp 1:1 đủ 25.000 khách hàng).
+  - Tổng số bản ghi mồ côi phát hiện = **0** (Trạng thái: **PASS**).
+
+3.2.3. Chuẩn hóa kiểu dữ liệu và kiểm soát miền giá trị
+- Toàn bộ trường định danh số tiền (`order_value`, `credit_limit`, `total_spend`) được lưu dạng số thực chuẩn (Double/Float), không chứa ký hiệu tiền tệ hay dấu phân cách định dạng chuỗi.
+- Toàn bộ trường phân loại (`country_code`, `region`, `customer_tier`, `region_tier`, `traffic_source`, `device_type`, `payment_method`, `shipping_speed`) được chuẩn hóa danh mục nhất quán, không tồn tại biểu diễn hỗn tạp chữ hoa/thường hay giá trị boolean lạ.
+
+3.2.4. Phân tích ngoại lệ và miền giá trị hợp lệ
+- Rà soát phân vị 1%, 25%, 50%, 75%, 99% cho thấy các trường dữ liệu đều nằm trong miền nghiệp vụ hợp lý:
+  - `order_value`: Dao động từ $18,73 đến $696,71 (trung vị $95,20, IQR = $76,40).
+  - `items_count`: Đạt tối thiểu 1 sản phẩm/đơn (không có đơn hàng 0 sản phẩm).
+  - `session_duration`: Dao động từ 5,0 giây đến 3.590,2 giây (phân bố lệch phải tự nhiên của hành vi duyệt web).
+  - `credit_limit`: Dao động từ $1.012,40 đến $45.890,50.
+- Các giá trị cao thuộc về nhóm khách hàng chi tiêu lớn (high-value customers), hoàn toàn hợp lệ về mặt thống kê và được giữ nguyên để mô hình khai phá.
+
+> **Tham chiếu artifact:** Báo cáo chất lượng dữ liệu chi tiết lưu tại [`outputs/controlled_benchmark/eda/data_quality.csv`](outputs/controlled_benchmark/eda/data_quality.csv).  
+> Biểu đồ tỷ lệ dữ liệu thiếu lưu tại [`outputs/controlled_benchmark/eda/eda_3_missing_values.png`](outputs/controlled_benchmark/eda/eda_3_missing_values.png).  
+> *Hình 3.2: Tỷ lệ khuyết thiếu theo từng thuộc tính trong bộ Controlled Benchmark Dataset.*
+
+3.3. Tích hợp dữ liệu đa bảng (Multi-Table Integration)
+Quá trình tích hợp dữ liệu được hiện thực hóa bằng DuckDB trong module `src/features/build_point_in_time_features.py` nhằm xây dựng bảng dữ liệu thống nhất cấp khách hàng mà không làm nhân bản dòng.
+
+3.3.1. Khóa liên kết và sơ đồ tích hợp
+- Khóa chính trung tâm: `customer_id` đóng vai trò thực thể gốc, kết nối 1:N với `sessions.csv` và `transactions.csv`, kết nối 1:1 với `customer_labels_pit.csv`.
+- Khóa thứ nguyên phụ trợ: `campaign_id` liên kết thứ nguyên chiến dịch; `geo_ip_region` liên kết phiên truy cập với bảng địa lý `geo_data.csv`.
+
+3.3.2. Quy trình tiền tổng hợp (Pre-Aggregation) triệt tiêu nổ dòng
+Để tránh lỗi nổ dòng (cartesian explosion) khi JOIN trực tiếp bảng phiên (89.666 dòng) với bảng giao dịch (21.534 dòng), pipeline tuân thủ nguyên tắc:
+1. **Lọc sự kiện trước mốc chốt $t_0$ (`2024-06-01`):**
+   - Chỉ 78.836 phiên truy cập và 19.061 giao dịch phát sinh trước hoặc đúng $t_0$ được đưa vào tính toán đặc trưng.
+   - 10.830 phiên và 2.473 giao dịch phát sinh trong cửa sổ tương lai sau $t_0$ bị cách ly hoàn toàn khỏi bước tích hợp này.
+2. **Tiền tổng hợp cấp khách hàng:**
+   - Tạo khung nhìn `v_pit_sessions_agg` tổng hợp 18 chỉ số hành vi duyệt web cấp khách hàng và xác định vùng địa lý chủ đạo (`dominant_geo_ip_region`), chiến dịch chủ đạo (`dominant_campaign_id`).
+   - Tạo khung nhìn `v_pit_trans_agg` tổng hợp 18 chỉ số lịch sử giao dịch cấp khách hàng.
+3. **Phép JOIN 1:1:**
+   - Thực hiện `LEFT JOIN` từ `customers.csv` sang `v_pit_sessions_agg`, `v_pit_trans_agg` và `geo_data.csv` theo quan hệ 1:1 duy nhất.
+
+3.3.3. Biến thiên số dòng và mức hạt dữ liệu trước và sau tích hợp
+| Tên bảng / Bước xử lý | Mức hạt dữ liệu (Granularity) | Số dòng trước tích hợp | Số dòng sau tích hợp | Số cột đầu ra | Ghi chú kiểm toán |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| `customers.csv` | Khách hàng (1:1) | 25.000 | 25.000 | 17 | Bảng thực thể gốc |
+| `sessions.csv` (<= $t_0$) | Phiên truy cập (N:1) | 78.836 | 25.000 | 18 | Tổng hợp về cấp khách hàng |
+| `transactions.csv` (<= $t_0$) | Giao dịch (N:1) | 19.061 | 25.000 | 18 | Tổng hợp về cấp khách hàng |
+| `geo_data.csv` | Vùng IP (N:1) | 100 | 25.000 | 4 | Ánh xạ qua dominant geo IP |
+| `customer_labels_pit.csv` | Nhãn PIT (1:1) | 25.000 | 25.000 | 1 | Nhãn mục tiêu tương lai |
+| **Bảng tích hợp cuối** | **Khách hàng (1:1)** | — | **25.000** | **71** | Lưu tại Parquet, 0 nhân bản dòng |
+
+> **Tham chiếu artifact:** Pipeline tích hợp được định nghĩa tại `src/features/build_point_in_time_features.py`; tệp lưu trữ kết quả: `outputs/controlled_benchmark/customer_features_pit.parquet`.
+
+3.4. Xây dựng không gian đặc trưng hành vi (Feature Engineering)
+Từ các bảng dữ liệu thô, nhóm nghiên cứu thiết kế 68 đặc trưng dự báo ứng viên (candidate predictors) thuộc 6 nhóm hành vi và kiểm định tính nhân quả thời gian:
+
+3.4.1. Phân loại các nhóm đặc trưng
+1. **Hồ sơ khách hàng & Nhân khẩu học (11 đặc trưng):** `age`, `country_code`, `region`, `customer_tier`, `credit_limit`, `loyalty_score`, `email_open_rate`, `discount_usage_rate`, `avg_review_score`, `has_referral_code`, `account_age_days`.
+2. **Cường độ & Hành vi truy cập (18 đặc trưng):** `sess_count`, `total_session_duration`, `avg_session_duration`, `max_session_duration`, `total_pages_viewed`, `avg_pages_viewed`, `total_cart_additions`, `avg_cart_additions`, `bounce_rate`, tỷ trọng nguồn truy cập (`pct_organic_sessions`, `pct_ads_sessions`, `pct_email_sessions`, `pct_social_sessions`), tỷ trọng thiết bị (`pct_mobile_sessions`, `pct_desktop_sessions`, `pct_tablet_sessions`), `days_since_last_session`, `has_sessions`.
+3. **Lịch sử giao dịch (18 đặc trưng):** `has_transactions`, `trans_count`, `total_spend`, `avg_order_value`, `max_order_value`, `min_order_value`, `total_items_count`, `avg_items_per_order`, `trans_discount_rate`, `high_value_trans_count`, `high_value_trans_ratio`, tỷ trọng thanh toán (`pct_credit_card`, `pct_debit_card`, `pct_paypal`, `pct_crypto`), tốc độ giao hàng (`pct_standard_shipping`, `pct_express_shipping`, `pct_overnight_shipping`), `days_since_last_transaction`.
+4. **Địa lý & Kinh tế xã hội (4 đặc trưng):** `average_income`, `urban_ratio`, `internet_penetration`, `region_tier`.
+5. **Chỉ số tương tác & Tỷ lệ an toàn (9 đặc trưng):**
+   - Tỷ lệ giỏ trên trang: $\text{cart\_to\_page\_ratio} = \frac{\text{total\_cart\_additions}}{\text{total\_pages\_viewed} + 1.0}$
+   - Thời lượng mỗi trang: $\text{duration\_per\_page} = \frac{\text{total\_session\_duration}}{\text{total\_pages\_viewed} + 1.0}$
+   - Chi tiêu mỗi phiên: $\text{spend\_per\_session} = \frac{\text{total\_spend}}{\text{sess\_count} + 1.0}$
+   - Chi tiêu mỗi sản phẩm: $\text{spend\_per\_item} = \frac{\text{total\_spend}}{\text{total\_items\_count} + 1.0}$
+   - Tương tác giảm giá: $\text{discount\_interaction} = \text{discount\_usage\_rate} \times \text{trans\_discount\_rate}$
+   - Điểm gắn kết tổng hợp: $\text{engagement\_score} = \ln(1 + \text{duration}) + \ln(1 + \text{cart}) + \ln(1 + \text{sessions})$
+   - Tỷ số độ tươi mới hoạt động: $\text{activity\_recency\_ratio} = \min\left(5.0, \frac{\text{days\_since\_last\_session}}{\text{account\_age\_days} + 1.0}\right)$
+   - Tích số chi tiêu - trung thành: $\text{loyalty\_spend\_product} = \text{loyalty\_score} \times (\text{total\_spend} + 1.0)$
+   - Điểm đánh giá trung thành: $\text{review\_loyalty\_score} = (\text{avg\_review\_score} / 5.0) \times \text{loyalty\_score}$
+6. **Thuộc tính nhiễu nhân tạo kiểm chuẩn (7 đặc trưng):** `noise_customer_0` đến `noise_customer_4`, `avg_noise_trans_0`, `avg_noise_trans_1`.
+
+3.4.2. Nguyên tắc cách ly không gian thuộc tính
+- Khóa định danh `customer_id`, nhãn tương lai `target`, và cờ chia dữ liệu `split_type` được bảo vệ nghiêm ngặt: tuyệt đối không đưa vào ma trận thuộc tính đầu vào $X$.
+- Tổng số biến dự báo ứng viên đưa vào mô hình là **68 đặc trưng** (64 biến số liên tục, 4 biến phân loại).
+
+> **Tham chiếu artifact:** Thống kê mô tả 64 biến số dự báo được lưu tại [`outputs/controlled_benchmark/eda/numeric_summary.csv`](outputs/controlled_benchmark/eda/numeric_summary.csv); phân bố 34 danh mục phân loại lưu tại [`outputs/controlled_benchmark/eda/categorical_summary.csv`](outputs/controlled_benchmark/eda/categorical_summary.csv).
+
 3.5. Phân tích khám phá dữ liệu (EDA) cho Controlled Benchmark
-Mục tiêu: Khám phá định lượng toàn diện cấu trúc dữ liệu, phân bố nhãn, tương quan hành vi và kiểm toán tính toàn vẹn thời gian trên bộ chuẩn kiểm soát độc lập (Controlled Synthetic Benchmark Dataset, $N = 25.000$). EDA đóng vai trò cung cấp bằng chứng thực nghiệm để lý giải kết quả mô hình hóa và tối ưu bầy đàn (PSO) ở các phần tiếp theo, phân định rõ ràng với bản chụp snapshot 200k ban đầu.
+Toàn bộ phân tích khám phá dữ liệu dưới đây được tính toán động 100% từ dữ liệu thực tế tại `outputs/controlled_benchmark/` bằng kịch bản `scripts/eda_controlled_benchmark.py`.
 
 3.5.1. Phân phối nhãn mục tiêu và đối chiếu Point-in-Time (PIT)
-- Quy chuẩn thiết kế: Nhãn mục tiêu được xác định theo mô hình quan sát Point-in-Time:
+- Nhãn mục tiêu được xác định theo mô hình quan sát Point-in-Time:
   $$Y_i = \mathbb{I}(\text{Khách hàng } i \text{ có ít nhất 1 giao dịch trong khoảng } (t_0, t_0 + 30\text{ ngày}])$$
   với $t_0 = \text{2024-06-01}$ và cửa sổ tương lai kết thúc tại $\text{2024-07-01}$.
 - Kết quả kiểm toán thực nghiệm (từ `outputs/controlled_benchmark/eda/target_distribution.csv`):
@@ -609,96 +593,87 @@ Mục tiêu: Khám phá định lượng toàn diện cấu trúc dữ liệu, p
 | :---: | :--- | :---: | :---: | :--- |
 | **0** | Không phát sinh giao dịch | 22.805 | **91,22%** | Khớp 100% (không có đơn hàng trong cửa sổ) |
 | **1** | Có phát sinh giao dịch | 2.195 | **8,78%** | Khớp 100% (đúng 2.195 khách hàng có đơn hàng) |
-| **Tổng cộng** | Toàn bộ quần thể khách hàng | 25.000 | **100,00%** | Số trường hợp sai lệch = **0** |
+| **Tổng cộng** | Toàn bộ quần thể khách hàng | 25.000 | **100,00%** | Số trường hợp sai lệch = **0** (PASS) |
 
-- Nhận xét khoa học:
-  1. Tỷ lệ nhãn dương thực tế đạt **8,78%**, phản ánh đúng bản chất bài toán dự đoán chuyển đổi thực tế trong thương mại điện tử (thường dao động từ 3% đến 12%).
-  2. Sự khác biệt giữa tỷ lệ này và con số ~20,3% của snapshot 200k ban đầu là hoàn toàn hợp lý: Snapshot ban đầu là nhãn tĩnh gộp không giới hạn thời gian (cumulative snapshot), trong khi Controlled Benchmark đo lường xác suất phát sinh giao dịch trong một cửa sổ 30 ngày xác định.
-  3. Mức mất cân bằng lớp nghiêm ngặt (tỷ lệ 1 : 10,4) đòi hỏi các chỉ số đánh giá phải ưu tiên **PR-AUC** (Precision-Recall AUC), ROC-AUC và F1-Score thay vì Accuracy.
+- **Nhận định khoa học:**
+  1. Tỷ lệ nhãn dương thực tế đạt **8,78%** (2.195/25.000), phản ánh chân thực tỷ lệ chuyển đổi tự nhiên trong thương mại điện tử (thường dao động từ 3% đến 12%).
+  2. Sự sụt giảm từ 20,3% của snapshot 200k ban đầu xuống 8,78% có căn cứ phương pháp luận rõ ràng: Snapshot ban đầu là nhãn tĩnh tích lũy không giới hạn thời gian (cumulative snapshot), trong khi Controlled Benchmark đo lường xác suất phát sinh giao dịch trong một cửa sổ 30 ngày xác định.
+  3. Mức mất cân bằng lớp (1 : 10,4) đòi hỏi các chỉ số đánh giá phải ưu tiên **PR-AUC**, ROC-AUC và F1-Score thay vì Accuracy.
 
-> **Tham chiếu trực quan:** Biểu đồ phân bố nhãn Point-in-Time được lưu tại [`outputs/controlled_benchmark/eda/eda_2_target_distribution_pit.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_2_target_distribution_pit.png).
-> *Hình 3.2: Phân bố nhãn mục tiêu Point-in-Time (8,78% dương) trên 25.000 khách hàng của Controlled Benchmark.*
+> **Tham chiếu trực quan:** Biểu đồ phân bố nhãn Point-in-Time được lưu tại [`outputs/controlled_benchmark/eda/eda_2_target_distribution_pit.png`](outputs/controlled_benchmark/eda/eda_2_target_distribution_pit.png).  
+> *Hình 3.3: Phân bố nhãn mục tiêu Point-in-Time (8,78% dương) trên 25.000 khách hàng của Controlled Benchmark.*
 
-3.5.2. Chất lượng dữ liệu và kiểm toán toàn vẹn liên kết (Referential Integrity)
-- Kiểm tra tính duy nhất và bản ghi trùng lặp:
-  - 100% các bảng thỏa mãn tính duy nhất của khóa chính: `customer_id` (25.000/25.000), `session_id` (89.666/89.666), `transaction_id` (21.534/21.534). Khóa trùng = **0**.
-  - Dòng trùng lặp hoàn toàn trên toàn bộ thuộc tính = **0**.
-- Kiểm tra bản ghi mồ côi (Orphan records):
-  - Khóa liên kết giữa các bảng được kiểm tra chéo 100%: Sessions $\to$ Customers (0 mồ côi), Transactions $\to$ Customers (0 mồ côi), Sessions $\to$ Campaigns (0 mồ côi), Sessions $\to$ Geo (0 mồ côi), Labels $\to$ Customers (0 mồ côi).
-- Thống kê dữ liệu khuyết thiếu (Missing Values):
-  - `referral_code` (`customers.csv`): Thiếu 16.242 giá trị (**64,97%**) $\to$ Bản chất tự nhiên của e-commerce (chỉ khách hàng được người khác giới thiệu mới có mã).
-  - `campaign_id` (`sessions.csv`): Thiếu 49.324 giá trị (**55,01%**) $\to$ Các phiên truy cập tự nhiên (Direct/Organic) không gắn với chiến dịch quảng cáo trả phí.
-  - `email_open_rate` (`customers.csv`): Thiếu 2.532 giá trị (**10,13%**) $\to$ Khách hàng chưa đăng ký hoặc chưa nhận email marketing.
-  - Tất cả các trường còn lại: Tỷ lệ thiếu = **0,00%**.
+3.5.2. Phân bố các đặc trưng số học cốt lõi
+- Thống kê mô tả được trích xuất tự động cho 64 biến số dự báo trong `numeric_summary.csv`:
+  - **Độ tuổi (`age`):** Trung bình 38,0 tuổi, độ lệch chuẩn 11,5, phân vị 25% là 30 tuổi, phân vị 75% là 46 tuổi.
+  - **Điểm trung thành (`loyalty_score`):** Trung bình 0,51, trung vị 0,51, phân vị 25% là 0,33, phân vị 75% là 0,69.
+  - **Thời lượng duyệt web (`total_session_duration`):** Trung bình 592,4 giây, trung vị 512,1 giây, phân bố lệch phải tự nhiên (skewness = 0,86).
+  - **Lượt thêm giỏ hàng (`total_cart_additions`):** Trung bình 2,28 lượt, trung vị 2,0 lượt.
+  - **Tổng chi tiêu lịch sử (`total_spend`):** Trung bình $105,33, trung vị $76,40, tối đa $1.428,90.
 
-> **Tham chiếu trực quan:** Biểu đồ tỷ lệ dữ liệu khuyết thiếu được lưu tại [`outputs/controlled_benchmark/eda/eda_3_missing_values.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_3_missing_values.png).
-> *Hình 3.3: Tỷ lệ khuyết thiếu theo từng thuộc tính trong các bảng dữ liệu Controlled Benchmark.*
+> **Tham chiếu trực quan:** Biểu đồ phân bố tần suất 6 đặc trưng số học cốt lõi được lưu tại [`outputs/controlled_benchmark/eda/eda_4_numeric_distributions.png`](outputs/controlled_benchmark/eda/eda_4_numeric_distributions.png).  
+> *Hình 3.4: Phân bố tần suất (Histogram) của các thuộc tính nhân khẩu học và hành vi cốt lõi.*
 
-3.5.3. Phân bố đặc trưng số học và phân loại
-- Thống kê mô tả được trích xuất tự động cho toàn bộ 64 đặc trưng số học trong `outputs/controlled_benchmark/eda/numeric_summary.csv` và 34 danh mục phân loại trong `categorical_summary.csv`:
-  - **Độ tuổi (`age`):** Trung bình 39,4 tuổi, độ lệch chuẩn 12,1, phân bố đều từ 18 đến 70 tuổi.
-  - **Điểm trung thành (`loyalty_score`):** Trung bình 49,8 điểm, phân vị 25% là 27,6, phân vị 75% là 71,9.
-  - **Thời lượng phiên duyệt (`session_duration`):** Trung bình 452,7 giây, trung vị 320,1 giây, lệch phải mạnh (right-skewed), tối đa 3.590 giây.
-  - **Lượt xem trang (`pages_viewed`):** Trung bình 6,1 trang, tối đa 35 trang.
-  - **Giá trị đơn hàng (`order_value`):** Trung bình $128,4, trung vị $95,2, cực đại $696,7.
+3.5.3. Khác biệt hành vi thực tế giữa nhóm Mua và Không mua
+Đối chiếu định lượng trực tiếp từ dữ liệu Feature Store giữa nhóm khách hàng sẽ mua hàng ($Y=1$, $N=2.195$) và nhóm không mua ($Y=0$, $N=22.805$) trên dữ liệu trước mốc chốt $t_0$:
 
-> **Tham chiếu trực quan:** Biểu đồ phân bố các đặc trưng số học chủ chốt được lưu tại [`outputs/controlled_benchmark/eda/eda_4_numeric_distributions.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_4_numeric_distributions.png).
-> *Hình 3.4: Phân bố tần suất (Histogram & KDE) của các đặc trưng hành vi và nhân khẩu học cốt lõi.*
-
-3.5.4. So sánh hành vi khách hàng theo nhãn mục tiêu
-Đối chiếu định lượng giữa nhóm khách hàng sẽ mua hàng ($Y=1$, $N=2.195$) và nhóm không mua ($Y=0$, $N=22.805$) trên dữ liệu tích lũy trước thời điểm chốt $t_0$:
-
-| Đặc trưng hành vi | Nhóm Không mua ($Y=0$) | Nhóm Có mua ($Y=1$) | Tỷ lệ chênh lệch | Ý nghĩa phân tích |
+| Đặc trưng hành vi | Nhóm Không mua ($Y=0$) | Nhóm Có mua ($Y=1$) | Tỷ lệ chênh lệch | Ý nghĩa phân tích thực tế |
 | :--- | :---: | :---: | :---: | :--- |
-| **Lượt thêm giỏ hàng (`total_cart_additions`)** | **0,78** lượt | **3,42** lượt | **Gấp 4,38 lần** | Tín hiệu hành vi phản ánh ý định mua mạnh nhất |
-| **Thời lượng duyệt web (`total_session_duration`)** | **354,2** giây | **1.482,6** giây | **Gấp 4,19 lần** | Mức độ tương tác sâu và tìm hiểu sản phẩm |
-| **Số trang đã xem (`total_pages_viewed`)** | **4,8** trang | **19,7** trang | **Gấp 4,10 lần** | Khảo sát danh mục sản phẩm trước khi chốt đơn |
-| **Tổng chi tiêu lịch sử (`total_spend`)** | **$68,20** | **$214,85** | **Gấp 3,15 lần** | Giá trị vòng đời và khả năng chi trả của khách hàng |
-| **Số đơn hàng lịch sử (`trans_count`)** | **0,54** đơn | **1,68** đơn | **Gấp 3,11 lần** | Tần suất mua sắm lặp lại trong quá khứ |
-| **Tỷ lệ thoát trang (`bounce_rate`)** | **48,2%** | **18,5%** | **Giảm 61,6%** | Khách hàng tiềm năng ít khi rời bỏ ngay phiên đầu |
+| **Lượt thêm giỏ hàng (`total_cart_additions`)** | **2,17** lượt | **3,45** lượt | **Gấp 1,59 lần** | Tín hiệu hành vi phản ánh ý định mua mạnh |
+| **Thời lượng duyệt web (`total_session_duration`)** | **563,68** giây | **890,87** giây | **Gấp 1,58 lần** | Mức độ tương tác sâu và khảo sát sản phẩm |
+| **Tổng chi tiêu lịch sử (`total_spend`)** | **$98,12** | **$180,31** | **Gấp 1,84 lần** | Giá trị vòng đời và năng lực chi trả tích lũy |
+| **Số trang đã xem (`total_pages_viewed`)** | **15,42** trang | **22,82** trang | **Gấp 1,48 lần** | Mức độ tìm hiểu danh mục hàng hóa |
+| **Số phiên duyệt web (`sess_count`)** | **3,08** phiên | **3,89** phiên | **Gấp 1,26 lần** | Tần suất quay lại nền tảng |
+| **Số đơn hàng lịch sử (`trans_count`)** | **0,73** đơn | **1,11** đơn | **Gấp 1,52 lần** | Thói quen mua sắm lặp lại trong quá khứ |
 
-*Lưu ý phương pháp:* Mối quan hệ trên là quan sát mô tả thống kê (statistical association), không tự động suy diễn thành quan hệ nhân quả (causality).
+*Lưu ý phương pháp luận:* Mối quan hệ trên là tương quan thống kê mô tả (statistical association), không tự động suy diễn thành quan hệ nhân quả (causality).
 
-> **Tham chiếu trực quan:** Biểu đồ so sánh hành vi theo nhãn được lưu tại [`outputs/controlled_benchmark/eda/eda_6_feature_comparison_by_target.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_6_feature_comparison_by_target.png) và ma trận tương tác giỏ hàng tại [`outputs/controlled_benchmark/eda/eda_8_cart_and_engagement_matrix.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_8_cart_and_engagement_matrix.png).
-> *Hình 3.5: So sánh phân vị và mức độ tương tác giữa nhóm khách hàng Mua hàng (Y=1) và Không mua (Y=0).*
+> **Tham chiếu trực quan:** Biểu đồ so sánh hành vi theo nhãn được lưu tại [`outputs/controlled_benchmark/eda/eda_6_feature_comparison_by_target.png`](outputs/controlled_benchmark/eda/eda_6_feature_comparison_by_target.png) và ma trận tương tác giỏ hàng tại [`outputs/controlled_benchmark/eda/eda_8_cart_and_engagement_matrix.png`](outputs/controlled_benchmark/eda/eda_8_cart_and_engagement_matrix.png).  
+> *Hình 3.5: So sánh giá trị trung bình hành vi giữa nhóm Không mua (Y=0) và Mua hàng (Y=1).*
 
-3.5.5. Ma trận tương quan và kiểm soát đa cộng tuyến (Multi-collinearity)
-- Ma trận tương quan Pearson ($24 \times 24$) được tính toán độc lập trong `outputs/controlled_benchmark/eda/correlation_matrix.csv`, tuyệt đối không đưa các trường định danh (`customer_id`) hoặc nhãn tương lai vào không gian tương quan.
-- Phát hiện tương quan với biến mục tiêu:
-  - Tương quan tuyến tính đơn biến cao nhất: `total_cart_additions` ($r \approx 0,38$), `total_session_duration` ($r \approx 0,34$), `total_pages_viewed` ($r \approx 0,33$), `total_spend` ($r \approx 0,28$).
-  - Các biến nhiễu nhân tạo (`noise_customer_0` đến `noise_customer_4`): Tương quan dao động sát 0 từ $-0,008$ đến $+0,011$ (đúng bản chất nhiễu trắng).
-- Hiện tượng đa cộng tuyến mạnh:
-  - Cặp `total_pages_viewed` và `total_session_duration`: $r = 0,89$.
-  - Cặp `total_spend` và `trans_count`: $r = 0,84$.
-  - Cặp `avg_cart_additions` và `total_cart_additions`: $r = 0,78$.
-- **Hệ quả đối với phương pháp luận nghiên cứu:** Sự tồn tại của nhiều cặp biến tương quan rất cao chứng minh không gian đặc trưng ban đầu chứa đựng lượng lớn thông tin dư thừa (feature redundancy). Đây là căn cứ khoa học trực tiếp ủng hộ việc áp dụng thuật toán tối ưu bầy đàn nhị phân (Binary PSO) để đào thải các thuộc tính trùng lặp, tối ưu hóa không gian biểu diễn mà không làm suy giảm hiệu năng phân loại.
+3.5.4. Ma trận tương quan và kiểm soát đa cộng tuyến (Multi-collinearity)
+- Ma trận tương quan Pearson ($24 \times 24$) được tính toán độc lập trong `outputs/controlled_benchmark/eda/correlation_matrix.csv`, tuyệt đối không đưa `customer_id` hoặc nhãn tương lai vào không gian tương quan.
+- **Tương quan tuyến tính đơn biến với nhãn mục tiêu:**
+  - `total_session_duration`: $r = 0,1506$
+  - `total_pages_viewed`: $r = 0,1437$
+  - `total_spend`: $r = 0,1355$
+  - `total_cart_additions`: $r = 0,1351$
+  - Các hệ số tương quan tuyến tính đơn biến dao động quanh mức $0,13 - 0,15$, hoàn toàn phù hợp với thực tế dữ liệu hành vi người dùng trong các hệ thống thương mại điện tử lớn.
+  - Các biến nhiễu nhân tạo (`noise_customer_0` đến `noise_customer_4`): Tương quan dao động sát 0 từ $-0,0050$ đến $0,0026$ (phản ánh đúng bản chất nhiễu trắng ngẫu nhiên).
+- **Hiện tượng đa cộng tuyến mạnh:**
+  - Cặp `total_pages_viewed` và `total_session_duration`: $r = 0,9695$.
+  - Cặp `total_spend` và `trans_count`: $r = 0,9136$.
+- **Hệ quả đối với phương pháp luận nghiên cứu:** Sự xuất hiện của các cặp biến có tương quan rất cao ($r > 0,90$) chỉ ra sự tồn tại của lượng lớn thông tin dư thừa trong không gian thuộc tính ban đầu. Đây là căn cứ thực nghiệm thúc đẩy việc áp dụng các kỹ thuật chọn đặc trưng (như PSO hoặc ANOVA) nhằm loại bỏ biến trùng lặp. Tuy nhiên, khả năng thuật toán Binary PSO duy trì hay cải thiện PR-AUC trong khi giảm số chiều là một giả thuyết thực nghiệm cần được chứng minh bằng kết quả mô hình hóa ở Phần 4, không thể suy diễn đơn thuần từ phân tích tương quan EDA.
 
-> **Tham chiếu trực quan:** Ma trận tương quan Pearson được lưu tại [`outputs/controlled_benchmark/eda/eda_5_correlation_heatmap.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_5_correlation_heatmap.png).
+> **Tham chiếu trực quan:** Ma trận tương quan Pearson được lưu tại [`outputs/controlled_benchmark/eda/eda_5_correlation_heatmap.png`](outputs/controlled_benchmark/eda/eda_5_correlation_heatmap.png).  
 > *Hình 3.6: Ma trận tương quan Pearson giữa các đặc trưng hành vi và nhãn mục tiêu.*
 
-3.5.6. Kiểm toán chuỗi thời gian và bảo toàn tính nhân quả (Anti-Leakage Audit)
+3.5.5. Kiểm toán chuỗi thời gian và bảo toàn tính nhân quả (Anti-Leakage Audit)
 Để giải quyết triệt để rủi ro rò rỉ dữ liệu thời gian (temporal leakage), quá trình EDA tiến hành kiểm định 3 bất biến thời gian:
 1. **Bất biến phát sinh sự kiện:**
-   - 100% phiên truy cập web có `timestamp >= signup_date` của khách hàng (0 vi phạm).
-   - 100% giao dịch có `timestamp >= signup_date` của khách hàng (0 vi phạm).
+   - 100% phiên truy cập web có `timestamp >= signup_date` của khách hàng: 0 vi phạm (Trạng thái: **PASS**).
+   - 100% giao dịch có `timestamp >= signup_date` của khách hàng: 0 vi phạm (Trạng thái: **PASS**).
+   - 100% khách hàng đăng ký trước mốc chốt $t_0$: 0 vi phạm (Trạng thái: **PASS**).
 2. **Bất biến ranh giới thời điểm chốt ($t_0 = \text{2024-06-01}$):**
    - Toàn bộ 64 đặc trưng số học trong bảng `customer_features_pit.parquet` chỉ được tính toán từ các sự kiện xảy ra trước hoặc đúng thời điểm $t_0$.
-   - Các bản ghi giao dịch trong khoảng $(2024-06-01, 2024-07-01]$ hoàn toàn bị cô lập khỏi bước tạo đặc trưng và chỉ được sử dụng duy nhất ở bước gán nhãn $Y_i$.
-   - Khẳng định: Pipeline đặc trưng của Controlled Benchmark hoàn toàn không bị rò rỉ dữ liệu tương lai.
+   - Tổng giao dịch lịch sử trước mốc chốt trên nhật ký thô: **19.061 giao dịch**.
+   - Tổng giao dịch tích hợp trong feature store (`SUM(trans_count)`): đúng **19.061 giao dịch** (Khớp **100%**, chênh lệch = 0).
+   - Toàn bộ 2.473 giao dịch phát sinh trong khoảng $(2024-06-01, 2024-07-01]$ hoàn toàn bị cô lập khỏi bước tạo đặc trưng và chỉ được sử dụng duy nhất ở bước gán nhãn $Y_i$.
+   - Khẳng định: Pipeline đặc trưng của Controlled Benchmark hoàn toàn không bị rò rỉ dữ liệu tương lai (Trạng thái: **PASS**).
 
-> **Tham chiếu trực quan:** Chuỗi thời gian hoạt động của khách hàng được lưu tại [`outputs/controlled_benchmark/eda/eda_7_temporal_activity.png`](file:///d:/HuyD/Đại%20Học/BigData/Global/outputs/controlled_benchmark/eda/eda_7_temporal_activity.png).
-> *Hình 3.7: Phân bố sự kiện truy cập và giao dịch theo thời gian, thể hiện rõ mốc chốt t0 và cửa sổ quan sát nhãn.*
+> **Tham chiếu trực quan:** Biểu đồ dòng thời gian giao dịch thực tế được lưu tại [`outputs/controlled_benchmark/eda/eda_7_temporal_activity.png`](outputs/controlled_benchmark/eda/eda_7_temporal_activity.png).  
+> *Hình 3.7: Phân bố sự kiện giao dịch theo ngày (đường trung bình động 7 ngày), phân định rõ ràng thời kỳ quan sát lịch sử và cửa sổ nhãn tương lai.*
 
-3.5.7. Tổng hợp các artifact EDA có thể kiểm chứng
+3.5.6. Danh mục artifact EDA đã kiểm chứng và lưu trữ
 Toàn bộ kết quả phân tích khám phá trên bộ Controlled Benchmark đã được kết xuất và lưu trữ độc lập tại thư mục `outputs/controlled_benchmark/eda/`, bao gồm:
 1. `data_inventory.csv`: Danh mục 7 tệp dữ liệu, số dòng, cột, khóa chính và mã băm SHA-256.
 2. `data_quality.csv`: Kiểm toán tỷ lệ thiếu, khóa trùng và bản ghi mồ côi.
 3. `target_distribution.csv`: Thống kê tần suất và tỷ lệ nhãn Point-in-Time (8,78%).
-4. `numeric_summary.csv`: Thống kê mô tả 64 đặc trưng số học (mean, std, median, IQR, skewness).
+4. `numeric_summary.csv`: Thống kê mô tả 64 đặc trưng số học dự báo (phân định rõ với trường `target`).
 5. `categorical_summary.csv`: Tần suất và tỷ lệ của 34 nhóm phân loại.
 6. `correlation_matrix.csv`: Ma trận tương quan 24 đặc trưng chủ chốt.
-7. 8 tệp biểu đồ định dạng PNG chất lượng cao (200 DPI).
-8. `eda_manifest.json`: Siêu dữ liệu thực thi, thông số môi trường và mã kiểm tra tính toàn vẹn.
+7. 8 tệp biểu đồ định dạng PNG chất lượng cao (200 DPI), tạo động 100% không hardcode.
+8. `eda_manifest.json`: Siêu dữ liệu thực thi, bộ kiểm tra 7 hạng mục PASS/FAIL và mã kiểm tra tính toàn vẹn.
 9. `eda_report.md`: Báo cáo kiểm toán độc lập chi tiết.
 10. `eda_run.log`: Nhật ký thực thi pipeline tái lập.
 3.6. Chuẩn bị dữ liệu cho Machine Learning
