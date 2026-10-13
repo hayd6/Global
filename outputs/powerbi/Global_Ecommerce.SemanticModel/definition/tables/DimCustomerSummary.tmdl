@@ -1,0 +1,112 @@
+table DimCustomerSummary
+	lineageTag: 60a08d7b-2902-4b57-b81e-3fb664201dc6
+
+	column customer_id
+		dataType: int64
+		isUnique
+		isKey
+		isNullable: false
+		lineageTag: cef35df6-f9b0-476f-96ef-a3b85633adab
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	column split_group
+		dataType: string
+		lineageTag: f5894ba0-b005-4672-9da6-0e292cf15121
+		summarizeBy: none
+		sourceColumn: split_group
+
+	column target
+		dataType: int64
+		lineageTag: 0760f1dd-6b2c-4332-9409-fcbdc531a040
+		summarizeBy: none
+		sourceColumn: target
+
+	column age
+		dataType: int64
+		lineageTag: 1c831b68-084f-417a-905f-0282937ce54d
+		summarizeBy: average
+		sourceColumn: age
+
+	column country
+		dataType: string
+		lineageTag: bcc07876-3ea0-4afb-841c-8ed62a4b03e7
+		summarizeBy: none
+		sourceColumn: country
+
+	column customer_tier
+		dataType: string
+		lineageTag: a982fc69-d270-4d84-834f-60c1b13cb847
+		summarizeBy: none
+		sourceColumn: customer_tier
+
+	column loyalty_score
+		dataType: double
+		lineageTag: 808fa61d-edb0-45f4-968b-44bc665dc3c0
+		summarizeBy: average
+		sourceColumn: loyalty_score
+
+	column total_spend
+		dataType: double
+		lineageTag: 795a6cc8-fa73-4071-ae28-7d80581227b5
+		summarizeBy: sum
+		sourceColumn: total_spend
+
+	column transaction_count
+		dataType: int64
+		lineageTag: 365c06b3-68d2-4f91-b16b-49b9adeb0488
+		summarizeBy: sum
+		sourceColumn: transaction_count
+
+	column total_sessions
+		dataType: int64
+		lineageTag: d01d176f-106c-41f7-b324-d4aeb9fefa5c
+		summarizeBy: sum
+		sourceColumn: total_sessions
+
+	column avg_session_duration_sec
+		dataType: double
+		lineageTag: b8d207a0-16b2-4b2f-b668-9600bf14edcd
+		summarizeBy: average
+		sourceColumn: avg_session_duration_sec
+
+	column avg_pages_per_session
+		dataType: double
+		lineageTag: b14bffba-d3eb-42cb-9b85-5599a44d09ea
+		summarizeBy: average
+		sourceColumn: avg_pages_per_session
+
+	column total_cart_additions
+		dataType: double
+		lineageTag: 0803fbdf-cecc-414d-af95-ee4e1dbb8054
+		summarizeBy: sum
+		sourceColumn: total_cart_additions
+
+	column bounce_rate
+		dataType: double
+		lineageTag: 912b534e-f0cf-4c81-96b3-b306a6e34046
+		summarizeBy: average
+		sourceColumn: bounce_rate
+
+	column marketing_campaign_tier
+		dataType: string
+		lineageTag: d5023574-1f16-4dfc-9cbb-4a7b34d1be28
+		summarizeBy: none
+		sourceColumn: marketing_campaign_tier
+
+	column preferred_device
+		dataType: string
+		lineageTag: 5ad5ed6b-897b-4be5-a89f-625dc5501445
+		summarizeBy: none
+		sourceColumn: preferred_device
+
+	partition DimCustomerSummary = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\HuyD\Đại Học\BigData\Global\outputs\powerbi\dashboard_customer_summary.csv"),[Delimiter=",", Columns=16, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"customer_id", Int64.Type}, {"split_group", type text}, {"target", Int64.Type}, {"age", Int64.Type}, {"country", type text}, {"customer_tier", type text}, {"loyalty_score", type number}, {"total_spend", type number}, {"transaction_count", Int64.Type}, {"total_sessions", Int64.Type}, {"avg_session_duration_sec", type number}, {"avg_pages_per_session", type number}, {"total_cart_additions", type number}, {"bounce_rate", type number}, {"marketing_campaign_tier", type text}, {"preferred_device", type text}})
+				in
+				    #"Changed Type"
+

@@ -1,0 +1,42 @@
+{
+  "config": "{\"version\":\"5.53\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY24SU02\",\"version\":\"5.53\",\"type\":2}},\"activeSectionIndex\":0,\"defaultDrillFilterOtherVisuals\":true}",
+  "layoutOptimization": 0,
+  "sections": [
+    {
+      "config": "{}",
+      "displayName": "1. Tổng quan TMĐT",
+      "displayOption": 1,
+      "height": 720.0,
+      "name": "Section_Overview",
+      "visualContainers": [],
+      "width": 1280.0
+    },
+    {
+      "config": "{}",
+      "displayName": "2. Phân tích Hành vi",
+      "displayOption": 1,
+      "height": 720.0,
+      "name": "Section_Behavior",
+      "visualContainers": [],
+      "width": 1280.0
+    },
+    {
+      "config": "{}",
+      "displayName": "3. Mô hình & PSO",
+      "displayOption": 1,
+      "height": 720.0,
+      "name": "Section_Models_PSO",
+      "visualContainers": [],
+      "width": 1280.0
+    },
+    {
+      "config": "{}",
+      "displayName": "4. Hàm ý Kinh doanh",
+      "displayOption": 1,
+      "height": 720.0,
+      "name": "Section_Business_Strategy",
+      "visualContainers": [],
+      "width": 1280.0
+    }
+  ]
+}

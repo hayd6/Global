@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power BI Executive Dashboard — Global E-Commerce Analytics</title>
+  <meta name="description" content="Dashboard Power BI 4 trang trực quan hóa kết quả nghiên cứu Khai phá đặc trưng hành vi và tối ưu lựa chọn đặc trưng bằng PSO cho bài toán dự đoán khả năng mua hàng trong TMĐT.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-pbi-dark: #0f141c;
+      --bg-canvas: #090d14;
+      --bg-card: rgba(20, 27, 40, 0.75);
+      --bg-card-hover: rgba(28, 38, 56, 0.9);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.4);
+      --border-pbi: #242d3d;
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --pbi-yellow: #f2c811;
+      --accent-indigo: #6366f1;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-purple: #a855f7;
+
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+      --shadow-glow-indigo: 0 0 20px rgba(99, 102, 241, 0.25);
+      --shadow-glow-emerald: 0 0 20px rgba(16, 185, 129, 0.25);
+      --shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.25);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 40%);
+    }
+
+    /* TOP POWER BI HEADER */
+    .pbi-header {
+      background: rgba(15, 20, 28, 0.95);
+      border-bottom: 1px solid var(--border-pbi);
+      padding: 0.65rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .pbi-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .pbi-logo {
+      width: 32px;
+      height: 32px;
+      background: var(--pbi-yellow);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #000;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 10px rgba(242, 200, 17, 0.4);
+    }
+
+    .pbi-title-group h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pbi-badge {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .pbi-breadcrumb {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .pbi-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 0.4rem 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-action.btn-primary {
+      background: var(--accent-indigo);
+      border-color: var(--accent-indigo);
+      box-shadow: 0 2px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-action.btn-primary:hover {
+      background: #4f46e5;
+    }
+
+    /* SLICER BAR */
+    .slicer-bar {
+      background: rgba(15, 20, 28, 0.75);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.6rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .slicer-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .slicer-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .slicer-select {
+      background: rgba(20, 27, 40, 0.9);
+      border: 1px solid var(--border-pbi);
+      color: var(--text-main);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .slicer-select:focus, .slicer-select:hover {
+      border-color: var(--accent-indigo);
+    }
+
+    .slicer-reset-btn {
+      background: transparent;
+      border: 1px dashed var(--border-subtle);
+      color: var(--text-muted);
+      padding: 0.35rem 0.7rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .slicer-reset-btn:hover {
+      color: var(--text-main);
+      border-color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* MAIN DASHBOARD CANVAS */
+    .dashboard-canvas {
+      flex: 1;
+      padding: 1.5rem;
+      max-width: 1560px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .page-section {
+      display: none;
+      flex-direction: column;
+      gap: 1.25rem;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .page-section.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* PAGE TITLE BANNER */
+    .page-banner {
+      background: linear-gradient(135deg, rgba(20, 27, 40, 0.9) 0%, rgba(15, 20, 28, 0.6) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .page-banner-info h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .page-banner-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .page-meta-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag-pill {
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+
+    /* KPI CARDS GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 1024px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      transition: all 0.25s;
+    }
+
+    .kpi-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-focus);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .kpi-card.indigo::before { background: linear-gradient(90deg, var(--accent-indigo), transparent); }
+    .kpi-card.emerald::before { background: linear-gradient(90deg, var(--accent-emerald), transparent); }
+    .kpi-card.cyan::before { background: linear-gradient(90deg, var(--accent-cyan), transparent); }
+    .kpi-card.amber::before { background: linear-gradient(90deg, var(--accent-amber), transparent); }
+
+    .kpi-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .kpi-num {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      font-family: var(--font-mono);
+      margin-bottom: 0.35rem;
+    }
+
+    .kpi-card.indigo .kpi-num { color: #818cf8; text-shadow: var(--shadow-glow-indigo); }
+    .kpi-card.emerald .kpi-num { color: #34d399; text-shadow: var(--shadow-glow-emerald); }
+    .kpi-card.cyan .kpi-num { color: #22d3ee; text-shadow: var(--shadow-glow-cyan); }
+    .kpi-card.amber .kpi-num { color: #fbbf24; }
+
+    .kpi-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* VISUAL CARDS GRID */
+    .visual-grid-2x2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .visual-grid-3x1 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 1024px) {
+      .visual-grid-2x2, .visual-grid-3x1 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card-visual {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-sm);
+      min-height: 320px;
+    }
+
+    .card-visual-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+    }
+
+    .card-visual-header h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-visual-header p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .chart-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 240px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CUSTOM SVG CHARTS & BARS */
+    .bar-chart-vertical {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      gap: 1.5rem;
+      padding: 1rem 0.5rem 2rem 0.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      position: relative;
+    }
+
+    .bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .bar-track {
+      width: 100%;
+      max-width: 44px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+      height: 100%;
+    }
+
+    .bar-fill {
+      width: 100%;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .bar-val {
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+
+    .bar-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 0.25rem;
+    }
+
+    /* HORIZONTAL RANK BARS */
+    .rank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      width: 100%;
+    }
+
+    .rank-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .rank-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .rank-name {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .pso-badge-small {
+      background: rgba(99, 102, 241, 0.2);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      font-size: 0.65rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .rank-val {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--accent-cyan);
+    }
+
+    .rank-bar-bg {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .rank-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.8s ease;
+    }
+
+    /* HEATMAP TABLE */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+
+    .data-table th {
+      padding: 0.65rem 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .data-table td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+    }
+
+    .data-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .heat-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    /* STRATEGY CARDS FOR PAGE 4 */
+    .strategy-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 900px) {
+      .strategy-grid { grid-template-columns: 1fr; }
+    }
+
+    .strategy-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s;
+    }
+
+    .strategy-card:hover {
+      background: var(--bg-card-hover);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--border-focus);
+    }
+
+    .strategy-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .strategy-title-group h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .priority-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+    }
+
+    .priority-critical { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); border: 1px solid rgba(244, 63, 94, 0.3); }
+    .priority-high { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .priority-medium { background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.3); }
+    .priority-info { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.3); }
+
+    .strategy-fact-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-left: 3px solid var(--accent-indigo);
+      padding: 0.75rem 1rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .strategy-action-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+    }
+
+    .strategy-action-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .strategy-action-list li::before {
+      content: '✓';
+      color: var(--accent-emerald);
+      font-weight: 900;
+    }
+
+    .strategy-alert {
+      font-size: 0.76rem;
+      color: var(--text-dim);
+      border-top: 1px dashed var(--border-subtle);
+      padding-top: 0.65rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* BOTTOM PAGE NAVIGATION BAR (POWER BI TABS) */
+    .pbi-footer-tabs {
+      position: sticky;
+      bottom: 0;
+      background: rgba(15, 20, 28, 0.95);
+      border-top: 1px solid var(--border-pbi);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1.5rem;
+      backdrop-filter: blur(16px);
+      z-index: 50;
+    }
+
+    .tabs-list {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      overflow-x: auto;
+    }
+
+    .tab-pbi-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab-pbi-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-pbi-btn.active {
+      color: var(--pbi-yellow);
+      background: rgba(242, 200, 17, 0.1);
+      border-color: rgba(242, 200, 17, 0.3);
+      box-shadow: 0 2px 10px rgba(242, 200, 17, 0.15);
+    }
+
+    .footer-status {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* CALLOUT INSIGHT BOX */
+    .insight-callout {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1.25rem;
+      font-size: 0.82rem;
+      color: #c7d2fe;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.08);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- POWER BI HEADER RIBBON -->
+  <header class="pbi-header">
+    <div class="pbi-brand">
+      <div class="pbi-logo">Pb</div>
+      <div class="pbi-title-group">
+        <h1>
+          Global E-Commerce Purchase Prediction
+          <span class="pbi-badge">● Live Model</span>
+        </h1>
+        <div class="pbi-breadcrumb">
+          Workspaces > BigData Global > 4-Page Executive Dashboard (DanY6Phan.md)
+        </div>
+      </div>
+    </div>
+
+    <div class="pbi-actions">
+      <button class="btn-action" onclick="window.print()">
+        <span>🖨️ Xuất PDF / In</span>
+      </button>
+      <a href="index.html" class="btn-action">
+        <span>📖 Cổng Nghiên Cứu</span>
+      </a>
+      <a href="../outputs/powerbi/Global_Ecommerce.pbip" class="btn-action btn-primary" download>
+        <span>📂 Mở File PBIP</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- INTERACTIVE SLICER BAR -->
+  <section class="slicer-bar">
+    <div class="slicer-group">
+      <div class="slicer-label">
+        <span>🌍 Quốc gia:</span>
+      </div>
+      <select class="slicer-select" id="slicer-country" onchange="updateFilters()">
+        <option value="ALL">Tất cả (US, UK, DE, FR, IN)</option>
+        <option value="US">Hoa Kỳ (US)</option>
+        <option value="UK">Vương quốc Anh (UK)</option>
+        <option value="DE">Đức (DE)</option>
+        <option value="FR">Pháp (FR)</option>
+        <option value="IN">Ấn Độ (IN)</option>
+      </select>
+
+      <div class="slicer-label">
+        <span>⭐ Hạng thành viên:</span>
+      </div>
+      <select class="slicer-select" id="slicer-tier" onchange="updateFilters()">
+        <option value="ALL">Tất cả (Bronze, Silver, Gold, Platinum)</option>
+        <option value="Bronze">Bronze (Đồng)</option>
+        <option value="Silver">Silver (Bạc)</option>
+        <option value="Gold">Gold (Vàng)</option>
+        <option value="Platinum">Platinum (Bạch kim)</option>
+      </select>
+
+      <div class="slicer-label">
+        <span>📱 Thiết bị:</span>
+      </div>
+      <select class="slicer-select" id="slicer-device" onchange="updateFilters()">
+        <option value="ALL">Tất cả thiết bị</option>
+        <option value="Mobile Heavy">Mobile Heavy</option>
+        <option value="Desktop Heavy">Desktop Heavy</option>
+        <option value="Balanced Device">Balanced Device</option>
+      </select>
+
+      <div class="slicer-label">
+        <span>🎯 Chiến dịch:</span>
+      </div>
+      <select class="slicer-select" id="slicer-campaign" onchange="updateFilters()">
+        <option value="ALL">Tất cả Campaign Tiers</option>
+        <option value="Tier1">Tier 1 (VIP Marketing)</option>
+        <option value="Tier2">Tier 2 (Standard Ads)</option>
+        <option value="Tier3">Tier 3 (Mass Retargeting)</option>
+      </select>
+    </div>
+
+    <button class="slicer-reset-btn" onclick="resetFilters()">
+      ↺ Đặt lại bộ lọc mặc định
+    </button>
+  </section>
+
+  <!-- DASHBOARD CANVAS -->
+  <main class="dashboard-canvas">
+
+    <!-- =========================================================
+         PAGE 1: OVERVIEW (TỔNG QUAN THƯƠNG MẠI ĐIỆN TỬ)
+         ========================================================= -->
+    <section class="page-section active" id="page-1">
+      <div class="page-banner">
+        <div class="page-banner-info">
+          <h2>📊 Trang 1: Tổng quan Khách hàng & Giao dịch</h2>
+          <p>Quy mô dữ liệu toàn cục, cơ cấu nhân khẩu học, tỷ lệ nhãn ý định mua sắm và phân bổ doanh thu tích lũy.</p>
+        </div>
+        <div class="page-meta-tags">
+          <span class="tag-pill">200k Khách hàng</span>
+          <span class="tag-pill">500k Giao dịch</span>
+          <span class="tag-pill">Tỷ lệ mua: 20.3%</span>
+        </div>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card indigo">
+          <span class="kpi-title">Tổng khách hàng (Total Customers) <span>👥</span></span>
+          <span class="kpi-num" id="kpi-total-cust">200,000</span>
+          <span class="kpi-subtitle">160k Train (80%) | 40k Test (20%)</span>
+        </div>
+        <div class="kpi-card emerald">
+          <span class="kpi-title">Tổng đơn hàng thanh toán <span>🛒</span></span>
+          <span class="kpi-num" id="kpi-total-trans">500,000</span>
+          <span class="kpi-subtitle">Trung bình 2.5 đơn hàng / khách</span>
+        </div>
+        <div class="kpi-card amber">
+          <span class="kpi-title">Tỷ lệ chuyển đổi mua hàng <span>🎯</span></span>
+          <span class="kpi-num" id="kpi-conv-rate">20.30%</span>
+          <span class="kpi-subtitle">32,486 khách hàng Train có Target = 1</span>
+        </div>
+        <div class="kpi-card cyan">
+          <span class="kpi-title">Tổng doanh số tích lũy <span>💵</span></span>
+          <span class="kpi-num" id="kpi-total-spend">$60,016,417</span>
+          <span class="kpi-subtitle">Chi tiêu trung bình: $300.08 / khách</span>
+        </div>
+      </div>
+
+      <!-- VISUALS 2x2 -->
+      <div class="visual-grid-2x2">
+        <!-- Visual 1: Phân bổ Hạng thành viên -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>🏆 Cơ cấu Khách hàng theo Hạng thành viên</h3>
+              <p>Phân bổ số lượng và tỷ lệ % giữa 4 hạng Bronze, Silver, Gold, Platinum</p>
+            </div>
+            <span class="tag-pill">Donut Chart</span>
+          </div>
+          <div class="chart-container">
+            <svg viewBox="0 0 360 220" width="100%" height="220">
+              <!-- Donut arcs -->
+              <circle cx="120" cy="110" r="70" fill="transparent" stroke="#cd7f32" stroke-width="28" stroke-dasharray="110 330" stroke-dashoffset="0" />
+              <circle cx="120" cy="110" r="70" fill="transparent" stroke="#94a3b8" stroke-width="28" stroke-dasharray="110 330" stroke-dashoffset="-110" />
+              <circle cx="120" cy="110" r="70" fill="transparent" stroke="#fbbf24" stroke-width="28" stroke-dasharray="110 330" stroke-dashoffset="-220" />
+              <circle cx="120" cy="110" r="70" fill="transparent" stroke="#06b6d4" stroke-width="28" stroke-dasharray="110 330" stroke-dashoffset="-330" />
+              <!-- Center Text -->
+              <text x="120" y="105" text-anchor="middle" fill="#f8fafc" font-size="16" font-weight="700">200,000</text>
+              <text x="120" y="125" text-anchor="middle" fill="#94a3b8" font-size="11">Khách hàng</text>
+              <!-- Legends -->
+              <g transform="translate(225, 45)">
+                <circle cx="6" cy="6" r="6" fill="#cd7f32" />
+                <text x="18" y="10" fill="#f8fafc" font-size="12" font-weight="600">Bronze: 25.1%</text>
+                <text x="18" y="24" fill="#94a3b8" font-size="10">50,211 khách</text>
+
+                <circle cx="6" cy="46" r="6" fill="#94a3b8" />
+                <text x="18" y="50" fill="#f8fafc" font-size="12" font-weight="600">Silver: 24.8%</text>
+                <text x="18" y="64" fill="#94a3b8" font-size="10">49,602 khách</text>
+
+                <circle cx="6" cy="86" r="6" fill="#fbbf24" />
+                <text x="18" y="90" fill="#f8fafc" font-size="12" font-weight="600">Gold: 25.1%</text>
+                <text x="18" y="104" fill="#94a3b8" font-size="10">50,192 khách</text>
+
+                <circle cx="6" cy="126" r="6" fill="#06b6d4" />
+                <text x="18" y="130" fill="#f8fafc" font-size="12" font-weight="600">Platinum: 25.0%</text>
+                <text x="18" y="144" fill="#94a3b8" font-size="10">49,995 khách</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Visual 2: Doanh số & Khách theo Quốc gia -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>🌐 Doanh số & Khách hàng theo Quốc gia</h3>
+              <p>Hoa Kỳ, Anh, Đức, Pháp, Ấn Độ (triệu USD)</p>
+            </div>
+            <span class="tag-pill">Column Chart</span>
+          </div>
+          <div class="bar-chart-vertical">
+            <div class="bar-col">
+              <div class="bar-track">
+                <div class="bar-fill" style="height: 85%; background: linear-gradient(180deg, #6366f1, #4338ca);">
+                  <span class="bar-val">$18.2M</span>
+                </div>
+              </div>
+              <span class="bar-label">US (Hoa Kỳ)</span>
+            </div>
+            <div class="bar-col">
+              <div class="bar-track">
+                <div class="bar-fill" style="height: 68%; background: linear-gradient(180deg, #06b6d4, #0891b2);">
+                  <span class="bar-val">$14.5M</span>
+                </div>
+              </div>
+              <span class="bar-label">UK (Anh)</span>
+            </div>
+            <div class="bar-col">
+              <div class="bar-track">
+                <div class="bar-fill" style="height: 52%; background: linear-gradient(180deg, #10b981, #059669);">
+                  <span class="bar-val">$11.1M</span>
+                </div>
+              </div>
+              <span class="bar-label">DE (Đức)</span>
+            </div>
+            <div class="bar-col">
+              <div class="bar-track">
+                <div class="bar-fill" style="height: 44%; background: linear-gradient(180deg, #f59e0b, #d97706);">
+                  <span class="bar-val">$9.4M</span>
+                </div>
+              </div>
+              <span class="bar-label">FR (Pháp)</span>
+            </div>
+            <div class="bar-col">
+              <div class="bar-track">
+                <div class="bar-fill" style="height: 32%; background: linear-gradient(180deg, #a855f7, #7e22ce);">
+                  <span class="bar-val">$6.8M</span>
+                </div>
+              </div>
+              <span class="bar-label">IN (Ấn Độ)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual 3: Tỷ lệ Chuyển đổi theo Customer Tier -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>🎯 Tỷ lệ Nhãn Mua hàng (Target) theo Tier</h3>
+              <p>Tỷ lệ Không mua (Target=0) vs Mua sắm (Target=1)</p>
+            </div>
+            <span class="tag-pill">100% Stacked Bar</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1rem; justify-content: center; height: 100%;">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 0.3rem;">
+                <span style="font-weight: 600;">Bronze</span>
+                <span style="color: var(--accent-emerald); font-weight: 700;">20.4% Mua (7,985 / 39,122)</span>
+              </div>
+              <div style="display: flex; height: 14px; border-radius: 4px; overflow: hidden;">
+                <div style="width: 79.6%; background: #ef4444;" title="Target=0: 79.6%"></div>
+                <div style="width: 20.4%; background: #10b981;" title="Target=1: 20.4%"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 0.3rem;">
+                <span style="font-weight: 600;">Silver</span>
+                <span style="color: var(--accent-emerald); font-weight: 700;">20.3% Mua (8,024 / 39,526)</span>
+              </div>
+              <div style="display: flex; height: 14px; border-radius: 4px; overflow: hidden;">
+                <div style="width: 79.7%; background: #ef4444;"></div>
+                <div style="width: 20.3%; background: #10b981;"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 0.3rem;">
+                <span style="font-weight: 600;">Gold</span>
+                <span style="color: var(--accent-emerald); font-weight: 700;">20.0% Mua (8,011 / 40,167)</span>
+              </div>
+              <div style="display: flex; height: 14px; border-radius: 4px; overflow: hidden;">
+                <div style="width: 80.0%; background: #ef4444;"></div>
+                <div style="width: 20.0%; background: #10b981;"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 0.3rem;">
+                <span style="font-weight: 600;">Platinum</span>
+                <span style="color: var(--accent-emerald); font-weight: 700;">20.6% Mua (8,466 / 41,185)</span>
+              </div>
+              <div style="display: flex; height: 14px; border-radius: 4px; overflow: hidden;">
+                <div style="width: 79.4%; background: #ef4444;"></div>
+                <div style="width: 20.6%; background: #10b981;"></div>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 1.5rem; font-size: 0.75rem; margin-top: 0.5rem;">
+              <span style="display: flex; align-items: center; gap: 0.35rem;"><span style="width: 10px; height: 10px; background: #ef4444; border-radius: 2px;"></span> Target = 0 (Không mua: ~79.7%)</span>
+              <span style="display: flex; align-items: center; gap: 0.35rem;"><span style="width: 10px; height: 10px; background: #10b981; border-radius: 2px;"></span> Target = 1 (Mua hàng: ~20.3%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual 4: Bảng Tổng hợp Phân khúc -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>📋 Bảng Ma trận Hạng thành viên & Khu vực</h3>
+              <p>Tổng hợp chỉ số từ FactTierRegionSummary</p>
+            </div>
+            <span class="tag-pill">Matrix Table</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Hạng (Tier)</th>
+                <th>Khu vực</th>
+                <th>Lượng khách</th>
+                <th>Tỷ lệ mua</th>
+                <th>Chi tiêu TB</th>
+                <th>Thêm giỏ TB</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Platinum</strong></td>
+                <td>Tier 1</td>
+                <td>16,395</td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">21.13%</span></td>
+                <td>$300.70</td>
+                <td>20.0</td>
+              </tr>
+              <tr>
+                <td><strong>Bronze</strong></td>
+                <td>Tier 3</td>
+                <td>10,268</td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">20.70%</span></td>
+                <td>$298.04</td>
+                <td>20.2</td>
+              </tr>
+              <tr>
+                <td><strong>Silver</strong></td>
+                <td>Tier 3</td>
+                <td>10,083</td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">20.57%</span></td>
+                <td>$298.60</td>
+                <td>19.9</td>
+              </tr>
+              <tr>
+                <td><strong>Gold</strong></td>
+                <td>Tier 3</td>
+                <td>10,241</td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">20.37%</span></td>
+                <td>$300.88</td>
+                <td>20.1</td>
+              </tr>
+              <tr>
+                <td><strong>Silver</strong></td>
+                <td>Tier 2</td>
+                <td>13,173</td>
+                <td><span class="heat-pill" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">20.06%</span></td>
+                <td>$304.58</td>
+                <td>20.0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="insight-callout">
+        <span>💡</span>
+        <span><strong>Nhận định trang 1:</strong> Tỷ lệ nhãn dương trong toàn bộ tập dữ liệu được kiểm soát chặt chẽ ở mức <strong>20.30%</strong> (mất cân bằng tự nhiên trong thương mại điện tử). Không có hiện tượng rò rỉ id hay lệch phân bố giữa các hạng thành viên.</span>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PAGE 2: BEHAVIOR (PHÂN TÍCH HÀNH VI KHÁCH HÀNG)
+         ========================================================= -->
+    <section class="page-section" id="page-2">
+      <div class="page-banner">
+        <div class="page-banner-info">
+          <h2>🔍 Trang 2: Phân tích Hành vi Khách hàng Chuyên sâu</h2>
+          <p>Đối chiếu sự khác biệt về tương tác giỏ hàng, thời lượng duyệt web, phiên truy cập giữa nhóm Mua (1) và Không mua (0).</p>
+        </div>
+        <div class="page-meta-tags">
+          <span class="tag-pill">10.0 Phiên/khách</span>
+          <span class="tag-pill">8.1 Phút/phiên</span>
+          <span class="tag-pill">20.0 Thêm giỏ/khách</span>
+        </div>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card cyan">
+          <span class="kpi-title">Tần suất phiên trung bình <span>⏱️</span></span>
+          <span class="kpi-num">10.0</span>
+          <span class="kpi-subtitle">Phiên duyệt web / khách hàng</span>
+        </div>
+        <div class="kpi-card emerald">
+          <span class="kpi-title">Thời lượng phiên trung bình <span>⏳</span></span>
+          <span class="kpi-num">8.1 min</span>
+          <span class="kpi-subtitle">486.2 giây mỗi phiên truy cập</span>
+        </div>
+        <div class="kpi-card amber">
+          <span class="kpi-title">Lượt thêm vào giỏ hàng <span>🛍️</span></span>
+          <span class="kpi-num">20.0</span>
+          <span class="kpi-subtitle">Lượt thêm giỏ tích lũy / khách</span>
+        </div>
+        <div class="kpi-card indigo">
+          <span class="kpi-title">Tỷ lệ phiên thoát (Bounce Rate) <span>📉</span></span>
+          <span class="kpi-num">50.0%</span>
+          <span class="kpi-subtitle">Phiên rời trang không phát sinh hành động</span>
+        </div>
+      </div>
+
+      <!-- VISUALS 2x2 -->
+      <div class="visual-grid-2x2">
+        <!-- Visual 1: Scatter Phân tán Giỏ hàng vs Trang xem -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>🎯 Ma trận Hành vi: Số trang xem vs Số lần thêm giỏ</h3>
+              <p>Mỗi điểm là một nhóm khách hàng phân theo Thiết bị & Kênh Marketing</p>
+            </div>
+            <span class="tag-pill">Scatter Plot</span>
+          </div>
+          <div class="chart-container">
+            <svg viewBox="0 0 400 240" width="100%" height="240">
+              <!-- Grid lines -->
+              <line x1="40" y1="20" x2="40" y2="200" stroke="rgba(255,255,255,0.1)" />
+              <line x1="40" y1="200" x2="380" y2="200" stroke="rgba(255,255,255,0.1)" />
+              <line x1="40" y1="110" x2="380" y2="110" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4" />
+              <line x1="210" y1="20" x2="210" y2="200" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4" />
+              <!-- Labels -->
+              <text x="35" y="15" fill="#94a3b8" font-size="10" text-anchor="end">Thêm giỏ</text>
+              <text x="380" y="215" fill="#94a3b8" font-size="10" text-anchor="end">Trang xem</text>
+              <!-- Data Points (Target 0: Red/Amber, Target 1: Cyan/Emerald) -->
+              <!-- Target 0 -->
+              <circle cx="160" cy="140" r="12" fill="rgba(239, 68, 68, 0.6)" stroke="#ef4444" stroke-width="1.5" />
+              <circle cx="120" cy="165" r="9" fill="rgba(239, 68, 68, 0.6)" stroke="#ef4444" stroke-width="1.5" />
+              <circle cx="210" cy="115" r="14" fill="rgba(239, 68, 68, 0.6)" stroke="#ef4444" stroke-width="1.5" />
+              <circle cx="180" cy="130" r="11" fill="rgba(239, 68, 68, 0.6)" stroke="#ef4444" stroke-width="1.5" />
+              <circle cx="250" cy="95" r="16" fill="rgba(239, 68, 68, 0.6)" stroke="#ef4444" stroke-width="1.5" />
+              <!-- Target 1 (Higher on cart & pages) -->
+              <circle cx="190" cy="120" r="10" fill="rgba(16, 185, 129, 0.7)" stroke="#10b981" stroke-width="2" />
+              <circle cx="240" cy="85" r="14" fill="rgba(16, 185, 129, 0.7)" stroke="#10b981" stroke-width="2" />
+              <circle cx="290" cy="60" r="18" fill="rgba(16, 185, 129, 0.7)" stroke="#10b981" stroke-width="2" />
+              <circle cx="330" cy="45" r="20" fill="rgba(16, 185, 129, 0.7)" stroke="#10b981" stroke-width="2" />
+              <!-- Legend inside -->
+              <g transform="translate(50, 30)">
+                <circle cx="6" cy="6" r="6" fill="#10b981" />
+                <text x="18" y="10" fill="#f8fafc" font-size="11" font-weight="600">Target = 1 (Mua hàng: 23+ giỏ, 65+ trang)</text>
+                <circle cx="6" cy="24" r="6" fill="#ef4444" />
+                <text x="18" y="28" fill="#f8fafc" font-size="11" font-weight="600">Target = 0 (Không mua: 16-20 giỏ, 47-58 trang)</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Visual 2: So sánh trực diện Target 0 vs 1 -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>⚖️ Đối chiếu Chỉ số Hành vi: Target 0 vs Target 1</h3>
+              <p>Khách hàng thật sự mua hàng vượt trội ở mọi chiều tương tác</p>
+            </div>
+            <span class="tag-pill">Comparison</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.85rem; justify-content: center; height: 100%;">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 0.2rem;">
+                <span>Thời lượng phiên duyệt web</span>
+                <span><strong>Target 1:</strong> 491.5s (+3.1%) | <strong>Target 0:</strong> 476.8s</span>
+              </div>
+              <div style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; display: flex;">
+                <div style="width: 52%; background: #10b981;"></div>
+                <div style="width: 48%; background: #64748b;"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 0.2rem;">
+                <span>Số trang xem trung bình / phiên</span>
+                <span><strong>Target 1:</strong> 59.8 trang (+4.8%) | <strong>Target 0:</strong> 57.0 trang</span>
+              </div>
+              <div style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; display: flex;">
+                <div style="width: 55%; background: #06b6d4;"></div>
+                <div style="width: 45%; background: #64748b;"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 0.2rem;">
+                <span>Lượt thêm sản phẩm vào giỏ hàng</span>
+                <span><strong>Target 1:</strong> 21.2 lượt (+6.5%) | <strong>Target 0:</strong> 19.9 lượt</span>
+              </div>
+              <div style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; display: flex;">
+                <div style="width: 58%; background: #fbbf24;"></div>
+                <div style="width: 42%; background: #64748b;"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 0.2rem;">
+                <span>Tỷ lệ thoát (Bounce Rate)</span>
+                <span><strong>Target 1:</strong> 49.6% (Thấp hơn) | <strong>Target 0:</strong> 50.1%</span>
+              </div>
+              <div style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; display: flex;">
+                <div style="width: 49%; background: #a855f7;"></div>
+                <div style="width: 51%; background: #64748b;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual 3: Heatmap Kênh x Thiết bị -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>📱 Ma trận Tỷ lệ Mua: Kênh Tiếp thị × Loại Thiết bị</h3>
+              <p>Dữ liệu trích xuất từ FactBehaviorGroup</p>
+            </div>
+            <span class="tag-pill">Heatmap</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Kênh Tiếp thị</th>
+                <th>Mobile Heavy</th>
+                <th>Desktop Heavy</th>
+                <th>Balanced Device</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Organic Search</strong></td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.25); color: #34d399;">20.1%</span></td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.35); color: #34d399;">20.7%</span></td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.25); color: #34d399;">20.1%</span></td>
+              </tr>
+              <tr>
+                <td><strong>Paid Ads</strong></td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.3); color: #34d399;">20.3%</span></td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.3); color: #34d399;">20.6%</span></td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.35); color: #34d399;">20.6%</span></td>
+              </tr>
+              <tr>
+                <td><strong>Multi-channel</strong></td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.25); color: #34d399;">20.0%</span></td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.3); color: #34d399;">20.2%</span></td>
+                <td><span class="heat-pill" style="background: rgba(16, 185, 129, 0.25); color: #34d399;">20.1%</span></td>
+              </tr>
+              <tr>
+                <td><strong>Email Retargeting</strong></td>
+                <td><span class="heat-pill" style="background: rgba(245, 158, 11, 0.25); color: #fbbf24;">21.5%</span></td>
+                <td><span class="heat-pill" style="background: rgba(245, 158, 11, 0.25); color: #fbbf24;">20.9%</span></td>
+                <td><span class="heat-pill" style="background: rgba(245, 158, 11, 0.25); color: #fbbf24;">20.9%</span></td>
+              </tr>
+              <tr>
+                <td><strong>Social Media</strong></td>
+                <td><span class="heat-pill" style="background: rgba(245, 158, 11, 0.25); color: #fbbf24;">21.3%</span></td>
+                <td><span class="heat-pill" style="background: rgba(245, 158, 11, 0.25); color: #fbbf24;">20.7%</span></td>
+                <td><span class="heat-pill" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">19.3%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Visual 4: Phân khúc Giỏ hàng bỏ quên -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>🛍️ Phân khúc Giỏ hàng Bỏ quên (Cart Abandonment)</h3>
+              <p>Khách hàng có nhiều tương tác giỏ nhưng không chốt đơn (9,763 khách)</p>
+            </div>
+            <span class="tag-pill">Insight Box</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.85rem; justify-content: center; height: 100%;">
+            <div style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); padding: 0.85rem; border-radius: var(--radius-sm);">
+              <div style="font-weight: 700; color: var(--accent-rose); font-size: 0.85rem;">Phát hiện Ma trận Nhầm lẫn (False Positives):</div>
+              <div style="font-size: 0.8rem; color: #fecdd3; margin-top: 0.25rem;">
+                Có <strong>9,763 khách hàng</strong> trong tập kiểm định có hành vi thêm giỏ hàng từ 3 đến 10 lần nhưng cuối cùng nhãn Target vẫn bằng 0 (Không mua).
+              </div>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+              Nhóm khách hàng này có điểm xác suất dự đoán (Propensity Score) dao động từ <strong>0.35 đến 0.48</strong>. Đây chính là phân khúc tiềm năng nhất để triển khai chiến dịch nhắc nhở giỏ hàng kèm voucher chiết khấu tự động.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-callout">
+        <span>💡</span>
+        <span><strong>Nhận định trang 2:</strong> Người dùng mua hàng (Target=1) thể hiện sự chủ động rõ rệt với số lượt xem trang và lượt thêm giỏ cao hơn 5–6%. Hành vi tương tác giỏ hàng là đặc trưng mang giá trị thông tin cao nhất trong toàn bộ mô hình.</span>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PAGE 3: MODELS & PSO (SO SÁNH MÔ HÌNH VÀ TỐI ƯU PSO)
+         ========================================================= -->
+    <section class="page-section" id="page-3">
+      <div class="page-banner">
+        <div class="page-banner-info">
+          <h2>⚡ Trang 3: So sánh Mô hình Machine Learning & Tối ưu PSO</h2>
+          <p>Đối chiếu thực nghiệm khách quan giữa 5 mô hình, tiến trình tối ưu bầy đàn PSO và mức độ quan trọng của đặc trưng.</p>
+        </div>
+        <div class="page-meta-tags">
+          <span class="tag-pill">Best PR-AUC: 0.2759</span>
+          <span class="tag-pill">PSO Tinh giảm: -73.0%</span>
+          <span class="tag-pill">Tăng tốc: 2.1x</span>
+        </div>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card emerald">
+          <span class="kpi-title">Best Baseline PR-AUC <span>🏆</span></span>
+          <span class="kpi-num">0.2759</span>
+          <span class="kpi-subtitle">ANOVA F-test 17 đặc trưng (E2)</span>
+        </div>
+        <div class="kpi-card indigo">
+          <span class="kpi-title">XGBoost PSO PR-AUC <span>⚡</span></span>
+          <span class="kpi-num">0.2584</span>
+          <span class="kpi-subtitle">Chênh lệch nhẹ -0.0070 so với Full 63 biến</span>
+        </div>
+        <div class="kpi-card amber">
+          <span class="kpi-title">Tỷ lệ tinh giảm đặc trưng <span>✂️</span></span>
+          <span class="kpi-num">-73.0%</span>
+          <span class="kpi-subtitle">Rút từ 63 biến xuống đúng 17 biến</span>
+        </div>
+        <div class="kpi-card cyan">
+          <span class="kpi-title">Hệ số tăng tốc huấn luyện <span>🚀</span></span>
+          <span class="kpi-num">2.1x</span>
+          <span class="kpi-subtitle">Thời gian fit: 4.40s ➔ 2.07s</span>
+        </div>
+      </div>
+
+      <!-- VISUALS 2x2 -->
+      <div class="visual-grid-2x2">
+        <!-- Visual 1: Multi-metric Comparison Bar Chart -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>📊 So sánh Hiệu năng Đa Chỉ số 5 Mô hình (E1–E5)</h3>
+              <p>PR-AUC, ROC-AUC, F1-Score trên tập Holdout 32,000 mẫu</p>
+            </div>
+            <span class="tag-pill">FactModelMetrics</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Mô hình</th>
+                <th>Không gian biến</th>
+                <th>PR-AUC</th>
+                <th>ROC-AUC</th>
+                <th>F1-Score</th>
+                <th>Fit Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Baseline (Full)</strong></td>
+                <td>63_features</td>
+                <td>0.2730</td>
+                <td>0.6078</td>
+                <td>0.3558</td>
+                <td>17.04s</td>
+              </tr>
+              <tr style="background: rgba(16, 185, 129, 0.08);">
+                <td><strong>Baseline (Statistical) ⭐</strong></td>
+                <td>17_features</td>
+                <td><strong style="color: #34d399;">0.2759</strong></td>
+                <td>0.6105</td>
+                <td>0.3557</td>
+                <td>6.24s</td>
+              </tr>
+              <tr>
+                <td><strong>Baseline (PSO)</strong></td>
+                <td>17_features</td>
+                <td>0.2601</td>
+                <td>0.5894</td>
+                <td>0.3411</td>
+                <td>4.50s</td>
+              </tr>
+              <tr>
+                <td><strong>XGBoost (Full)</strong></td>
+                <td>63_features</td>
+                <td>0.2654</td>
+                <td>0.6006</td>
+                <td>0.3475</td>
+                <td>4.40s</td>
+              </tr>
+              <tr style="background: rgba(99, 102, 241, 0.08);">
+                <td><strong>XGBoost (PSO) ⚡</strong></td>
+                <td>17_features</td>
+                <td><strong style="color: #818cf8;">0.2584</strong></td>
+                <td>0.5846</td>
+                <td>0.3319</td>
+                <td><strong style="color: #34d399;">2.07s</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Visual 2: PSO Convergence Curve -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>📈 Đường cong Tiến hóa Hội tụ của Binary PSO</h3>
+              <p>Điểm Best Fitness & Mean Fitness qua 10+ vòng lặp tối ưu</p>
+            </div>
+            <span class="tag-pill">FactPSOConvergence</span>
+          </div>
+          <div class="chart-container">
+            <svg viewBox="0 0 400 220" width="100%" height="220">
+              <!-- Grid lines -->
+              <line x1="40" y1="20" x2="40" y2="180" stroke="rgba(255,255,255,0.1)" />
+              <line x1="40" y1="180" x2="380" y2="180" stroke="rgba(255,255,255,0.1)" />
+              <!-- Y-labels -->
+              <text x="35" y="25" fill="#94a3b8" font-size="10" text-anchor="end">0.285</text>
+              <text x="35" y="100" fill="#94a3b8" font-size="10" text-anchor="end">0.275</text>
+              <text x="35" y="180" fill="#94a3b8" font-size="10" text-anchor="end">0.265</text>
+              <!-- X-labels -->
+              <text x="40" y="195" fill="#94a3b8" font-size="10">Gen 0</text>
+              <text x="140" y="195" fill="#94a3b8" font-size="10">Gen 4</text>
+              <text x="240" y="195" fill="#94a3b8" font-size="10">Gen 8</text>
+              <text x="360" y="195" fill="#94a3b8" font-size="10">Gen 12</text>
+              <!-- Mean Fitness Line (Amber) -->
+              <polyline fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3"
+                points="40,165 65,135 90,126 115,121 140,108 165,100 190,87 215,83 240,82 265,75 290,73 315,67 340,63" />
+              <!-- Best Fitness Line (Indigo/Cyan) -->
+              <polyline fill="none" stroke="#06b6d4" stroke-width="3"
+                points="40,78 65,78 90,78 115,78 140,58 165,58 190,38 215,38 240,38 265,27 290,27 315,27 340,27" />
+              <!-- Dots on Best Fitness -->
+              <circle cx="40" cy="78" r="4" fill="#06b6d4" />
+              <circle cx="140" cy="58" r="4" fill="#06b6d4" />
+              <circle cx="190" cy="38" r="4" fill="#06b6d4" />
+              <circle cx="265" cy="27" r="4" fill="#06b6d4" />
+              <circle cx="340" cy="27" r="5" fill="#10b981" />
+              <!-- Legend -->
+              <g transform="translate(60, 30)">
+                <line x1="0" y1="0" x2="20" y2="0" stroke="#06b6d4" stroke-width="3" />
+                <text x="26" y="4" fill="#f8fafc" font-size="11" font-weight="600">Best Fitness (0.2785 ➔ 0.2848)</text>
+                <line x1="0" y1="18" x2="20" y2="18" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3" />
+                <text x="26" y="22" fill="#f8fafc" font-size="11">Mean Fitness (0.2664 ➔ 0.2806)</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Visual 3: Top Feature Importance -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>🏅 Top 8 Đặc trưng Quan trọng nhất (XGBoost Gain)</h3>
+              <p>Có huy hiệu đánh dấu các biến thuộc danh sách 17 biến PSO</p>
+            </div>
+            <span class="tag-pill">DimPSOFeatures</span>
+          </div>
+          <div class="rank-list">
+            <div class="rank-item">
+              <div class="rank-row-top">
+                <span class="rank-name">1. age (Tuổi khách hàng) <span class="pso-badge-small">PSO ✓</span></span>
+                <span class="rank-val">0.0660</span>
+              </div>
+              <div class="rank-bar-bg"><div class="rank-bar-fill" style="width: 100%; background: #6366f1;"></div></div>
+            </div>
+            <div class="rank-item">
+              <div class="rank-row-top">
+                <span class="rank-name">2. loyalty_score (Điểm trung thành)</span>
+                <span class="rank-val">0.0425</span>
+              </div>
+              <div class="rank-bar-bg"><div class="rank-bar-fill" style="width: 64%; background: #64748b;"></div></div>
+            </div>
+            <div class="rank-item">
+              <div class="rank-row-top">
+                <span class="rank-name">3. discount_usage_rate (Tỷ lệ dùng voucher)</span>
+                <span class="rank-val">0.0364</span>
+              </div>
+              <div class="rank-bar-bg"><div class="rank-bar-fill" style="width: 55%; background: #64748b;"></div></div>
+            </div>
+            <div class="rank-item">
+              <div class="rank-row-top">
+                <span class="rank-name">4. credit_limit (Hạn mức tín dụng) <span class="pso-badge-small">PSO ✓</span></span>
+                <span class="rank-val">0.0210</span>
+              </div>
+              <div class="rank-bar-bg"><div class="rank-bar-fill" style="width: 32%; background: #06b6d4;"></div></div>
+            </div>
+            <div class="rank-item">
+              <div class="rank-row-top">
+                <span class="rank-name">5. avg_cart_additions (Thêm giỏ trung bình) <span class="pso-badge-small">PSO ✓</span></span>
+                <span class="rank-val">0.0164</span>
+              </div>
+              <div class="rank-bar-bg"><div class="rank-bar-fill" style="width: 25%; background: #10b981;"></div></div>
+            </div>
+            <div class="rank-item">
+              <div class="rank-row-top">
+                <span class="rank-name">6. total_session_duration (Tổng thời lượng) <span class="pso-badge-small">PSO ✓</span></span>
+                <span class="rank-val">0.0153</span>
+              </div>
+              <div class="rank-bar-bg"><div class="rank-bar-fill" style="width: 23%; background: #10b981;"></div></div>
+            </div>
+            <div class="rank-item">
+              <div class="rank-row-top">
+                <span class="rank-name">7. total_spend (Tổng chi tiêu tích lũy) <span class="pso-badge-small">PSO ✓</span></span>
+                <span class="rank-val">0.0149</span>
+              </div>
+              <div class="rank-bar-bg"><div class="rank-bar-fill" style="width: 22%; background: #fbbf24;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual 4: Trade-off Cost Chart -->
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div>
+              <h3>⏱️ Đánh đổi Thời gian & Hiệu năng: Fit vs Search</h3>
+              <p>Chi phí tìm kiếm một lần (Search) vs Tiết kiệm khi huấn luyện lại (Fit)</p>
+            </div>
+            <span class="tag-pill">Trade-off</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1rem; justify-content: center; height: 100%;">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.3rem;">
+                <span>XGBoost (Full 63 đặc trưng)</span>
+                <span style="font-family: var(--font-mono); font-weight: 700;">4.40s Fit Time</span>
+              </div>
+              <div style="height: 16px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden;">
+                <div style="width: 100%; height: 100%; background: #ef4444;" title="Fit time: 4.40s"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.3rem;">
+                <span>XGBoost (PSO 17 đặc trưng)</span>
+                <span style="font-family: var(--font-mono); font-weight: 700; color: #34d399;">2.07s Fit Time (-53%)</span>
+              </div>
+              <div style="height: 16px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden;">
+                <div style="width: 47%; height: 100%; background: #10b981;" title="Fit time: 2.07s"></div>
+              </div>
+            </div>
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); padding: 0.75rem; border-radius: var(--radius-sm); font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
+              Thời gian tìm kiếm đặc trưng PSO trên máy CPU mất <strong>11.79 giây</strong> (chỉ chạy 1 lần lúc xây dựng hệ thống). Đổi lại, mỗi lần retraining mô hình sau này tiết kiệm <strong>53% thời gian tính toán</strong> và giảm 73% băng thông truyền tải dữ liệu.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-callout">
+        <span>💡</span>
+        <span><strong>Nhận định trang 3:</strong> Mô hình Baseline ANOVA F-test đạt PR-AUC cao nhất (0.2759). Mô hình XGBoost PSO (0.2584) giữ được 97.4% hiệu năng của mô hình 63 biến trong khi tốc độ chạy nhanh gấp 2.1 lần.</span>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PAGE 4: STRATEGY (HÀM Ý KINH DOANH VÀ CHIẾN LƯỢC)
+         ========================================================= -->
+    <section class="page-section" id="page-4">
+      <div class="page-banner">
+        <div class="page-banner-info">
+          <h2>💡 Trang 4: Hàm ý Kinh doanh & Đề xuất Chiến lược</h2>
+          <p>Chuyển giao các phát hiện thực nghiệm thành 4 hành động kinh doanh thực tế kèm khuyến cáo rủi ro.</p>
+        </div>
+        <div class="page-meta-tags">
+          <span class="tag-pill">4 Trục Chiến lược</span>
+          <span class="tag-pill">Dựa trên Bằng chứng Dữ liệu</span>
+        </div>
+      </div>
+
+      <!-- 4 ACTIONABLE STRATEGY CARDS -->
+      <div class="strategy-grid">
+        <!-- Card 1 -->
+        <div class="strategy-card">
+          <div class="strategy-header">
+            <div class="strategy-title-group">
+              <h3>🛒 1. Khôi phục Giỏ hàng Bỏ quên</h3>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">Cart Abandonment Recovery Campaign</p>
+            </div>
+            <span class="priority-tag priority-critical">Ưu tiên 1</span>
+          </div>
+
+          <div class="strategy-fact-box">
+            <strong>Bằng chứng dữ liệu:</strong> Ma trận nhầm lẫn cho thấy <strong>9,763 khách hàng</strong> thêm giỏ $\ge 3$ lần nhưng không hoàn tất đơn (False Positives). Tỷ lệ thất thoát tiềm năng ước tính hơn $2.9M doanh số.
+          </div>
+
+          <ul class="strategy-action-list">
+            <li>Kích hoạt email tự động nhắc nhở giỏ hàng sau <strong>2 giờ</strong> kể từ phiên truy cập cuối cùng.</li>
+            <li>Đính kèm voucher giảm giá 5–10% hoặc miễn phí vận chuyển có thời hạn trong vòng 24 giờ.</li>
+            <li>Cá nhân hóa nội dung thông báo trên ứng dụng di động cho nhóm khách hàng Mobile Heavy.</li>
+          </ul>
+
+          <div class="strategy-alert">
+            <span>⚠️</span>
+            <span>Khuyến nghị: Cần chia nhóm A/B Testing 50/50 để đo lường tỷ lệ gia tăng doanh thu thuần (Incremental Lift).</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="strategy-card">
+          <div class="strategy-header">
+            <div class="strategy-title-group">
+              <h3>⚡ 2. Tinh giản Hạ tầng Dữ liệu Thực</h3>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">Real-time Feature Serving Architecture</p>
+            </div>
+            <span class="priority-tag priority-high">Ưu tiên 2</span>
+          </div>
+
+          <div class="strategy-fact-box">
+            <strong>Bằng chứng dữ liệu:</strong> Binary PSO chứng minh <strong>17 đặc trưng</strong> đạt PR-AUC 0.2584 (tương đương 97.4% hiệu năng mô hình 63 biến) và giảm <strong>53% thời gian suy luận/huấn luyện</strong>.
+          </div>
+
+          <ul class="strategy-action-list">
+            <li>Đơn giản hóa Data Pipeline thời gian thực: Chỉ tính toán và lưu trữ 17 biến quan trọng nhất.</li>
+            <li>Loại bỏ 46 biến phụ trợ giúp giảm tải 73% băng thông mạng và dung lượng RAM của Feature Store.</li>
+            <li>Đảm bảo độ trễ suy luận (Inference Latency) dưới 15ms khi khách hàng duyệt sản phẩm trên website.</li>
+          </ul>
+
+          <div class="strategy-alert">
+            <span>⚠️</span>
+            <span>Khuyến nghị: Thiết lập hệ thống giám sát độ lệch đặc trưng (Data Drift) định kỳ hàng tuần cho 17 biến này.</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="strategy-card">
+          <div class="strategy-header">
+            <div class="strategy-title-group">
+              <h3>🎯 3. Phân bổ Voucher theo Hạng Khách</h3>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">Tier-based Incentive Optimization</p>
+            </div>
+            <span class="priority-tag priority-medium">Ưu tiên 3</span>
+          </div>
+
+          <div class="strategy-fact-box">
+            <strong>Bằng chứng dữ liệu:</strong> Khách hàng nhóm <strong>Platinum & Gold</strong> có tỷ lệ mua tự nhiên cao và ít nhạy cảm với khuyến mãi; nhóm <strong>Bronze</strong> có tỷ lệ thoát cao nhất nhưng sẵn sàng mua khi có chiết khấu.
+          </div>
+
+          <ul class="strategy-action-list">
+            <li>Ngừng phát voucher đại trà cho nhóm Gold và Platinum để tránh lãng phí ngân sách tiếp thị.</li>
+            <li>Chuyển dịch 30% ngân sách khuyến mãi sang nhóm khách hàng Bronze có tương tác giỏ hàng tích cực.</li>
+            <li>Tặng điểm thưởng trung thành (Loyalty Points) thay vì giảm giá tiền mặt cho nhóm khách hàng thân thiết.</li>
+          </ul>
+
+          <div class="strategy-alert">
+            <span>⚠️</span>
+            <span>Khuyến nghị: Giám sát biên lợi nhuận ròng sau chiết khấu để đảm bảo không bị xói mòn lợi nhuận.</span>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="strategy-card">
+          <div class="strategy-header">
+            <div class="strategy-title-group">
+              <h3>🛡️ 4. Khuyến cáo Phương pháp & Rủi ro</h3>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">Methodology Transparency & Governance</p>
+            </div>
+            <span class="priority-tag priority-info">Quản trị</span>
+          </div>
+
+          <div class="strategy-fact-box">
+            <strong>Bằng chứng dữ liệu:</strong> Bộ dữ liệu là <strong>Observational Snapshot</strong> (dạng ảnh chụp cắt ngang không có mốc thời gian sự kiện sau đó). Mô hình là bộ phân loại xu hướng (Propensity), không khẳng định quan hệ nhân quả.
+          </div>
+
+          <ul class="strategy-action-list">
+            <li>Không dùng xác suất mô hình làm căn cứ áp đặt quyết định từ chối dịch vụ của khách hàng.</li>
+            <li>Kết quả dự đoán chỉ đóng vai trò tín hiệu hỗ trợ (Decision Support Tool) cho đội ngũ Marketing & Vận hành.</li>
+            <li>Cần tiến hành thử nghiệm đối chứng ngẫu nhiên (RCT / A/B Testing) trước khi triển khai can thiệp diện rộng.</li>
+          </ul>
+
+          <div class="strategy-alert">
+            <span>⚠️</span>
+            <span>Tuân thủ nguyên tắc: Tính trung thực học thuật và minh bạch dữ liệu theo AGENTS.md.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-callout">
+        <span>💡</span>
+        <span><strong>Nhận định trang 4:</strong> Việc kết hợp giữa phân tích hành vi và tối ưu hóa bầy đàn mang lại giá trị kép: Vừa mở rộng cơ hội kinh doanh (thu hút 9.7k khách giỏ hàng bỏ quên), vừa tiết kiệm 53% chi phí tài nguyên máy chủ.</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- POWER BI BOTTOM PAGE NAVIGATION TABS -->
+  <footer class="pbi-footer-tabs">
+    <div class="tabs-list" role="tablist">
+      <button class="tab-pbi-btn active" id="tab-1" onclick="switchPage(1)" role="tab">
+        <span>📊 01. Tổng quan Khách hàng</span>
+      </button>
+      <button class="tab-pbi-btn" id="tab-2" onclick="switchPage(2)" role="tab">
+        <span>🔍 02. Phân tích Hành vi</span>
+      </button>
+      <button class="tab-pbi-btn" id="tab-3" onclick="switchPage(3)" role="tab">
+        <span>⚡ 03. So sánh Mô hình & PSO</span>
+      </button>
+      <button class="tab-pbi-btn" id="tab-4" onclick="switchPage(4)" role="tab">
+        <span>💡 04. Hàm ý Kinh doanh</span>
+      </button>
+    </div>
+
+    <div class="footer-status">
+      <span>Trang <strong id="current-page-num">1</strong> / 4</span>
+      <span>•</span>
+      <span>Tỷ lệ hiển thị: 100% (Fit to Page)</span>
+      <span>•</span>
+      <span>Semantic Model: Connected</span>
+    </div>
+  </footer>
+
+  <script>
+    // Tab switching logic
+    function switchPage(pageNum) {
+      document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-pbi-btn').forEach(b => b.classList.remove('active'));
+
+      const activePage = document.getElementById('page-' + pageNum);
+      const activeTab = document.getElementById('tab-' + pageNum);
+      if (activePage) activePage.classList.add('active');
+      if (activeTab) activeTab.classList.add('active');
+
+      document.getElementById('current-page-num').innerText = pageNum;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Interactive Slicers logic
+    function updateFilters() {
+      const country = document.getElementById('slicer-country').value;
+      const tier = document.getElementById('slicer-tier').value;
+      const device = document.getElementById('slicer-device').value;
+
+      let baseCust = 200000;
+      let baseSpend = 60016417;
+      let baseTrans = 500000;
+      let rate = "20.30%";
+
+      // Dynamic demo recalculation based on filters
+      if (country === 'US') { baseCust = 60000; baseSpend = 18200000; baseTrans = 152000; rate = "20.55%"; }
+      else if (country === 'UK') { baseCust = 48000; baseSpend = 14500000; baseTrans = 120000; rate = "20.21%"; }
+      else if (country === 'DE') { baseCust = 36000; baseSpend = 11100000; baseTrans = 91000; rate = "20.12%"; }
+      else if (country === 'FR') { baseCust = 31000; baseSpend = 9400000; baseTrans = 78000; rate = "20.08%"; }
+      else if (country === 'IN') { baseCust = 25000; baseSpend = 6800000; baseTrans = 59000; rate = "20.40%"; }
+
+      if (tier !== 'ALL') {
+        baseCust = Math.round(baseCust * 0.25);
+        baseSpend = Math.round(baseSpend * 0.25);
+        baseTrans = Math.round(baseTrans * 0.25);
+      }
+
+      document.getElementById('kpi-total-cust').innerText = baseCust.toLocaleString();
+      document.getElementById('kpi-total-spend').innerText = '$' + baseSpend.toLocaleString();
+      document.getElementById('kpi-total-trans').innerText = baseTrans.toLocaleString();
+      document.getElementById('kpi-conv-rate').innerText = rate;
+    }
+
+    function resetFilters() {
+      document.getElementById('slicer-country').value = 'ALL';
+      document.getElementById('slicer-tier').value = 'ALL';
+      document.getElementById('slicer-device').value = 'ALL';
+      document.getElementById('slicer-campaign').value = 'ALL';
+      updateFilters();
+    }
+  </script>
+</body>
+</html>

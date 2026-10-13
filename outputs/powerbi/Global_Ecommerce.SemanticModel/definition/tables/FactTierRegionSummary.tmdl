@@ -1,0 +1,58 @@
+table FactTierRegionSummary
+	lineageTag: fc6d362c-8ddf-4e5c-b981-688aea9df0e7
+
+	column customer_tier
+		dataType: string
+		lineageTag: 53a77957-a0cb-4e82-b0f8-11512bc8acf6
+		sourceColumn: customer_tier
+
+	column region_tier
+		dataType: string
+		lineageTag: 363f08b1-75bc-410d-86a7-28c88f5d1a51
+		sourceColumn: region_tier
+
+	column total_customers
+		dataType: int64
+		lineageTag: 0cf94290-649f-4cc1-9175-995795fef8e1
+		sourceColumn: total_customers
+
+	column purchase_conversion_rate
+		dataType: double
+		lineageTag: 59a02d3c-9c70-41e6-8692-fe733bb99f04
+		sourceColumn: purchase_conversion_rate
+
+	column avg_loyalty_score
+		dataType: double
+		lineageTag: 830aa4e5-ab4d-47d7-9574-012d01d66b07
+		sourceColumn: avg_loyalty_score
+
+	column avg_credit_limit
+		dataType: double
+		lineageTag: d5aa2155-b6c3-48ff-a756-332a6d525d2e
+		sourceColumn: avg_credit_limit
+
+	column avg_total_spend
+		dataType: double
+		lineageTag: 28aa8b25-273c-4b7b-9190-e9fec44d3507
+		sourceColumn: avg_total_spend
+
+	column avg_cart_additions
+		dataType: double
+		lineageTag: 37ff8c0e-e671-4b41-9f12-6bf9d0c455a3
+		sourceColumn: avg_cart_additions
+
+	column avg_account_age_days
+		dataType: double
+		lineageTag: 458d19e5-ea5f-449d-876a-85e899de765f
+		sourceColumn: avg_account_age_days
+
+	partition FactTierRegionSummary = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\HuyD\Đại Học\BigData\Global\outputs\powerbi\dashboard_tier_region_summary.csv"),[Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"customer_tier", type text}, {"region_tier", type text}, {"total_customers", Int64.Type}, {"purchase_conversion_rate", type number}, {"avg_loyalty_score", type number}, {"avg_credit_limit", type number}, {"avg_total_spend", type number}, {"avg_cart_additions", type number}, {"avg_account_age_days", type number}})
+				in
+				    #"Changed Type"
+

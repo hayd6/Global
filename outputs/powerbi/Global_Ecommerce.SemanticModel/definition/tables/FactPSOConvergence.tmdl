@@ -1,0 +1,43 @@
+table FactPSOConvergence
+	lineageTag: 5e7551e7-df7b-4ff4-9fa4-eb3a9c3a7221
+
+	column iteration
+		dataType: int64
+		lineageTag: 23a80a8c-669a-4e8e-aa5f-d2d57e1148ac
+		sourceColumn: iteration
+
+	column best_fitness
+		dataType: double
+		lineageTag: cc57fbdc-9339-4227-a119-33a2d52504a5
+		sourceColumn: best_fitness
+
+	column best_pr_auc
+		dataType: double
+		lineageTag: ec32d58d-3150-48c7-a561-67e8110d5ede
+		sourceColumn: best_pr_auc
+
+	column mean_fitness
+		dataType: double
+		lineageTag: 45ab359c-40fe-4b26-a2ce-86dee6e817eb
+		sourceColumn: mean_fitness
+
+	column best_feature_count
+		dataType: int64
+		lineageTag: 6095eb88-7143-4394-809a-8a7012d117d5
+		sourceColumn: best_feature_count
+
+	column elapsed_seconds
+		dataType: double
+		lineageTag: 4a39a8af-721d-4628-b2be-aaa5f584df38
+		sourceColumn: elapsed_seconds
+
+	partition FactPSOConvergence = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\HuyD\Đại Học\BigData\Global\outputs\powerbi\pso_convergence.csv"),[Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"iteration", Int64.Type}, {"best_fitness", type number}, {"best_pr_auc", type number}, {"mean_fitness", type number}, {"best_feature_count", Int64.Type}, {"elapsed_seconds", type number}})
+				in
+				    #"Changed Type"
+

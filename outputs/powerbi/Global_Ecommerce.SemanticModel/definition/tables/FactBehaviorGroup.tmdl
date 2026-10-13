@@ -1,0 +1,63 @@
+table FactBehaviorGroup
+	lineageTag: f2e83008-3f58-4b87-823f-c4145830849e
+
+	column target
+		dataType: int64
+		lineageTag: 29ec2265-bb4a-4f0f-bb1a-55cb0e068e22
+		sourceColumn: target
+
+	column device_persona
+		dataType: string
+		lineageTag: f63790d7-c9e3-4f05-a3b0-df43856ac1d2
+		sourceColumn: device_persona
+
+	column acquisition_channel
+		dataType: string
+		lineageTag: f4ac7dea-5fb4-48a4-9358-283dc6c10d61
+		sourceColumn: acquisition_channel
+
+	column customer_count
+		dataType: int64
+		lineageTag: 9b4ef44f-1f0b-4280-81f8-e546b4e3acc1
+		sourceColumn: customer_count
+
+	column avg_session_count
+		dataType: double
+		lineageTag: b0be6a6d-4631-4a45-93a4-10da24ab8bb6
+		sourceColumn: avg_session_count
+
+	column avg_session_duration_sec
+		dataType: double
+		lineageTag: 7b17622d-156c-48d8-83bd-6ef789fae479
+		sourceColumn: avg_session_duration_sec
+
+	column avg_pages_viewed
+		dataType: double
+		lineageTag: ddbd3b87-99d1-43be-8e8e-90a66eecd875
+		sourceColumn: avg_pages_viewed
+
+	column avg_cart_additions
+		dataType: double
+		lineageTag: d96edf8c-62a7-4fdf-9142-20bf7d3aac25
+		sourceColumn: avg_cart_additions
+
+	column avg_bounce_rate
+		dataType: double
+		lineageTag: 7242d0dd-1498-43c5-bc53-3c2262c4bbde
+		sourceColumn: avg_bounce_rate
+
+	column avg_spend_usd
+		dataType: double
+		lineageTag: 64090987-be18-479d-9d17-bfa42e6543f2
+		sourceColumn: avg_spend_usd
+
+	partition FactBehaviorGroup = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\HuyD\Đại Học\BigData\Global\outputs\powerbi\dashboard_behavior_summary.csv"),[Delimiter=",", Columns=10, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"target", Int64.Type}, {"device_persona", type text}, {"acquisition_channel", type text}, {"customer_count", Int64.Type}, {"avg_session_count", type number}, {"avg_session_duration_sec", type number}, {"avg_pages_viewed", type number}, {"avg_cart_additions", type number}, {"avg_bounce_rate", type number}, {"avg_spend_usd", type number}})
+				in
+				    #"Changed Type"
+

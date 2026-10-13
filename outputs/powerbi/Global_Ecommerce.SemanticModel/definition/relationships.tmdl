@@ -1,0 +1,5 @@
+relationship FeatureImportance_To_DimPSOFeatures
+	crossFilteringBehavior: bothDirections
+	fromColumn: FactFeatureImportance.feature_name
+	toColumn: DimPSOFeatures.feature_name
+

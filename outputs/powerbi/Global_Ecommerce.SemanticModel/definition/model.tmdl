@@ -1,0 +1,27 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["financials"]
+
+annotation PBI_ProTooling = ["MCP-PBIModeling"]
+
+ref table DateTableTemplate_a2ebb02f-2c6a-469a-9837-0957decc9239
+ref table FactPSOConvergence
+ref table FactBehaviorGroup
+ref table FactTierRegionSummary
+ref table FactModelMetrics
+ref table DimPSOFeatures
+ref table FactFeatureImportance
+ref table DimCustomerSummary
+ref table _Measures
+
+ref cultureInfo en-US
+

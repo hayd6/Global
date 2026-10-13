@@ -1,0 +1,133 @@
+table _Measures
+	lineageTag: 48532896-aa01-422c-8fa8-0e28a225ec9f
+
+	measure 'Total Customers' = COUNTROWS('DimCustomerSummary')
+		formatString: #,##0
+		displayFolder: 1. Tổng quan Khách hàng
+		lineageTag: d962fc7f-61d5-4092-88f2-e50d85217cbb
+
+	measure 'Total Train Customers' = CALCULATE(COUNTROWS('DimCustomerSummary'), 'DimCustomerSummary'[split_group] = "train")
+		formatString: #,##0
+		displayFolder: 1. Tổng quan Khách hàng
+		lineageTag: 9a02d92e-2613-49c1-b00f-7aa41846b055
+
+	measure 'Total Test Customers' = CALCULATE(COUNTROWS('DimCustomerSummary'), 'DimCustomerSummary'[split_group] = "test")
+		formatString: #,##0
+		displayFolder: 1. Tổng quan Khách hàng
+		lineageTag: b8f7e285-c2b5-42d4-b229-cce1e2a9dfec
+
+	measure 'Total Buyers (Target = 1)' = CALCULATE(COUNTROWS('DimCustomerSummary'), 'DimCustomerSummary'[target] = 1, 'DimCustomerSummary'[split_group] = "train")
+		formatString: #,##0
+		displayFolder: 1. Tổng quan Khách hàng
+		lineageTag: 386a39da-4954-4f52-b498-71c26a8885e7
+
+	measure 'Total Non-Buyers (Target = 0)' = CALCULATE(COUNTROWS('DimCustomerSummary'), 'DimCustomerSummary'[target] = 0, 'DimCustomerSummary'[split_group] = "train")
+		formatString: #,##0
+		displayFolder: 1. Tổng quan Khách hàng
+		lineageTag: 87c0d187-6ccb-4df4-bacd-776039766173
+
+	measure 'Target Conversion Rate' = DIVIDE([Total Buyers (Target = 1)], [Total Train Customers], 0)
+		formatString: 0.0%
+		displayFolder: 1. Tổng quan Khách hàng
+		lineageTag: e672a738-fa93-4ea2-91c1-2873f93a5443
+
+	measure 'Total Spend Sum' = SUM('DimCustomerSummary'[total_spend])
+		formatString: $#,##0.00
+		displayFolder: 1. Tổng quan Khách hàng
+		lineageTag: 33f82075-54c1-40b8-9124-566e9788ca6c
+
+	measure 'Average Spend Per Customer' = AVERAGE('DimCustomerSummary'[total_spend])
+		formatString: $#,##0.00
+		displayFolder: 1. Tổng quan Khách hàng
+		lineageTag: af94c113-6967-4357-8eb0-2e50f308a57a
+
+	measure 'Total Transactions Sum' = SUM('DimCustomerSummary'[transaction_count])
+		formatString: #,##0
+		displayFolder: 1. Tổng quan Khách hàng
+		lineageTag: 1dc38fac-0eeb-4e34-881e-ccdf62879cc8
+
+	measure 'Average Transactions Per Customer' = AVERAGE('DimCustomerSummary'[transaction_count])
+		formatString: 0.0
+		displayFolder: 1. Tổng quan Khách hàng
+		lineageTag: 7c2b27c4-e3c7-49af-803b-0ca1b8a19f4d
+
+	measure 'Average Loyalty Score' = AVERAGE('DimCustomerSummary'[loyalty_score])
+		formatString: 0.000
+		displayFolder: 1. Tổng quan Khách hàng
+		lineageTag: e1e85f9a-d6d2-4a0a-8751-ca44b59e5e18
+
+	measure 'Total Sessions Sum' = SUM('DimCustomerSummary'[total_sessions])
+		formatString: #,##0
+		displayFolder: 2. Hành vi Khách hàng
+		lineageTag: 48423bfa-b7c2-4d4b-aaae-7fa39e9aa630
+
+	measure 'Average Sessions Per Customer' = AVERAGE('DimCustomerSummary'[total_sessions])
+		formatString: 0.0
+		displayFolder: 2. Hành vi Khách hàng
+		lineageTag: 8173f04e-580f-4b1c-8aff-32f38777ba24
+
+	measure 'Average Session Duration (Mins)' = DIVIDE(AVERAGE('DimCustomerSummary'[avg_session_duration_sec]), 60, 0)
+		formatString: 0.0
+		displayFolder: 2. Hành vi Khách hàng
+		lineageTag: d4d5ebb7-e43b-48b1-9e33-394f2f22283b
+
+	measure 'Average Pages Per Session' = AVERAGE('DimCustomerSummary'[avg_pages_per_session])
+		formatString: 0.0
+		displayFolder: 2. Hành vi Khách hàng
+		lineageTag: 54dffea9-6c41-40b1-8d47-069a5185f9a9
+
+	measure 'Total Cart Additions' = SUM('DimCustomerSummary'[total_cart_additions])
+		formatString: #,##0
+		displayFolder: 2. Hành vi Khách hàng
+		lineageTag: bc19772c-e6f3-475a-84d9-0de7ca90e2fb
+
+	measure 'Average Cart Additions Per Customer' = AVERAGE('DimCustomerSummary'[total_cart_additions])
+		formatString: 0.0
+		displayFolder: 2. Hành vi Khách hàng
+		lineageTag: 3914f89c-51d0-4e47-bb32-bd3f439e4275
+
+	measure 'Average Bounce Rate' = AVERAGE('DimCustomerSummary'[bounce_rate])
+		formatString: 0.0%
+		displayFolder: 2. Hành vi Khách hàng
+		lineageTag: 5e085c0c-1533-4e76-bc2b-967aee3f414b
+
+	measure 'Best Baseline PR-AUC' = CALCULATE(MAX('FactModelMetrics'[pr_auc]), 'FactModelMetrics'[model_name] = "Baseline (Statistical Features)")
+		formatString: 0.0000
+		displayFolder: 3. Hiệu năng Mô hình ML
+		lineageTag: 4e794c67-e121-4c03-b8f3-46c6c0fde416
+
+	measure 'XGBoost Full PR-AUC' = CALCULATE(MAX('FactModelMetrics'[pr_auc]), 'FactModelMetrics'[model_name] = "XGBoost (Full Features)")
+		formatString: 0.0000
+		displayFolder: 3. Hiệu năng Mô hình ML
+		lineageTag: 1233de44-8f83-405d-894a-9b414311a6df
+
+	measure 'XGBoost PSO PR-AUC' = CALCULATE(MAX('FactModelMetrics'[pr_auc]), 'FactModelMetrics'[model_name] = "XGBoost (PSO Features)")
+		formatString: 0.0000
+		displayFolder: 3. Hiệu năng Mô hình ML
+		lineageTag: e11a0e6f-a464-4110-9019-ea98ef40ad7e
+
+	measure 'PSO Feature Reduction Pct' =
+			VAR OriginalCount = 63
+			VAR PSOCount = CALCULATE(MAX('FactModelMetrics'[feature_count]), 'FactModelMetrics'[feature_space] = "17_features")
+			RETURN DIVIDE(OriginalCount - PSOCount, OriginalCount, 0)
+		formatString: 0.0%
+		displayFolder: 3. Hiệu năng Mô hình ML
+		lineageTag: ce71ff1d-f729-4579-93a6-a813859d70a4
+
+	measure 'XGBoost Speedup Factor' =
+			VAR FullFitTime = CALCULATE(MAX('FactModelMetrics'[fit_time_seconds]), 'FactModelMetrics'[model_name] = "XGBoost (Full Features)")
+			VAR PSOFitTime = CALCULATE(MAX('FactModelMetrics'[fit_time_seconds]), 'FactModelMetrics'[model_name] = "XGBoost (PSO Features)")
+			RETURN DIVIDE(FullFitTime, PSOFitTime, 0)
+		formatString: 0.0"x"
+		displayFolder: 3. Hiệu năng Mô hình ML
+		lineageTag: 254ca7b9-1d1a-4e20-b0f5-2fd121c34158
+
+	column Description
+		isHidden
+		isNameInferred
+		sourceColumn: [Description]
+
+	partition _Measures = calculated
+		mode: import
+		source = ROW("Description", "Key Measures Table")
+

@@ -1,0 +1,26 @@
+table DimPSOFeatures
+	lineageTag: e7f749ac-5dca-4b38-b612-ad8602bae652
+
+	column feature_name
+		dataType: string
+		isUnique
+		isKey
+		isNullable: false
+		lineageTag: 24ff7d1a-18ef-43e4-924e-607d5a803623
+		sourceColumn: feature_name
+
+	column is_selected
+		dataType: int64
+		lineageTag: 3c120167-de84-422d-b498-212109879d30
+		sourceColumn: is_selected
+
+	partition DimPSOFeatures = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\HuyD\Đại Học\BigData\Global\outputs\powerbi\pso_selected_features.csv"),[Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"feature_name", type text}, {"is_selected", Int64.Type}})
+				in
+				    #"Changed Type"
+

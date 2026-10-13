@@ -1,0 +1,118 @@
+table FactModelMetrics
+	lineageTag: e8568e8c-456d-4f33-a461-249cdb70188a
+
+	column model_name
+		dataType: string
+		lineageTag: 09494ae6-08ad-4fa0-8b65-18b7ccc0720e
+		sourceColumn: model_name
+
+	column feature_count
+		dataType: int64
+		lineageTag: 74d4b525-2b0d-41c8-99ea-0a7dd00c8d9f
+		sourceColumn: feature_count
+
+	column pr_auc
+		dataType: double
+		lineageTag: f3b25d88-7537-4f6a-9c0a-4e11d14dd4e5
+		sourceColumn: pr_auc
+
+	column roc_auc
+		dataType: double
+		lineageTag: ec343af1-a91b-4c81-98a3-3a4909eb8657
+		sourceColumn: roc_auc
+
+	column f1_score
+		dataType: double
+		lineageTag: a37887eb-8391-4f1b-ab05-66e955daf875
+		sourceColumn: f1_score
+
+	column precision
+		dataType: double
+		lineageTag: f141bacc-d2b9-48da-a62e-3d214281d9ce
+		sourceColumn: precision
+
+	column recall
+		dataType: double
+		lineageTag: 961d3e8c-2d3b-40d0-81d0-95681df94f75
+		sourceColumn: recall
+
+	column accuracy
+		dataType: double
+		lineageTag: 015de788-1422-47b8-a100-61d7dad0aa81
+		sourceColumn: accuracy
+
+	column threshold
+		dataType: double
+		lineageTag: ab8dac56-55dd-4adc-9b1c-58793f976cdd
+		sourceColumn: threshold
+
+	column threshold_source
+		dataType: string
+		lineageTag: 85f20126-e067-441f-b71d-d557433a7992
+		sourceColumn: threshold_source
+
+	column best_f1_threshold_ref
+		dataType: double
+		lineageTag: ca2f9cd2-f4d6-4610-9bf1-d8f6fa338704
+		sourceColumn: best_f1_threshold_ref
+
+	column true_negatives
+		dataType: int64
+		lineageTag: 55b39782-a1a7-4e16-8fba-8aef58b141eb
+		sourceColumn: true_negatives
+
+	column false_positives
+		dataType: int64
+		lineageTag: b21d54a7-cc08-46f2-a823-5632aebcc948
+		sourceColumn: false_positives
+
+	column false_negatives
+		dataType: int64
+		lineageTag: 579304be-c84a-429f-8391-9274b83b4bce
+		sourceColumn: false_negatives
+
+	column true_positives
+		dataType: int64
+		lineageTag: 31a7ac17-c0fd-4eee-ac7a-47550fc8b14d
+		sourceColumn: true_positives
+
+	column fit_time_seconds
+		dataType: double
+		lineageTag: 0b968d07-8401-4555-bc20-1dfe54c572a3
+		sourceColumn: fit_time_seconds
+
+	column search_time_seconds
+		dataType: double
+		lineageTag: 58097d6e-fc82-4fb8-b719-d979b30d16a8
+		sourceColumn: search_time_seconds
+
+	column total_time_seconds
+		dataType: double
+		lineageTag: bd0864ad-98e3-4ffe-b9d9-23d6966bfe06
+		sourceColumn: total_time_seconds
+
+	column split_id
+		dataType: string
+		lineageTag: 9ce3d14b-f1d4-4c01-aa15-dd2452c988f2
+		sourceColumn: split_id
+
+	column evaluation_set
+		dataType: string
+		lineageTag: faf01d16-fb63-41f3-bbf7-20ee7bc97a18
+		sourceColumn: evaluation_set
+
+	column feature_space
+		dataType: string
+		lineageTag: adc320ab-88e2-43f5-8de5-9216e81a877c
+		sourceColumn: feature_space
+
+	partition FactModelMetrics = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\HuyD\Đại Học\BigData\Global\outputs\powerbi\metrics_comparison.csv"),[Delimiter=",", Columns=21, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"model_name", type text}, {"feature_count", Int64.Type}, {"pr_auc", type number}, {"roc_auc", type number}, {"f1_score", type number}, {"precision", type number}, {"recall", type number}, {"accuracy", type number}, {"threshold", type number}, {"threshold_source", type text}, {"best_f1_threshold_ref", type number}, {"true_negatives", Int64.Type}, {"false_positives", Int64.Type}, {"false_negatives", Int64.Type}, {"true_positives", Int64.Type}, {"fit_time_seconds", type number}, {"search_time_seconds", type number}, {"total_time_seconds", type number}, {"split_id", type text}, {"evaluation_set", type text}, {"feature_space", type text}})
+				in
+				    #"Changed Type"
+

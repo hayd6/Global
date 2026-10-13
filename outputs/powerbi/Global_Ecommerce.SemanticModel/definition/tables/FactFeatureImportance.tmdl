@@ -1,0 +1,24 @@
+table FactFeatureImportance
+	lineageTag: d8163938-2d46-46d6-9bda-35a2039b0ba8
+
+	column feature_name
+		dataType: string
+		isNullable: false
+		lineageTag: c2953de0-ef74-4a40-8cd6-76d5de9fa551
+		sourceColumn: feature_name
+
+	column importance_weight
+		dataType: double
+		lineageTag: bb397a1f-1538-4894-a6b0-f14e20e519e8
+		sourceColumn: importance_weight
+
+	partition FactFeatureImportance = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\HuyD\Đại Học\BigData\Global\outputs\powerbi\feature_importance.csv"),[Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"feature_name", type text}, {"importance_weight", type number}})
+				in
+				    #"Changed Type"
+
